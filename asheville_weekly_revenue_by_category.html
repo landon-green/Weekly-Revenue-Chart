@@ -82,11 +82,7 @@
       { name: 'Mar16-Mar22 2026',  label: 'Mar16–22'    }
     ];
 
-    // Google Sheets rows are 1-indexed; subtract 1 for 0-indexed array
-    // Trampoline=row9→8, Merchandise=row11→10, Concessions=row14→13, Events=row17→16
-    // Column I = index 8
-    const ROW_MAP = { trampoline: 8, merchandise: 10, concessions: 13, events: 16 };
-    const COL_IDX = 8;
+    const COL_IDX = 8; // Column I = Totals
 
     let chartInstance = null;
 
@@ -102,22 +98,24 @@
     }
 
     function extractTotals(rows) {
-      function getVal(rowIdx) {
-        const row = rows[rowIdx];
-        if (!row) return 0;
-        // Read column I (index 8) — the Totals column
-        const cell = row[COL_IDX];
-        if (cell) {
-          const v = cell.replace(/[$,"\s]/g, '');
-          if (v && !isNaN(parseFloat(v))) return parseFloat(v);
+      // Find a row by searching for a label in column A, then read column I (Totals)
+      function findVal(label) {
+        for (const row of rows) {
+          if (row[0] && row[0].toString().trim().toLowerCase() === label.toLowerCase()) {
+            const cell = row[COL_IDX];
+            if (cell) {
+              const v = cell.replace(/[$,"\s]/g, '');
+              if (v && !isNaN(parseFloat(v))) return parseFloat(v);
+            }
+          }
         }
         return 0;
       }
       return {
-        trampoline: getVal(ROW_MAP.trampoline),
-        merchandise: getVal(ROW_MAP.merchandise),
-        concessions: getVal(ROW_MAP.concessions),
-        events:      getVal(ROW_MAP.events)
+        trampoline:  findVal('Trampoline Park'),
+        merchandise: findVal('Merchandise'),
+        concessions: findVal('Concessions'),
+        events:      findVal('Events')
       };
     }
 
