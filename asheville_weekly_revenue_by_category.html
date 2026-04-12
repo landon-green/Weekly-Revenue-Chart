@@ -24,22 +24,16 @@
     }
     header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; }
     header p { font-size: 13px; color: #666; margin-top: 3px; }
-    #status {
-      font-size: 12px; color: #888;
-      display: flex; align-items: center; gap: 6px;
-    }
+    #status { font-size: 12px; color: #888; display: flex; align-items: center; gap: 6px; }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; display: inline-block; }
     .dot.loading { background: #EF9F27; animation: pulse 1s infinite; }
     .dot.error { background: #c0392b; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     button {
       font-size: 12px; padding: 4px 10px; border-radius: 4px;
-      border: 1px solid #ccc; background: #fff;
-      cursor: pointer;
+      border: 1px solid #ccc; background: #fff; cursor: pointer;
     }
     button:hover { background: #f0f0f0; }
-
-    /* Summary cards */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -56,8 +50,7 @@
     .card .value { font-size: 22px; font-weight: 600; color: #1a1a1a; }
     .card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
     .card.highlight { border-left: 4px solid #378ADD; }
-
-    /* Chart panels */
+    .card.current-month { border-left: 4px solid #1D9E75; }
     .panel {
       background: #fff;
       border-radius: 10px;
@@ -70,26 +63,20 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .panel-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
     .panel-sub { font-size: 12px; color: #999; }
-    .legend {
-      display: flex; flex-wrap: wrap; gap: 14px;
-      font-size: 12px; color: #555;
-    }
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: #555; }
     .legend span { display: flex; align-items: center; gap: 5px; }
     .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
     .chart-wrap { position: relative; width: 100%; }
-
-    /* WoW badge */
     .wow { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
     .wow.up { background: #e6f7f0; color: #1D9E75; }
     .wow.down { background: #fdecea; color: #c0392b; }
     .wow.flat { background: #f0f0f0; color: #888; }
-
-    .footer {
-      font-size: 11px; color: #bbb; text-align: center; margin-top: 24px;
-    }
+    .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
   </style>
 </head>
 <body>
@@ -107,10 +94,15 @@
 </header>
 
 <!-- Summary Cards -->
-<div class="cards" id="cards">
+<div class="cards">
   <div class="card highlight">
     <div class="label">Total Revenue (all weeks)</div>
     <div class="value" id="c-total">—</div>
+  </div>
+  <div class="card current-month">
+    <div class="label" id="c-month-lbl">Current Month Revenue</div>
+    <div class="value" id="c-month">—</div>
+    <div class="sub" id="c-month-weeks"></div>
   </div>
   <div class="card">
     <div class="label">Weekly Average</div>
@@ -133,23 +125,37 @@
   </div>
 </div>
 
-<!-- Revenue Chart -->
+<!-- Weekly Revenue Chart -->
 <div class="panel">
   <div class="panel-header">
     <div>
       <div class="panel-title">Weekly Revenue by Category</div>
-      <div class="panel-sub">Stacked total with week-over-week change</div>
+      <div class="panel-sub">Stacked bars with 4-week rolling average overlay · hover for % breakdown</div>
     </div>
     <div class="legend">
       <span><span class="swatch" style="background:#378ADD;"></span>Trampoline Park</span>
       <span><span class="swatch" style="background:#1D9E75;"></span>Concessions</span>
       <span><span class="swatch" style="background:#EF9F27;"></span>Merchandise</span>
       <span><span class="swatch" style="background:#D4537E;"></span>Events</span>
+      <span><span class="swatch" style="background:#7F77DD; border-radius:50%;"></span>4-wk Avg</span>
     </div>
   </div>
   <div id="wow-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:22px;"></div>
   <div class="chart-wrap" style="height:380px;">
-    <canvas id="revenueChart" role="img" aria-label="Stacked bar chart of weekly revenue by category">Weekly revenue by category.</canvas>
+    <canvas id="revenueChart" role="img" aria-label="Stacked bar chart of weekly revenue by category with rolling average">Weekly revenue by category.</canvas>
+  </div>
+</div>
+
+<!-- Monthly Revenue Chart -->
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Monthly Revenue</div>
+      <div class="panel-sub">Total revenue aggregated by month</div>
+    </div>
+  </div>
+  <div class="chart-wrap" style="height:260px;">
+    <canvas id="monthlyChart" role="img" aria-label="Bar chart of monthly revenue totals">Monthly revenue totals.</canvas>
   </div>
 </div>
 
@@ -185,19 +191,20 @@
 const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
 const COL_IDX = 8;
 
+// Each sheet has a month tag for grouping
 const SHEETS = [
-  { name: 'Dec28-Jan4 2026',  label: 'Dec28–Jan4'  },
-  { name: 'Jan5-Jan11 2026',  label: 'Jan5–11'     },
-  { name: 'Jan12-Jan18 2026', label: 'Jan12–18'    },
-  { name: 'Jan19-Jan25 2026', label: 'Jan19–25'    },
-  { name: 'Jan26-Feb1 2026',  label: 'Jan26–Feb1'  },
-  { name: ' Feb2-Feb8 2026',  label: 'Feb2–8'      },
-  { name: 'Feb9-Feb15 2026',  label: 'Feb9–15'     },
-  { name: 'Feb16-Feb22 2026', label: 'Feb16–22'    },
-  { name: 'Feb23-Mar1 2026',  label: 'Feb23–Mar1'  },
-  { name: 'Mar2-Mar8 2026',   label: 'Mar2–8'      },
-  { name: 'Mar9-Mar15 2026',  label: 'Mar9–15'     },
-  { name: 'Mar16-Mar22 2026', label: 'Mar16–22'    }
+  { name: 'Dec28-Jan4 2026',  label: 'Dec28–Jan4',  month: 'January 2026'   },
+  { name: 'Jan5-Jan11 2026',  label: 'Jan5–11',     month: 'January 2026'   },
+  { name: 'Jan12-Jan18 2026', label: 'Jan12–18',    month: 'January 2026'   },
+  { name: 'Jan19-Jan25 2026', label: 'Jan19–25',    month: 'January 2026'   },
+  { name: 'Jan26-Feb1 2026',  label: 'Jan26–Feb1',  month: 'January 2026'   },
+  { name: ' Feb2-Feb8 2026',  label: 'Feb2–8',      month: 'February 2026'  },
+  { name: 'Feb9-Feb15 2026',  label: 'Feb9–15',     month: 'February 2026'  },
+  { name: 'Feb16-Feb22 2026', label: 'Feb16–22',    month: 'February 2026'  },
+  { name: 'Feb23-Mar1 2026',  label: 'Feb23–Mar1',  month: 'February 2026'  },
+  { name: 'Mar2-Mar8 2026',   label: 'Mar2–8',      month: 'March 2026'     },
+  { name: 'Mar9-Mar15 2026',  label: 'Mar9–15',     month: 'March 2026'     },
+  { name: 'Mar16-Mar22 2026', label: 'Mar16–22',    month: 'March 2026'     }
 ];
 
 let charts = {};
@@ -232,15 +239,41 @@ function setStatus(msg, state) {
 }
 
 function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
-function fmtK(n) { return '$' + (n/1000).toFixed(1) + 'k'; }
+
+// 4-week rolling average — null for first 3 points so line starts at week 4
+function rollingAvg(arr, window) {
+  return arr.map((_, i) => {
+    if (i < window - 1) return null;
+    const slice = arr.slice(i - window + 1, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / window;
+  });
+}
+
+// Group weekly totals by month
+function groupByMonth(sheets, totals) {
+  const map = {};
+  sheets.forEach((s, i) => {
+    if (totals[i] !== undefined) {
+      map[s.month] = (map[s.month] || 0) + totals[i];
+    }
+  });
+  return map;
+}
+
+// Current month = the month tag of the last loaded week
+function getCurrentMonth(sheets, loadedCount) {
+  return sheets[loadedCount - 1]?.month || '';
+}
 
 async function loadData() {
   setStatus('Loading...', 'loading');
 
   const data = { trampoline: [], merchandise: [], concessions: [], events: [], attendance: [], totals: [] };
   const labels = [];
+  const loadedSheets = [];
 
-  for (const sheet of SHEETS) {
+  for (let i = 0; i < SHEETS.length; i++) {
+    const sheet = SHEETS[i];
     try {
       const rows = await fetchSheet(sheet.name);
       const t = findVal(rows, 'Trampoline Park');
@@ -257,8 +290,9 @@ async function loadData() {
         data.attendance.push(a);
         data.totals.push(total);
         labels.push(sheet.label);
+        loadedSheets.push(sheet);
       }
-    } catch(e) { console.warn('Skipping:', sheet.name); }
+    } catch(err) { console.warn('Skipping:', sheet.name); }
   }
 
   if (labels.length === 0) {
@@ -267,16 +301,17 @@ async function loadData() {
   }
 
   setStatus('Live · Updated ' + new Date().toLocaleTimeString());
-  updateCards(data, labels);
+  updateCards(data, labels, loadedSheets);
   renderWoW(data.totals, labels);
   renderRevenue(labels, data);
+  renderMonthly(loadedSheets, data.totals);
   renderAttendance(labels, data);
   renderPerCap(labels, data);
 }
 
-function updateCards(data, labels) {
+function updateCards(data, labels, loadedSheets) {
   const totals = data.totals;
-  const total = totals.reduce((a,b) => a+b, 0);
+  const total = totals.reduce((a, b) => a + b, 0);
   const avg = total / totals.length;
   const bestIdx = totals.indexOf(Math.max(...totals));
   const worstIdx = totals.indexOf(Math.min(...totals));
@@ -284,12 +319,20 @@ function updateCards(data, labels) {
     ? ((totals[totals.length-1] - totals[totals.length-2]) / totals[totals.length-2]) * 100
     : 0;
 
+  // Current month card
+  const currentMonth = loadedSheets[loadedSheets.length - 1]?.month || '';
+  const monthTotal = loadedSheets.reduce((sum, s, i) => s.month === currentMonth ? sum + totals[i] : sum, 0);
+  const monthWeeks = loadedSheets.filter(s => s.month === currentMonth).length;
+
   document.getElementById('c-total').textContent = fmt(total);
   document.getElementById('c-avg').textContent = fmt(avg);
   document.getElementById('c-best').textContent = fmt(totals[bestIdx]);
   document.getElementById('c-best-lbl').textContent = labels[bestIdx];
   document.getElementById('c-worst').textContent = fmt(totals[worstIdx]);
   document.getElementById('c-worst-lbl').textContent = labels[worstIdx];
+  document.getElementById('c-month-lbl').textContent = currentMonth + ' Revenue';
+  document.getElementById('c-month').textContent = fmt(monthTotal);
+  document.getElementById('c-month-weeks').textContent = monthWeeks + ' week' + (monthWeeks !== 1 ? 's' : '') + ' recorded';
 
   const wowEl = document.getElementById('c-wow');
   const sign = wow >= 0 ? '+' : '';
@@ -313,7 +356,7 @@ function renderWoW(totals, labels) {
   }
 }
 
-function makeChart(id, type, labels, datasets, yFmt, height) {
+function makeChart(id, type, labels, datasets, yFmt) {
   if (charts[id]) charts[id].destroy();
   charts[id] = new Chart(document.getElementById(id), {
     type,
@@ -326,18 +369,25 @@ function makeChart(id, type, labels, datasets, yFmt, height) {
         tooltip: {
           callbacks: {
             label: ctx => {
-              if (type === 'bar') {
+              if (ctx.dataset.label === '4-wk Avg') {
+                return ctx.dataset.label + ': ' + fmt(ctx.parsed.y);
+              }
+              if (type === 'bar' && ctx.chart.data.datasets.length > 1) {
                 const i = ctx.dataIndex;
-                const total = datasets.reduce((s, d) => s + d.data[i], 0);
-                const pct = ((ctx.parsed.y / total) * 100).toFixed(1);
+                const barDatasets = ctx.chart.data.datasets.filter(d => d.type !== 'line' && d.stack === 'r');
+                const total = barDatasets.reduce((s, d) => s + (d.data[i] || 0), 0);
+                const pct = total > 0 ? ((ctx.parsed.y / total) * 100).toFixed(1) : '0.0';
                 return `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
               }
               return `${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
             },
-            footer: type === 'bar' ? items => {
-              const total = items.reduce((s,i) => s + i.parsed.y, 0);
-              return `Total: ${fmt(total)}`;
-            } : undefined
+            footer: (items) => {
+              const barItems = items.filter(i => i.dataset.label !== '4-wk Avg');
+              if (barItems.length > 0 && type === 'bar') {
+                const total = barItems.reduce((s, i) => s + i.parsed.y, 0);
+                return `Total: ${fmt(total)}`;
+              }
+            }
           }
         }
       },
@@ -358,12 +408,70 @@ function makeChart(id, type, labels, datasets, yFmt, height) {
 }
 
 function renderRevenue(labels, data) {
+  const avg4 = rollingAvg(data.totals, 4);
   makeChart('revenueChart', 'bar', labels, [
-    { label: 'Trampoline Park', data: data.trampoline, backgroundColor: '#378ADD', borderWidth: 0, stack: 'r' },
-    { label: 'Concessions',     data: data.concessions,  backgroundColor: '#1D9E75', borderWidth: 0, stack: 'r' },
-    { label: 'Merchandise',     data: data.merchandise,  backgroundColor: '#EF9F27', borderWidth: 0, stack: 'r' },
-    { label: 'Events',          data: data.events,       backgroundColor: '#D4537E', borderWidth: 0, stack: 'r' }
+    { label: 'Trampoline Park', data: data.trampoline, backgroundColor: '#378ADD', borderWidth: 0, stack: 'r', type: 'bar' },
+    { label: 'Concessions',     data: data.concessions,  backgroundColor: '#1D9E75', borderWidth: 0, stack: 'r', type: 'bar' },
+    { label: 'Merchandise',     data: data.merchandise,  backgroundColor: '#EF9F27', borderWidth: 0, stack: 'r', type: 'bar' },
+    { label: 'Events',          data: data.events,       backgroundColor: '#D4537E', borderWidth: 0, stack: 'r', type: 'bar' },
+    {
+      label: '4-wk Avg',
+      data: avg4,
+      type: 'line',
+      borderColor: '#7F77DD',
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderDash: [5, 4],
+      pointRadius: 3,
+      pointBackgroundColor: '#7F77DD',
+      tension: 0.3,
+      spanGaps: false,
+      order: 0
+    }
   ], v => '$' + (v/1000).toFixed(0) + 'k');
+}
+
+function renderMonthly(loadedSheets, totals) {
+  const monthMap = {};
+  loadedSheets.forEach((s, i) => {
+    monthMap[s.month] = (monthMap[s.month] || 0) + totals[i];
+  });
+  const months = Object.keys(monthMap);
+  const values = months.map(m => monthMap[m]);
+
+  if (charts['monthlyChart']) charts['monthlyChart'].destroy();
+  charts['monthlyChart'] = new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Monthly Revenue',
+        data: values,
+        backgroundColor: ['#378ADD', '#1D9E75', '#EF9F27', '#D4537E'],
+        borderWidth: 0,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => 'Revenue: ' + fmt(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { font: { size: 12 } }, grid: { display: false } },
+        y: {
+          ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', font: { size: 11 } },
+          grid: { color: 'rgba(128,128,128,0.12)' }
+        }
+      }
+    }
+  });
 }
 
 function renderAttendance(labels, data) {
