@@ -3,209 +3,399 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Asheville Weekly Revenue by Category</title>
+  <title>Big Air Asheville — Weekly Performance</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
-      background: #fff;
+      background: #f4f6f9;
       color: #1a1a1a;
-      margin: 0;
-      padding: 24px;
-      box-sizing: border-box;
+      padding: 28px 32px;
     }
-    h1 { font-size: 18px; font-weight: 500; margin: 0 0 4px; }
-    .subtitle { font-size: 13px; color: #666; margin: 0 0 16px; }
-    .legend {
-      display: flex; flex-wrap: wrap; gap: 16px;
-      margin-bottom: 12px; font-size: 12px; color: #555;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #378ADD;
+      padding-bottom: 12px;
     }
-    .legend span { display: flex; align-items: center; gap: 5px; }
-    .legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
-    .chart-wrap { position: relative; width: 100%; height: 420px; }
+    header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+    header p { font-size: 13px; color: #666; margin-top: 3px; }
     #status {
-      font-size: 13px; color: #888; margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: #888;
+      display: flex; align-items: center; gap: 6px;
     }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #1D9E75; display: inline-block;
-    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; display: inline-block; }
     .dot.loading { background: #EF9F27; animation: pulse 1s infinite; }
     .dot.error { background: #c0392b; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     button {
       font-size: 12px; padding: 4px 10px; border-radius: 4px;
-      border: 1px solid #ccc; background: #f5f5f5;
-      cursor: pointer; margin-left: 8px;
+      border: 1px solid #ccc; background: #fff;
+      cursor: pointer;
     }
-    button:hover { background: #e8e8e8; }
+    button:hover { background: #f0f0f0; }
+
+    /* Summary cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 0.5px solid #e0e0e0;
+    }
+    .card .label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .card .value { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+    .card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .card.highlight { border-left: 4px solid #378ADD; }
+
+    /* Chart panels */
+    .panel {
+      background: #fff;
+      border-radius: 10px;
+      border: 0.5px solid #e0e0e0;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .panel-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .panel-sub { font-size: 12px; color: #999; }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      font-size: 12px; color: #555;
+    }
+    .legend span { display: flex; align-items: center; gap: 5px; }
+    .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .chart-wrap { position: relative; width: 100%; }
+
+    /* WoW badge */
+    .wow { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+    .wow.up { background: #e6f7f0; color: #1D9E75; }
+    .wow.down { background: #fdecea; color: #c0392b; }
+    .wow.flat { background: #f0f0f0; color: #888; }
+
+    .footer {
+      font-size: 11px; color: #bbb; text-align: center; margin-top: 24px;
+    }
   </style>
 </head>
 <body>
-  <h1>Asheville Weekly Revenue by Category</h1>
-  <p class="subtitle">Dec 2025 – present &nbsp;|&nbsp; Live from Google Sheets</p>
 
+<header>
+  <div>
+    <h1>Big Air Asheville — Weekly Performance</h1>
+    <p>Revenue, attendance & per cap trends · Dec 2025 – present</p>
+  </div>
   <div id="status">
     <span class="dot loading" id="dot"></span>
-    <span id="status-text">Fetching latest data...</span>
+    <span id="status-text">Loading...</span>
     <button onclick="loadData()">↻ Refresh</button>
   </div>
+</header>
 
-  <div class="legend">
-    <span><span class="legend-swatch" style="background:#378ADD;"></span>Trampoline Park</span>
-    <span><span class="legend-swatch" style="background:#1D9E75;"></span>Concessions</span>
-    <span><span class="legend-swatch" style="background:#EF9F27;"></span>Merchandise</span>
-    <span><span class="legend-swatch" style="background:#D4537E;"></span>Events</span>
+<!-- Summary Cards -->
+<div class="cards" id="cards">
+  <div class="card highlight">
+    <div class="label">Total Revenue (all weeks)</div>
+    <div class="value" id="c-total">—</div>
   </div>
-
-  <div class="chart-wrap">
-    <canvas id="revenueChart" role="img" aria-label="Stacked bar chart showing weekly revenue by category for Asheville">Weekly revenue by category.</canvas>
+  <div class="card">
+    <div class="label">Weekly Average</div>
+    <div class="value" id="c-avg">—</div>
   </div>
+  <div class="card">
+    <div class="label">Best Week</div>
+    <div class="value" id="c-best">—</div>
+    <div class="sub" id="c-best-lbl"></div>
+  </div>
+  <div class="card">
+    <div class="label">Worst Week</div>
+    <div class="value" id="c-worst">—</div>
+    <div class="sub" id="c-worst-lbl"></div>
+  </div>
+  <div class="card">
+    <div class="label">Latest Week vs Prior</div>
+    <div class="value" id="c-wow">—</div>
+    <div class="sub" id="c-wow-lbl"></div>
+  </div>
+</div>
 
-  <script>
-    const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
+<!-- Revenue Chart -->
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Weekly Revenue by Category</div>
+      <div class="panel-sub">Stacked total with week-over-week change</div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#378ADD;"></span>Trampoline Park</span>
+      <span><span class="swatch" style="background:#1D9E75;"></span>Concessions</span>
+      <span><span class="swatch" style="background:#EF9F27;"></span>Merchandise</span>
+      <span><span class="swatch" style="background:#D4537E;"></span>Events</span>
+    </div>
+  </div>
+  <div id="wow-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:22px;"></div>
+  <div class="chart-wrap" style="height:380px;">
+    <canvas id="revenueChart" role="img" aria-label="Stacked bar chart of weekly revenue by category">Weekly revenue by category.</canvas>
+  </div>
+</div>
 
-    const SHEETS = [
-      { name: 'Dec28-Jan4 2026',   label: 'Dec28–Jan4'  },
-      { name: 'Jan5-Jan11 2026',   label: 'Jan5–11'     },
-      { name: 'Jan12-Jan18 2026',  label: 'Jan12–18'    },
-      { name: 'Jan19-Jan25 2026',  label: 'Jan19–25'    },
-      { name: 'Jan26-Feb1 2026',   label: 'Jan26–Feb1'  },
-      { name: ' Feb2-Feb8 2026',   label: 'Feb2–8'      },
-      { name: 'Feb9-Feb15 2026',   label: 'Feb9–15'     },
-      { name: 'Feb16-Feb22 2026',  label: 'Feb16–22'    },
-      { name: 'Feb23-Mar1 2026',   label: 'Feb23–Mar1'  },
-      { name: 'Mar2-Mar8 2026',    label: 'Mar2–8'      },
-      { name: 'Mar9-Mar15 2026',   label: 'Mar9–15'     },
-      { name: 'Mar16-Mar22 2026',  label: 'Mar16–22'    }
-    ];
+<!-- Attendance Chart -->
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Weekly Attendance</div>
+      <div class="panel-sub">Big Air total attendance per week</div>
+    </div>
+  </div>
+  <div class="chart-wrap" style="height:220px;">
+    <canvas id="attendanceChart" role="img" aria-label="Line chart of weekly attendance">Weekly attendance trend.</canvas>
+  </div>
+</div>
 
-    const COL_IDX = 8; // Column I = Totals
+<!-- Per Cap Chart -->
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Revenue Per Guest</div>
+      <div class="panel-sub">Total revenue divided by attendance each week</div>
+    </div>
+  </div>
+  <div class="chart-wrap" style="height:220px;">
+    <canvas id="percapChart" role="img" aria-label="Line chart of revenue per guest">Revenue per guest trend.</canvas>
+  </div>
+</div>
 
-    let chartInstance = null;
+<div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
 
-    function csvUrl(sheetName) {
-      return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-    }
+<script>
+const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
+const COL_IDX = 8;
 
-    async function fetchSheet(sheetName) {
-      const res = await fetch(csvUrl(sheetName));
-      if (!res.ok) throw new Error('Failed: ' + sheetName);
-      const text = await res.text();
-      return Papa.parse(text, { skipEmptyLines: false }).data;
-    }
+const SHEETS = [
+  { name: 'Dec28-Jan4 2026',  label: 'Dec28–Jan4'  },
+  { name: 'Jan5-Jan11 2026',  label: 'Jan5–11'     },
+  { name: 'Jan12-Jan18 2026', label: 'Jan12–18'    },
+  { name: 'Jan19-Jan25 2026', label: 'Jan19–25'    },
+  { name: 'Jan26-Feb1 2026',  label: 'Jan26–Feb1'  },
+  { name: ' Feb2-Feb8 2026',  label: 'Feb2–8'      },
+  { name: 'Feb9-Feb15 2026',  label: 'Feb9–15'     },
+  { name: 'Feb16-Feb22 2026', label: 'Feb16–22'    },
+  { name: 'Feb23-Mar1 2026',  label: 'Feb23–Mar1'  },
+  { name: 'Mar2-Mar8 2026',   label: 'Mar2–8'      },
+  { name: 'Mar9-Mar15 2026',  label: 'Mar9–15'     },
+  { name: 'Mar16-Mar22 2026', label: 'Mar16–22'    }
+];
 
-    function extractTotals(rows) {
-      // Find a row by searching for a label in column A, then read column I (Totals)
-      function findVal(label) {
-        for (const row of rows) {
-          if (row[0] && row[0].toString().trim().toLowerCase() === label.toLowerCase()) {
-            const cell = row[COL_IDX];
-            if (cell) {
-              const v = cell.replace(/[$,"\s]/g, '');
-              if (v && !isNaN(parseFloat(v))) return parseFloat(v);
-            }
-          }
-        }
-        return 0;
+let charts = {};
+
+function csvUrl(name) {
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+}
+
+async function fetchSheet(name) {
+  const res = await fetch(csvUrl(name));
+  if (!res.ok) throw new Error('Failed: ' + name);
+  const text = await res.text();
+  return Papa.parse(text, { skipEmptyLines: false }).data;
+}
+
+function findVal(rows, label) {
+  for (const row of rows) {
+    if (row[0] && row[0].toString().trim().toLowerCase() === label.toLowerCase()) {
+      const cell = row[COL_IDX];
+      if (cell) {
+        const v = cell.replace(/[$,"\s]/g, '');
+        if (v && !isNaN(parseFloat(v))) return parseFloat(v);
       }
-      return {
-        trampoline:  findVal('Trampoline Park'),
-        merchandise: findVal('Merchandise'),
-        concessions: findVal('Concessions'),
-        events:      findVal('Events')
-      };
     }
+  }
+  return 0;
+}
 
-    function setStatus(msg, state) {
-      document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
-      document.getElementById('status-text').textContent = msg;
-    }
+function setStatus(msg, state) {
+  document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
+  document.getElementById('status-text').textContent = msg;
+}
 
-    async function loadData() {
-      setStatus('Fetching latest data...', 'loading');
+function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+function fmtK(n) { return '$' + (n/1000).toFixed(1) + 'k'; }
 
-      const data = { trampoline: [], merchandise: [], concessions: [], events: [] };
-      const labels = [];
+async function loadData() {
+  setStatus('Loading...', 'loading');
 
-      for (const sheet of SHEETS) {
-        try {
-          const rows = await fetchSheet(sheet.name);
-          const vals = extractTotals(rows);
-          const total = vals.trampoline + vals.merchandise + vals.concessions + vals.events;
-          if (total > 0) {
-            data.trampoline.push(vals.trampoline);
-            data.merchandise.push(vals.merchandise);
-            data.concessions.push(vals.concessions);
-            data.events.push(vals.events);
-            labels.push(sheet.label);
-          }
-        } catch(e) {
-          console.warn('Skipping sheet:', sheet.name, e);
-        }
+  const data = { trampoline: [], merchandise: [], concessions: [], events: [], attendance: [], totals: [] };
+  const labels = [];
+
+  for (const sheet of SHEETS) {
+    try {
+      const rows = await fetchSheet(sheet.name);
+      const t = findVal(rows, 'Trampoline Park');
+      const m = findVal(rows, 'Merchandise');
+      const c = findVal(rows, 'Concessions');
+      const e = findVal(rows, 'Events');
+      const a = findVal(rows, 'Big Air Total Attendance');
+      const total = t + m + c + e;
+      if (total > 0) {
+        data.trampoline.push(t);
+        data.merchandise.push(m);
+        data.concessions.push(c);
+        data.events.push(e);
+        data.attendance.push(a);
+        data.totals.push(total);
+        labels.push(sheet.label);
       }
+    } catch(e) { console.warn('Skipping:', sheet.name); }
+  }
 
-      if (labels.length === 0) {
-        setStatus('Could not load data. Make sure the sheet is set to "Anyone with the link can view".', 'error');
-        return;
-      }
+  if (labels.length === 0) {
+    setStatus('Could not load data.', 'error');
+    return;
+  }
 
-      setStatus('Live data · Last updated ' + new Date().toLocaleTimeString());
-      renderChart(labels, data);
-    }
+  setStatus('Live · Updated ' + new Date().toLocaleTimeString());
+  updateCards(data, labels);
+  renderWoW(data.totals, labels);
+  renderRevenue(labels, data);
+  renderAttendance(labels, data);
+  renderPerCap(labels, data);
+}
 
-    function renderChart(labels, data) {
-      if (chartInstance) chartInstance.destroy();
-      chartInstance = new Chart(document.getElementById('revenueChart'), {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Trampoline Park', data: data.trampoline, backgroundColor: '#378ADD', borderWidth: 0, stack: 'revenue' },
-            { label: 'Concessions',     data: data.concessions,  backgroundColor: '#1D9E75', borderWidth: 0, stack: 'revenue' },
-            { label: 'Merchandise',     data: data.merchandise,  backgroundColor: '#EF9F27', borderWidth: 0, stack: 'revenue' },
-            { label: 'Events',          data: data.events,       backgroundColor: '#D4537E', borderWidth: 0, stack: 'revenue' }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: ctx => {
-                  const i = ctx.dataIndex;
-                  const total = data.trampoline[i] + data.concessions[i] + data.merchandise[i] + data.events[i];
-                  const pct = ((ctx.parsed.y / total) * 100).toFixed(1);
-                  return `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en-US', {maximumFractionDigits: 0})} (${pct}%)`;
-                },
-                footer: items => {
-                  const total = items.reduce((s, i) => s + i.parsed.y, 0);
-                  return `Total: $${total.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
-                }
+function updateCards(data, labels) {
+  const totals = data.totals;
+  const total = totals.reduce((a,b) => a+b, 0);
+  const avg = total / totals.length;
+  const bestIdx = totals.indexOf(Math.max(...totals));
+  const worstIdx = totals.indexOf(Math.min(...totals));
+  const wow = totals.length > 1
+    ? ((totals[totals.length-1] - totals[totals.length-2]) / totals[totals.length-2]) * 100
+    : 0;
+
+  document.getElementById('c-total').textContent = fmt(total);
+  document.getElementById('c-avg').textContent = fmt(avg);
+  document.getElementById('c-best').textContent = fmt(totals[bestIdx]);
+  document.getElementById('c-best-lbl').textContent = labels[bestIdx];
+  document.getElementById('c-worst').textContent = fmt(totals[worstIdx]);
+  document.getElementById('c-worst-lbl').textContent = labels[worstIdx];
+
+  const wowEl = document.getElementById('c-wow');
+  const sign = wow >= 0 ? '+' : '';
+  wowEl.textContent = sign + wow.toFixed(1) + '%';
+  wowEl.style.color = wow >= 0 ? '#1D9E75' : '#c0392b';
+  document.getElementById('c-wow-lbl').textContent = labels[labels.length-1] + ' vs prior week';
+}
+
+function renderWoW(totals, labels) {
+  const container = document.getElementById('wow-badges');
+  container.innerHTML = '';
+  for (let i = 1; i < totals.length; i++) {
+    const pct = ((totals[i] - totals[i-1]) / totals[i-1]) * 100;
+    const sign = pct >= 0 ? '+' : '';
+    const cls = pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat';
+    const badge = document.createElement('span');
+    badge.className = 'wow ' + cls;
+    badge.title = labels[i];
+    badge.textContent = sign + pct.toFixed(1) + '%';
+    container.appendChild(badge);
+  }
+}
+
+function makeChart(id, type, labels, datasets, yFmt, height) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), {
+    type,
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (type === 'bar') {
+                const i = ctx.dataIndex;
+                const total = datasets.reduce((s, d) => s + d.data[i], 0);
+                const pct = ((ctx.parsed.y / total) * 100).toFixed(1);
+                return `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
               }
-            }
-          },
-          scales: {
-            x: {
-              stacked: true,
-              ticks: { font: { size: 11 }, autoSkip: false, maxRotation: 40 },
-              grid: { display: false }
+              return `${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
             },
-            y: {
-              stacked: true,
-              ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 11 } },
-              grid: { color: 'rgba(128,128,128,0.15)' }
-            }
+            footer: type === 'bar' ? items => {
+              const total = items.reduce((s,i) => s + i.parsed.y, 0);
+              return `Total: ${fmt(total)}`;
+            } : undefined
           }
         }
-      });
+      },
+      scales: {
+        x: {
+          stacked: type === 'bar',
+          ticks: { font: { size: 11 }, autoSkip: false, maxRotation: 40 },
+          grid: { display: false }
+        },
+        y: {
+          stacked: type === 'bar',
+          ticks: { callback: yFmt, font: { size: 11 } },
+          grid: { color: 'rgba(128,128,128,0.12)' }
+        }
+      }
     }
+  });
+}
 
-    loadData();
-  </script>
+function renderRevenue(labels, data) {
+  makeChart('revenueChart', 'bar', labels, [
+    { label: 'Trampoline Park', data: data.trampoline, backgroundColor: '#378ADD', borderWidth: 0, stack: 'r' },
+    { label: 'Concessions',     data: data.concessions,  backgroundColor: '#1D9E75', borderWidth: 0, stack: 'r' },
+    { label: 'Merchandise',     data: data.merchandise,  backgroundColor: '#EF9F27', borderWidth: 0, stack: 'r' },
+    { label: 'Events',          data: data.events,       backgroundColor: '#D4537E', borderWidth: 0, stack: 'r' }
+  ], v => '$' + (v/1000).toFixed(0) + 'k');
+}
+
+function renderAttendance(labels, data) {
+  makeChart('attendanceChart', 'line', labels, [{
+    label: 'Attendance',
+    data: data.attendance,
+    borderColor: '#378ADD',
+    backgroundColor: 'rgba(55,138,221,0.08)',
+    borderWidth: 2,
+    pointRadius: 4,
+    pointBackgroundColor: '#378ADD',
+    fill: true,
+    tension: 0.3
+  }], v => Math.round(v).toLocaleString());
+}
+
+function renderPerCap(labels, data) {
+  const percap = data.totals.map((t, i) => data.attendance[i] > 0 ? t / data.attendance[i] : 0);
+  makeChart('percapChart', 'line', labels, [{
+    label: 'Revenue per Guest',
+    data: percap,
+    borderColor: '#D4537E',
+    backgroundColor: 'rgba(212,83,126,0.08)',
+    borderWidth: 2,
+    pointRadius: 4,
+    pointBackgroundColor: '#D4537E',
+    fill: true,
+    tension: 0.3
+  }], v => '$' + v.toFixed(2));
+}
+
+loadData();
+</script>
 </body>
 </html>
