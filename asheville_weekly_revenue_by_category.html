@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asheville Weekly Revenue by Category</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    h1 { font-size: 18px; font-weight: 500; margin: 0 0 4px; }
+    .subtitle { font-size: 13px; color: #666; margin: 0 0 16px; }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      margin-bottom: 12px; font-size: 12px; color: #555;
+    }
+    .legend span { display: flex; align-items: center; gap: 5px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
+    .chart-wrap { position: relative; width: 100%; height: 420px; }
+    #status {
+      font-size: 13px; color: #888; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #1D9E75; display: inline-block;
+    }
+    .dot.loading { background: #EF9F27; animation: pulse 1s infinite; }
+    .dot.error { background: #c0392b; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    button {
+      font-size: 12px; padding: 4px 10px; border-radius: 4px;
+      border: 1px solid #ccc; background: #f5f5f5;
+      cursor: pointer; margin-left: 8px;
+    }
+    button:hover { background: #e8e8e8; }
+  </style>
+</head>
+<body>
+  <h1>Asheville Weekly Revenue by Category</h1>
+  <p class="subtitle">Dec 2025 – present &nbsp;|&nbsp; Live from Google Sheets</p>
+
+  <div id="status">
+    <span class="dot loading" id="dot"></span>
+    <span id="status-text">Fetching latest data...</span>
+    <button onclick="loadData()">↻ Refresh</button>
+  </div>
+
+  <div class="legend">
+    <span><span class="legend-swatch" style="background:#378ADD;"></span>Trampoline Park</span>
+    <span><span class="legend-swatch" style="background:#1D9E75;"></span>Concessions</span>
+    <span><span class="legend-swatch" style="background:#EF9F27;"></span>Merchandise</span>
+    <span><span class="legend-swatch" style="background:#D4537E;"></span>Events</span>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="revenueChart" role="img" aria-label="Stacked bar chart showing weekly revenue by category for Asheville">Weekly revenue by category.</canvas>
+  </div>
+
+  <script>
+    const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
+
+    const SHEETS = [
+      { name: 'Dec28-Jan4 2026',   label: 'Dec28–Jan4'  },
+      { name: 'Jan5-Jan11 2026',   label: 'Jan5–11'     },
+      { name: 'Jan12-Jan18 2026',  label: 'Jan12–18'    },
+      { name: 'Jan19-Jan25 2026',  label: 'Jan19–25'    },
+      { name: 'Jan26-Feb1 2026',   label: 'Jan26–Feb1'  },
+      { name: ' Feb2-Feb8 2026',   label: 'Feb2–8'      },
+      { name: 'Feb9-Feb15 2026',   label: 'Feb9–15'     },
+      { name: 'Feb16-Feb22 2026',  label: 'Feb16–22'    },
+      { name: 'Feb23-Mar1 2026',   label: 'Feb23–Mar1'  },
+      { name: 'Mar2-Mar8 2026',    label: 'Mar2–8'      },
+      { name: 'Mar9-Mar15 2026',   label: 'Mar9–15'     },
+      { name: 'Mar16-Mar22 2026',  label: 'Mar16–22'    }
+    ];
+
+    // Google Sheets rows are 1-indexed; subtract 1 for 0-indexed array
+    // Trampoline=row9→8, Merchandise=row11→10, Concessions=row14→13, Events=row17→16
+    // Column I = index 8
+    const ROW_MAP = { trampoline: 8, merchandise: 10, concessions: 13, events: 16 };
+    const COL_IDX = 8;
+
+    let chartInstance = null;
+
+    function csvUrl(sheetName) {
+      return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+    }
+
+    async function fetchSheet(sheetName) {
+      const res = await fetch(csvUrl(sheetName));
+      if (!res.ok) throw new Error('Failed: ' + sheetName);
+      const text = await res.text();
+      return Papa.parse(text, { skipEmptyLines: false }).data;
+    }
+
+    function extractTotals(rows) {
+      function getVal(rowIdx) {
+        const row = rows[rowIdx];
+        if (!row) return 0;
+        // Read column I (index 8) — the Totals column
+        const cell = row[COL_IDX];
+        if (cell) {
+          const v = cell.replace(/[$,"\s]/g, '');
+          if (v && !isNaN(parseFloat(v))) return parseFloat(v);
+        }
+        return 0;
+      }
+      return {
+        trampoline: getVal(ROW_MAP.trampoline),
+        merchandise: getVal(ROW_MAP.merchandise),
+        concessions: getVal(ROW_MAP.concessions),
+        events:      getVal(ROW_MAP.events)
+      };
+    }
+
+    function setStatus(msg, state) {
+      document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
+      document.getElementById('status-text').textContent = msg;
+    }
+
+    async function loadData() {
+      setStatus('Fetching latest data...', 'loading');
+
+      const data = { trampoline: [], merchandise: [], concessions: [], events: [] };
+      const labels = [];
+
+      for (const sheet of SHEETS) {
+        try {
+          const rows = await fetchSheet(sheet.name);
+          const vals = extractTotals(rows);
+          const total = vals.trampoline + vals.merchandise + vals.concessions + vals.events;
+          if (total > 0) {
+            data.trampoline.push(vals.trampoline);
+            data.merchandise.push(vals.merchandise);
+            data.concessions.push(vals.concessions);
+            data.events.push(vals.events);
+            labels.push(sheet.label);
+          }
+        } catch(e) {
+          console.warn('Skipping sheet:', sheet.name, e);
+        }
+      }
+
+      if (labels.length === 0) {
+        setStatus('Could not load data. Make sure the sheet is set to "Anyone with the link can view".', 'error');
+        return;
+      }
+
+      setStatus('Live data · Last updated ' + new Date().toLocaleTimeString());
+      renderChart(labels, data);
+    }
+
+    function renderChart(labels, data) {
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(document.getElementById('revenueChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Trampoline Park', data: data.trampoline, backgroundColor: '#378ADD', borderWidth: 0, stack: 'revenue' },
+            { label: 'Concessions',     data: data.concessions,  backgroundColor: '#1D9E75', borderWidth: 0, stack: 'revenue' },
+            { label: 'Merchandise',     data: data.merchandise,  backgroundColor: '#EF9F27', borderWidth: 0, stack: 'revenue' },
+            { label: 'Events',          data: data.events,       backgroundColor: '#D4537E', borderWidth: 0, stack: 'revenue' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const i = ctx.dataIndex;
+                  const total = data.trampoline[i] + data.concessions[i] + data.merchandise[i] + data.events[i];
+                  const pct = ((ctx.parsed.y / total) * 100).toFixed(1);
+                  return `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en-US', {maximumFractionDigits: 0})} (${pct}%)`;
+                },
+                footer: items => {
+                  const total = items.reduce((s, i) => s + i.parsed.y, 0);
+                  return `Total: $${total.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: { font: { size: 11 }, autoSkip: false, maxRotation: 40 },
+              grid: { display: false }
+            },
+            y: {
+              stacked: true,
+              ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 11 } },
+              grid: { color: 'rgba(128,128,128,0.15)' }
+            }
+          }
+        }
+      });
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
