@@ -386,28 +386,37 @@ function estimateHours(shift) {
 }
 
 function parseSchedule(rows, sheetName) {
-  // Row 0 = header row with day names
-  // Column A (index 0) = Last Name, Column B (index 1) = First Name
-  // Days start somewhere after column B
+  // Layout: Col A (0)=empty, Col B (1)=First Name, Col C-I (2-8)=Sun-Sat
+  // Row 0 = headers, Row 1+ = employee data
   const header = rows[0] || [];
+
+  // Find day columns by matching header text
   const dayCols = {};
   DAYS.forEach(d => {
     const idx = header.findIndex(h => h && h.toString().trim().toLowerCase() === d.toLowerCase());
     if (idx >= 0) dayCols[d] = idx;
   });
 
+  // Fallback: if headers not found, use fixed positions C-I (index 2-8)
+  if (Object.keys(dayCols).length === 0) {
+    DAYS.forEach((d, i) => { dayCols[d] = i + 2; });
+  }
+
   const employees = [];
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
+    // Last Name in col A (index 0), First Name in col B (index 1)
     const firstName = row[1] ? row[1].toString().trim() : '';
     const lastName  = row[0] ? row[0].toString().trim() : '';
-    const name = firstName + (lastName ? ' ' + lastName : '');
     if (!firstName) continue;
+    const name = firstName + (lastName ? ' ' + lastName : '');
 
     const shifts = DAYS.map(d => {
       const col = dayCols[d];
       if (col === undefined) return '';
-      return row[col] ? row[col].toString().trim() : '';
+      const val = row[col] ? row[col].toString().trim() : '';
+      // Clean up any stray characters
+      return val.replace(/[^0-9:\-\s\.]/g, '').trim();
     });
 
     const shiftCount = shifts.filter(s => s !== '').length;
@@ -426,7 +435,7 @@ function parseSchedule(rows, sheetName) {
         let m = parseTimeToMinutes(parts[1]);
         if (m !== null) {
           const startM = parts[0] ? parseTimeToMinutes(parts[0]) : 0;
-          if (m < (startM || 0)) m += 12 * 60;
+          if (startM !== null && m < startM) m += 12 * 60;
           if (m > latestMin) latestMin = m;
         }
       }
