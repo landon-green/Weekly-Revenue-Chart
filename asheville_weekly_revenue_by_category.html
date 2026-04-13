@@ -84,7 +84,7 @@
 <header>
   <div>
     <h1>Big Air Asheville — Weekly Performance</h1>
-    <p>Revenue, attendance & per cap trends · Dec 2025 – present</p>
+    <p>Revenue, attendance & per cap trends · Auto-updating from Google Sheets</p>
   </div>
   <div id="status">
     <span class="dot loading" id="dot"></span>
@@ -189,32 +189,60 @@
 
 <script>
 const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
-const COL_IDX = 8;
+const API_KEY  = 'AIzaSyAhXmcuN44JX5-8M-CaOevdtp7yrgWvRMQ';
+const COL_IDX  = 8; // Column I = Totals
 
-// Each sheet has a month tag for grouping
-const SHEETS = [
-  { name: 'Dec28-Jan4 2026',  label: 'Dec28–Jan4',  month: 'January 2026'   },
-  { name: 'Jan5-Jan11 2026',  label: 'Jan5–11',     month: 'January 2026'   },
-  { name: 'Jan12-Jan18 2026', label: 'Jan12–18',    month: 'January 2026'   },
-  { name: 'Jan19-Jan25 2026', label: 'Jan19–25',    month: 'January 2026'   },
-  { name: 'Jan26-Feb1 2026',  label: 'Jan26–Feb1',  month: 'January 2026'   },
-  { name: ' Feb2-Feb8 2026',  label: 'Feb2–8',      month: 'February 2026'  },
-  { name: 'Feb9-Feb15 2026',  label: 'Feb9–15',     month: 'February 2026'  },
-  { name: 'Feb16-Feb22 2026', label: 'Feb16–22',    month: 'February 2026'  },
-  { name: 'Feb23-Mar1 2026',  label: 'Feb23–Mar1',  month: 'February 2026'  },
-  { name: 'Mar2-Mar8 2026',   label: 'Mar2–8',      month: 'March 2026'     },
-  { name: 'Mar9-Mar15 2026',  label: 'Mar9–15',     month: 'March 2026'     },
-  { name: 'Mar16-Mar22 2026', label: 'Mar16–22',    month: 'March 2026'     }
-];
+// Sheets to skip (template/empty tabs)
+const SKIP_SHEETS = ['template', 'sheet1'];
 
 let charts = {};
 
-function csvUrl(name) {
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+function setStatus(msg, state) {
+  document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
+  document.getElementById('status-text').textContent = msg;
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
+// Fetch all sheet tab names via the Sheets API
+async function fetchSheetNames() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?key=${API_KEY}&fields=sheets.properties`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Could not fetch sheet list');
+  const json = await res.json();
+  return json.sheets
+    .map(s => s.properties.title)
+    .filter(name => !SKIP_SHEETS.includes(name.trim().toLowerCase()));
+}
+
+// Convert a sheet name like "Jan5-Jan11 2026" into a month label like "January 2026"
+function sheetToMonth(name) {
+  const months = {
+    jan: 'January', feb: 'February', mar: 'March', apr: 'April',
+    may: 'May', jun: 'June', jul: 'July', aug: 'August',
+    sep: 'September', oct: 'October', nov: 'November', dec: 'December'
+  };
+  // Extract year
+  const yearMatch = name.match(/\d{4}/);
+  const year = yearMatch ? yearMatch[0] : '';
+  // Find the latest month mentioned in the sheet name (e.g. "Jan26-Feb1" → February)
+  const parts = name.toLowerCase().replace(/\d{4}/, '').match(/[a-z]+/g) || [];
+  let month = '';
+  for (const part of parts) {
+    const key = part.substring(0, 3);
+    if (months[key]) month = months[key];
+  }
+  return month && year ? `${month} ${year}` : name;
+}
+
+// Shorten sheet name to a chart label like "Jan5–11"
+function sheetToLabel(name) {
+  return name.replace(/\s*\d{4}/, '').replace(/-/g, '–').trim();
 }
 
 async function fetchSheet(name) {
-  const res = await fetch(csvUrl(name));
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed: ' + name);
   const text = await res.text();
   return Papa.parse(text, { skipEmptyLines: false }).data;
@@ -233,14 +261,6 @@ function findVal(rows, label) {
   return 0;
 }
 
-function setStatus(msg, state) {
-  document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
-  document.getElementById('status-text').textContent = msg;
-}
-
-function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
-
-// 4-week rolling average — null for first 3 points so line starts at week 4
 function rollingAvg(arr, window) {
   return arr.map((_, i) => {
     if (i < window - 1) return null;
@@ -249,33 +269,24 @@ function rollingAvg(arr, window) {
   });
 }
 
-// Group weekly totals by month
-function groupByMonth(sheets, totals) {
-  const map = {};
-  sheets.forEach((s, i) => {
-    if (totals[i] !== undefined) {
-      map[s.month] = (map[s.month] || 0) + totals[i];
-    }
-  });
-  return map;
-}
-
-// Current month = the month tag of the last loaded week
-function getCurrentMonth(sheets, loadedCount) {
-  return sheets[loadedCount - 1]?.month || '';
-}
-
 async function loadData() {
   setStatus('Loading...', 'loading');
 
+  let sheetNames;
+  try {
+    sheetNames = await fetchSheetNames();
+  } catch(e) {
+    setStatus('Could not load sheet list. Check API key.', 'error');
+    return;
+  }
+
   const data = { trampoline: [], merchandise: [], concessions: [], events: [], attendance: [], totals: [] };
   const labels = [];
-  const loadedSheets = [];
+  const months = [];
 
-  for (let i = 0; i < SHEETS.length; i++) {
-    const sheet = SHEETS[i];
+  for (const name of sheetNames) {
     try {
-      const rows = await fetchSheet(sheet.name);
+      const rows = await fetchSheet(name);
       const t = findVal(rows, 'Trampoline Park');
       const m = findVal(rows, 'Merchandise');
       const c = findVal(rows, 'Concessions');
@@ -289,27 +300,27 @@ async function loadData() {
         data.events.push(e);
         data.attendance.push(a);
         data.totals.push(total);
-        labels.push(sheet.label);
-        loadedSheets.push(sheet);
+        labels.push(sheetToLabel(name));
+        months.push(sheetToMonth(name));
       }
-    } catch(err) { console.warn('Skipping:', sheet.name); }
+    } catch(err) { console.warn('Skipping:', name); }
   }
 
   if (labels.length === 0) {
-    setStatus('Could not load data.', 'error');
+    setStatus('No data found. Make sure the sheet is set to "Anyone with link can view".', 'error');
     return;
   }
 
   setStatus('Live · Updated ' + new Date().toLocaleTimeString());
-  updateCards(data, labels, loadedSheets);
+  updateCards(data, labels, months);
   renderWoW(data.totals, labels);
   renderRevenue(labels, data);
-  renderMonthly(loadedSheets, data.totals);
+  renderMonthly(months, data.totals);
   renderAttendance(labels, data);
   renderPerCap(labels, data);
 }
 
-function updateCards(data, labels, loadedSheets) {
+function updateCards(data, labels, months) {
   const totals = data.totals;
   const total = totals.reduce((a, b) => a + b, 0);
   const avg = total / totals.length;
@@ -319,10 +330,9 @@ function updateCards(data, labels, loadedSheets) {
     ? ((totals[totals.length-1] - totals[totals.length-2]) / totals[totals.length-2]) * 100
     : 0;
 
-  // Current month card
-  const currentMonth = loadedSheets[loadedSheets.length - 1]?.month || '';
-  const monthTotal = loadedSheets.reduce((sum, s, i) => s.month === currentMonth ? sum + totals[i] : sum, 0);
-  const monthWeeks = loadedSheets.filter(s => s.month === currentMonth).length;
+  const currentMonth = months[months.length - 1];
+  const monthTotal = months.reduce((sum, m, i) => m === currentMonth ? sum + totals[i] : sum, 0);
+  const monthWeeks = months.filter(m => m === currentMonth).length;
 
   document.getElementById('c-total').textContent = fmt(total);
   document.getElementById('c-avg').textContent = fmt(avg);
@@ -369,23 +379,21 @@ function makeChart(id, type, labels, datasets, yFmt) {
         tooltip: {
           callbacks: {
             label: ctx => {
-              if (ctx.dataset.label === '4-wk Avg') {
-                return ctx.dataset.label + ': ' + fmt(ctx.parsed.y);
-              }
-              if (type === 'bar' && ctx.chart.data.datasets.length > 1) {
+              if (ctx.dataset.label === '4-wk Avg') return '4-wk Avg: ' + fmt(ctx.parsed.y);
+              if (type === 'bar' && datasets.length > 1) {
                 const i = ctx.dataIndex;
-                const barDatasets = ctx.chart.data.datasets.filter(d => d.type !== 'line' && d.stack === 'r');
-                const total = barDatasets.reduce((s, d) => s + (d.data[i] || 0), 0);
-                const pct = total > 0 ? ((ctx.parsed.y / total) * 100).toFixed(1) : '0.0';
+                const barDs = datasets.filter(d => d.type !== 'line' && d.stack === 'r');
+                const tot = barDs.reduce((s, d) => s + (d.data[i] || 0), 0);
+                const pct = tot > 0 ? ((ctx.parsed.y / tot) * 100).toFixed(1) : '0.0';
                 return `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
               }
               return `${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
             },
-            footer: (items) => {
+            footer: items => {
               const barItems = items.filter(i => i.dataset.label !== '4-wk Avg');
               if (barItems.length > 0 && type === 'bar') {
-                const total = barItems.reduce((s, i) => s + i.parsed.y, 0);
-                return `Total: ${fmt(total)}`;
+                const tot = barItems.reduce((s, i) => s + i.parsed.y, 0);
+                return `Total: ${fmt(tot)}`;
               }
             }
           }
@@ -431,23 +439,22 @@ function renderRevenue(labels, data) {
   ], v => '$' + (v/1000).toFixed(0) + 'k');
 }
 
-function renderMonthly(loadedSheets, totals) {
+function renderMonthly(months, totals) {
   const monthMap = {};
-  loadedSheets.forEach((s, i) => {
-    monthMap[s.month] = (monthMap[s.month] || 0) + totals[i];
-  });
-  const months = Object.keys(monthMap);
-  const values = months.map(m => monthMap[m]);
+  months.forEach((m, i) => { monthMap[m] = (monthMap[m] || 0) + totals[i]; });
+  const keys = Object.keys(monthMap);
+  const values = keys.map(k => monthMap[k]);
+  const colors = ['#378ADD','#1D9E75','#EF9F27','#D4537E','#7F77DD','#E8763A'];
 
   if (charts['monthlyChart']) charts['monthlyChart'].destroy();
   charts['monthlyChart'] = new Chart(document.getElementById('monthlyChart'), {
     type: 'bar',
     data: {
-      labels: months,
+      labels: keys,
       datasets: [{
         label: 'Monthly Revenue',
         data: values,
-        backgroundColor: ['#378ADD', '#1D9E75', '#EF9F27', '#D4537E'],
+        backgroundColor: keys.map((_, i) => colors[i % colors.length]),
         borderWidth: 0,
         borderRadius: 6
       }]
@@ -457,11 +464,7 @@ function renderMonthly(loadedSheets, totals) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => 'Revenue: ' + fmt(ctx.parsed.y)
-          }
-        }
+        tooltip: { callbacks: { label: ctx => 'Revenue: ' + fmt(ctx.parsed.y) } }
       },
       scales: {
         x: { ticks: { font: { size: 12 } }, grid: { display: false } },
