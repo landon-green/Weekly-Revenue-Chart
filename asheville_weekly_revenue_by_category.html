@@ -188,12 +188,9 @@
 <div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
 
 <script>
-const SHEET_ID = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
-const API_KEY  = 'AIzaSyAhXmcuN44JX5-8M-CaOevdtp7yrgWvRMQ';
-const COL_IDX  = 8; // Column I = Totals
-
-// Sheets to skip (template/empty tabs)
-const SKIP_SHEETS = ['template', 'sheet1'];
+const SHEET_ID   = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxCsLL6TAGfNkqChTvXhH9xWCO6bQhQqSmtgAK1zyS-K7tCncatageNjpfNfy__MUi8Kw/exec';
+const COL_IDX    = 8; // Column I = Totals
 
 let charts = {};
 
@@ -204,15 +201,12 @@ function setStatus(msg, state) {
 
 function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
 
-// Fetch all sheet tab names via the Sheets API
+// Fetch all sheet tab names via Apps Script (no API key needed)
 async function fetchSheetNames() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?key=${API_KEY}&fields=sheets.properties`;
-  const res = await fetch(url);
+  const res = await fetch(APPS_SCRIPT);
   if (!res.ok) throw new Error('Could not fetch sheet list');
   const json = await res.json();
-  return json.sheets
-    .map(s => s.properties.title)
-    .filter(name => !SKIP_SHEETS.includes(name.trim().toLowerCase()));
+  return json.sheets;
 }
 
 // Convert a sheet name like "Jan5-Jan11 2026" into a month label like "January 2026"
@@ -276,7 +270,7 @@ async function loadData() {
   try {
     sheetNames = await fetchSheetNames();
   } catch(e) {
-    setStatus('Could not load sheet list. Check API key.', 'error');
+    setStatus('Could not load sheet list. Check Apps Script deployment.', 'error');
     return;
   }
 
