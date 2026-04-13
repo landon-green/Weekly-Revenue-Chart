@@ -386,22 +386,23 @@ function estimateHours(shift) {
 }
 
 function parseSchedule(rows, sheetName) {
-  // Row 0 = header with day names, find which columns are which day
+  // Row 0 = header row with day names
+  // Column A (index 0) = Last Name, Column B (index 1) = First Name
+  // Days start somewhere after column B
   const header = rows[0] || [];
-  const dayCols = {}; // dayName -> colIndex
+  const dayCols = {};
   DAYS.forEach(d => {
     const idx = header.findIndex(h => h && h.toString().trim().toLowerCase() === d.toLowerCase());
     if (idx >= 0) dayCols[d] = idx;
   });
 
-  const nameColIdx = header.findIndex(h => h && h.toString().trim().toLowerCase().includes('first'));
-  const usedNameCol = nameColIdx >= 0 ? nameColIdx : 0;
-
   const employees = [];
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
-    const name = row[usedNameCol] ? row[usedNameCol].toString().trim() : '';
-    if (!name) continue;
+    const firstName = row[1] ? row[1].toString().trim() : '';
+    const lastName  = row[0] ? row[0].toString().trim() : '';
+    const name = firstName + (lastName ? ' ' + lastName : '');
+    if (!firstName) continue;
 
     const shifts = DAYS.map(d => {
       const col = dayCols[d];
@@ -412,7 +413,6 @@ function parseSchedule(rows, sheetName) {
     const shiftCount = shifts.filter(s => s !== '').length;
     const hours = shifts.reduce((sum, s) => sum + estimateHours(s), 0);
 
-    // Earliest start across all shifts
     let earliestMin = Infinity;
     let latestMin = -Infinity;
     shifts.forEach(s => {
@@ -425,7 +425,6 @@ function parseSchedule(rows, sheetName) {
       if (parts[1]) {
         let m = parseTimeToMinutes(parts[1]);
         if (m !== null) {
-          // PM correction
           const startM = parts[0] ? parseTimeToMinutes(parts[0]) : 0;
           if (m < (startM || 0)) m += 12 * 60;
           if (m > latestMin) latestMin = m;
