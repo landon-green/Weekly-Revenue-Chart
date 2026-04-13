@@ -77,11 +77,66 @@
     .wow.down { background: #fdecea; color: #c0392b; }
     .wow.flat { background: #f0f0f0; color: #888; }
     .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
+    #password-screen {
+      position: fixed;
+      inset: 0;
+      background: #f4f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #password-box {
+      background: #fff;
+      border-radius: 12px;
+      border: 0.5px solid #e0e0e0;
+      padding: 36px 40px;
+      width: 340px;
+      text-align: center;
+    }
+    #password-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    #password-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
+    #password-box input {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 0.5px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    #password-box input:focus { border-color: #378ADD; }
+    #password-box button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #378ADD;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #password-box button:hover { background: #2a6db5; }
+    #password-error { font-size: 12px; color: #c0392b; margin-top: 10px; min-height: 16px; }
+    #main-content { display: none; }
   </style>
 </head>
 <body>
 
-<header>
+<!-- Password Screen -->
+<div id="password-screen">
+  <div id="password-box">
+    <h2>Big Air Asheville</h2>
+    <p>Enter the password to view the dashboard</p>
+    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+    <button onclick="checkPassword()">View Dashboard</button>
+    <div id="password-error"></div>
+  </div>
+</div>
+
+<!-- Main Dashboard -->
+<div id="main-content">
   <div>
     <h1>Big Air Asheville — Weekly Performance</h1>
     <p>Revenue, attendance & per cap trends · Auto-updating from Google Sheets</p>
@@ -187,9 +242,11 @@
 
 <div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
 
+</div> <!-- end main-content -->
+
 <script>
 const SHEET_ID   = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
-const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxCsLL6TAGfNkqChTvXhH9xWCO6bQhQqSmtgAK1zyS-K7tCncatageNjpfNfy__MUi8Kw/exec';
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz3P-guZK4MPPYZkVhmm9kdYXpTWn_cGg7KfKjsanasbUYm4pHn8PQCTu8Y-rBz_pOU1g/exec';
 const COL_IDX    = 8; // Column I = Totals
 
 let charts = {};
@@ -500,7 +557,29 @@ function renderPerCap(labels, data) {
   }], v => '$' + v.toFixed(2));
 }
 
-loadData();
+const CORRECT_PASSWORD = 'Asheville2026!';
+
+function checkPassword() {
+  const input = document.getElementById('password-input').value;
+  if (input === CORRECT_PASSWORD) {
+    sessionStorage.setItem('auth', 'true');
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('password-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+  }
+}
+
+// If already authenticated in this session, skip the password screen
+if (sessionStorage.getItem('auth') === 'true') {
+  document.getElementById('password-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  loadData();
+}
+
 </script>
 </body>
 </html>
