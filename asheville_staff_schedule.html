@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Air Asheville — Staff Schedule</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a1a;
+      padding: 28px 32px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #378ADD;
+      padding-bottom: 12px;
+    }
+    header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+    header p { font-size: 13px; color: #666; margin-top: 3px; }
+    #status { font-size: 12px; color: #888; display: flex; align-items: center; gap: 6px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; display: inline-block; }
+    .dot.loading { background: #EF9F27; animation: pulse 1s infinite; }
+    .dot.error { background: #c0392b; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Password screen */
+    #password-screen {
+      position: fixed;
+      inset: 0;
+      background: #f4f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #password-box {
+      background: #fff;
+      border-radius: 12px;
+      border: 0.5px solid #e0e0e0;
+      padding: 36px 40px;
+      width: 340px;
+      text-align: center;
+    }
+    #password-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    #password-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
+    #password-box input {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 0.5px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    #password-box input:focus { border-color: #378ADD; }
+    #password-box button.primary {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #378ADD;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #password-box button.primary:hover { background: #2a6db5; }
+    #password-error { font-size: 12px; color: #c0392b; margin-top: 10px; min-height: 16px; }
+    #main-content { display: none; }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .controls label { font-size: 13px; color: #666; }
+    select, button.ctrl-btn {
+      font-size: 13px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 0.5px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      color: #1a1a1a;
+    }
+    select:focus, button.ctrl-btn:focus { outline: none; border-color: #378ADD; }
+    button.ctrl-btn:hover { background: #f0f0f0; }
+    button.refresh-btn {
+      font-size: 12px; padding: 4px 10px; border-radius: 4px;
+      border: 1px solid #ccc; background: #fff; cursor: pointer;
+    }
+    button.refresh-btn:hover { background: #f0f0f0; }
+
+    /* Summary cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 0.5px solid #e0e0e0;
+    }
+    .card.highlight { border-left: 4px solid #378ADD; }
+    .card .label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .card .value { font-size: 22px; font-weight: 600; color: #1a1a1a; }
+    .card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
+
+    /* Panel */
+    .panel {
+      background: #fff;
+      border-radius: 10px;
+      border: 0.5px solid #e0e0e0;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .panel-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+
+    /* Legend */
+    .legend {
+      display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; font-size: 12px; color: #555;
+    }
+    .legend span { display: flex; align-items: center; gap: 6px; }
+    .leg-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+
+    /* Schedule table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 700px;
+    }
+    th {
+      background: #f0f4f8;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 12px;
+      color: #555;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th.name-col { text-align: left; }
+    td {
+      padding: 8px 12px;
+      text-align: center;
+      border-bottom: 0.5px solid #f0f0f0;
+      font-size: 13px;
+    }
+    td.name-col {
+      text-align: left;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+    td.shift-open { background: #dbeeff; color: #1a5a8a; font-weight: 600; border-radius: 4px; }
+    td.shift-close { background: #ffd6d6; color: #8a1a1a; font-weight: 600; border-radius: 4px; }
+    td.shift-mid { background: #e8f5e9; color: #1a6a2a; font-weight: 600; border-radius: 4px; }
+    td.shift-off { background: #1a1a1a; color: #555; font-size: 11px; }
+    td.hours-col { font-weight: 600; color: #378ADD; background: #f0f7ff; }
+    tr:hover td { filter: brightness(0.97); }
+
+    .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+<!-- Password Screen -->
+<div id="password-screen">
+  <div id="password-box">
+    <h2>Big Air Asheville</h2>
+    <p>Enter the password to view the staff schedule</p>
+    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+    <button class="primary" onclick="checkPassword()">View Schedule</button>
+    <div id="password-error"></div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div id="main-content">
+
+<header>
+  <div>
+    <h1>Big Air Asheville — Staff Schedule</h1>
+    <p>Park Ops · Live from Google Sheets</p>
+  </div>
+  <div id="status">
+    <span class="dot loading" id="dot"></span>
+    <span id="status-text">Loading...</span>
+    <button class="refresh-btn" onclick="loadSchedule()">↻ Refresh</button>
+  </div>
+</header>
+
+<!-- Summary Cards -->
+<div class="cards">
+  <div class="card highlight">
+    <div class="label">Staff Scheduled</div>
+    <div class="value" id="c-staff">—</div>
+    <div class="sub">this week</div>
+  </div>
+  <div class="card">
+    <div class="label">Total Shifts</div>
+    <div class="value" id="c-shifts">—</div>
+    <div class="sub">across all staff</div>
+  </div>
+  <div class="card">
+    <div class="label">Most Shifts</div>
+    <div class="value" id="c-most">—</div>
+    <div class="sub" id="c-most-name"></div>
+  </div>
+  <div class="card">
+    <div class="label">Earliest Start</div>
+    <div class="value" id="c-early">—</div>
+    <div class="sub" id="c-early-name"></div>
+  </div>
+  <div class="card">
+    <div class="label">Latest Finish</div>
+    <div class="value" id="c-late">—</div>
+    <div class="sub" id="c-late-name"></div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <label>Week:</label>
+  <select id="week-select" onchange="onWeekChange()"></select>
+
+  <label>Sort by:</label>
+  <select id="sort-select" onchange="renderTable()">
+    <option value="default">Default order</option>
+    <option value="alpha">Alphabetical (A–Z)</option>
+    <option value="alpha-desc">Alphabetical (Z–A)</option>
+    <option value="shifts-desc">Most shifts first</option>
+    <option value="shifts-asc">Fewest shifts first</option>
+    <option value="earliest">Earliest start first</option>
+    <option value="latest">Latest finish first</option>
+    <option value="hours-desc">Most hours first</option>
+    <option value="hours-asc">Fewest hours first</option>
+  </select>
+
+  <label>Filter day:</label>
+  <select id="day-filter" onchange="renderTable()">
+    <option value="all">All days</option>
+    <option value="0">Sunday</option>
+    <option value="1">Monday</option>
+    <option value="2">Tuesday</option>
+    <option value="3">Wednesday</option>
+    <option value="4">Thursday</option>
+    <option value="5">Friday</option>
+    <option value="6">Saturday</option>
+  </select>
+</div>
+
+<!-- Schedule Panel -->
+<div class="panel">
+  <div class="panel-title" id="schedule-title">Weekly Schedule</div>
+  <div class="legend">
+    <span><span class="leg-swatch" style="background:#dbeeff;"></span>Opening shift</span>
+    <span><span class="leg-swatch" style="background:#ffd6d6;"></span>Closing shift</span>
+    <span><span class="leg-swatch" style="background:#e8f5e9;"></span>Mid shift</span>
+    <span><span class="leg-swatch" style="background:#1a1a1a;"></span>Off</span>
+  </div>
+  <div id="table-container"></div>
+</div>
+
+<div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
+
+</div> <!-- end main-content -->
+
+<script>
+const SHEET_ID   = '1_ttQGFzfvCFemMwWuc233I3znGQSrRtpiQ06eH5Q1MA';
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyHssPtO7_g_CZwfE-lEj5wlrYjABN1oUzpMXZnoHq8tXn8xKEYicrUV1cWIJi__0I4w/exec';
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const CORRECT_PASSWORD = 'Asheville2026!';
+
+let allSheets = [];
+let currentData = []; // array of { name, shifts: [7 strings], shiftCount, earliestStart, latestEnd, estHours }
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function checkPassword() {
+  const input = document.getElementById('password-input').value;
+  if (input === CORRECT_PASSWORD) {
+    sessionStorage.setItem('schedAuth', 'true');
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('password-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+  }
+}
+if (sessionStorage.getItem('schedAuth') === 'true') {
+  document.getElementById('password-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  init();
+}
+
+function setStatus(msg, state) {
+  document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
+  document.getElementById('status-text').textContent = msg;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  setStatus('Loading...', 'loading');
+  try {
+    const res = await fetch(APPS_SCRIPT + '?sheet=' + SHEET_ID);
+    const json = await res.json();
+    // Filter out non-schedule tabs
+    const skip = ['hours','operational demands','example schedule'];
+    allSheets = (json.sheets || []).filter(n => !skip.some(s => n.toLowerCase().includes(s)));
+    populateWeekSelect();
+    await loadSchedule();
+  } catch(e) {
+    setStatus('Could not load sheet list.', 'error');
+  }
+}
+
+function populateWeekSelect() {
+  const sel = document.getElementById('week-select');
+  sel.innerHTML = '';
+  // Show most recent first
+  [...allSheets].reverse().forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+}
+
+async function onWeekChange() {
+  await loadSchedule();
+}
+
+// ── Fetch & Parse ─────────────────────────────────────────────────────────────
+async function loadSchedule() {
+  const sheetName = document.getElementById('week-select').value;
+  if (!sheetName) return;
+  setStatus('Loading...', 'loading');
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const rows = Papa.parse(text, { skipEmptyLines: false }).data;
+
+    parseSchedule(rows, sheetName);
+    setStatus('Live · Updated ' + new Date().toLocaleTimeString());
+  } catch(e) {
+    setStatus('Could not load schedule.', 'error');
+  }
+}
+
+function parseTimeToMinutes(t) {
+  if (!t) return null;
+  // e.g. "10:15", "3", "9"
+  const parts = t.trim().split(':');
+  let h = parseInt(parts[0]);
+  const m = parts[1] ? parseInt(parts[1]) : 0;
+  return h * 60 + m;
+}
+
+function estimateHours(shift) {
+  if (!shift || shift.trim() === '') return 0;
+  const parts = shift.split('-').map(s => s.trim());
+  if (parts.length < 2) return 0;
+  let start = parseTimeToMinutes(parts[0]);
+  let end = parseTimeToMinutes(parts[1]);
+  if (start === null || end === null) return 0;
+  // Assume AM/PM heuristic: if end < start, end is PM
+  // Start times < 12 are AM, end times are PM if end < start
+  if (end < start) end += 12 * 60; // add 12 hours
+  return Math.max(0, (end - start) / 60);
+}
+
+function parseSchedule(rows, sheetName) {
+  // Row 0 = header with day names, find which columns are which day
+  const header = rows[0] || [];
+  const dayCols = {}; // dayName -> colIndex
+  DAYS.forEach(d => {
+    const idx = header.findIndex(h => h && h.toString().trim().toLowerCase() === d.toLowerCase());
+    if (idx >= 0) dayCols[d] = idx;
+  });
+
+  const nameColIdx = header.findIndex(h => h && h.toString().trim().toLowerCase().includes('first'));
+  const usedNameCol = nameColIdx >= 0 ? nameColIdx : 0;
+
+  const employees = [];
+  for (let r = 1; r < rows.length; r++) {
+    const row = rows[r];
+    const name = row[usedNameCol] ? row[usedNameCol].toString().trim() : '';
+    if (!name) continue;
+
+    const shifts = DAYS.map(d => {
+      const col = dayCols[d];
+      if (col === undefined) return '';
+      return row[col] ? row[col].toString().trim() : '';
+    });
+
+    const shiftCount = shifts.filter(s => s !== '').length;
+    const hours = shifts.reduce((sum, s) => sum + estimateHours(s), 0);
+
+    // Earliest start across all shifts
+    let earliestMin = Infinity;
+    let latestMin = -Infinity;
+    shifts.forEach(s => {
+      if (!s) return;
+      const parts = s.split('-').map(x => x.trim());
+      if (parts[0]) {
+        const m = parseTimeToMinutes(parts[0]);
+        if (m !== null && m < earliestMin) earliestMin = m;
+      }
+      if (parts[1]) {
+        let m = parseTimeToMinutes(parts[1]);
+        if (m !== null) {
+          // PM correction
+          const startM = parts[0] ? parseTimeToMinutes(parts[0]) : 0;
+          if (m < (startM || 0)) m += 12 * 60;
+          if (m > latestMin) latestMin = m;
+        }
+      }
+    });
+
+    employees.push({
+      name,
+      shifts,
+      shiftCount,
+      hours: parseFloat(hours.toFixed(1)),
+      earliestMin: earliestMin === Infinity ? null : earliestMin,
+      latestMin: latestMin === -Infinity ? null : latestMin
+    });
+  }
+
+  currentData = employees;
+  document.getElementById('schedule-title').textContent = sheetName + ' Schedule';
+  updateCards();
+  renderTable();
+}
+
+function minsToTime(m) {
+  if (m === null) return '—';
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  return h + (min > 0 ? ':' + String(min).padStart(2,'0') : '');
+}
+
+// ── Cards ──────────────────────────────────────────────────────────────────────
+function updateCards() {
+  const d = currentData;
+  const totalShifts = d.reduce((s, e) => s + e.shiftCount, 0);
+  const mostShifts = d.reduce((a, b) => b.shiftCount > a.shiftCount ? b : a, d[0] || {});
+  const earliest = d.filter(e => e.earliestMin !== null).reduce((a, b) => b.earliestMin < a.earliestMin ? b : a, d.find(e => e.earliestMin !== null) || {});
+  const latest = d.filter(e => e.latestMin !== null).reduce((a, b) => b.latestMin > a.latestMin ? b : a, d.find(e => e.latestMin !== null) || {});
+
+  document.getElementById('c-staff').textContent = d.length;
+  document.getElementById('c-shifts').textContent = totalShifts;
+  document.getElementById('c-most').textContent = mostShifts.shiftCount || '—';
+  document.getElementById('c-most-name').textContent = mostShifts.name || '';
+  document.getElementById('c-early').textContent = minsToTime(earliest.earliestMin);
+  document.getElementById('c-early-name').textContent = earliest.name || '';
+  document.getElementById('c-late').textContent = minsToTime(latest.latestMin);
+  document.getElementById('c-late-name').textContent = latest.name || '';
+}
+
+// ── Classify shift for color ──────────────────────────────────────────────────
+function shiftClass(shift) {
+  if (!shift || shift.trim() === '') return 'shift-off';
+  const parts = shift.split('-').map(s => s.trim());
+  const startMin = parseTimeToMinutes(parts[0]);
+  if (startMin === null) return 'shift-mid';
+  if (startMin < 12 * 60) return 'shift-open';   // before noon = opener
+  if (startMin >= 15 * 60) return 'shift-close'; // 3pm+ = closer
+  return 'shift-mid';
+}
+
+// ── Render Table ──────────────────────────────────────────────────────────────
+function renderTable() {
+  const sortVal = document.getElementById('sort-select').value;
+  const dayFilter = document.getElementById('day-filter').value;
+
+  let data = [...currentData];
+
+  // Sort
+  switch(sortVal) {
+    case 'alpha':       data.sort((a,b) => a.name.localeCompare(b.name)); break;
+    case 'alpha-desc':  data.sort((a,b) => b.name.localeCompare(a.name)); break;
+    case 'shifts-desc': data.sort((a,b) => b.shiftCount - a.shiftCount); break;
+    case 'shifts-asc':  data.sort((a,b) => a.shiftCount - b.shiftCount); break;
+    case 'earliest':    data.sort((a,b) => (a.earliestMin ?? 9999) - (b.earliestMin ?? 9999)); break;
+    case 'latest':      data.sort((a,b) => (b.latestMin ?? 0) - (a.latestMin ?? 0)); break;
+    case 'hours-desc':  data.sort((a,b) => b.hours - a.hours); break;
+    case 'hours-asc':   data.sort((a,b) => a.hours - b.hours); break;
+  }
+
+  // Determine which days to show
+  const showDays = dayFilter === 'all' ? DAYS : [DAYS[parseInt(dayFilter)]];
+  const showIdxs = showDays.map(d => DAYS.indexOf(d));
+
+  // Filter to only staff working on selected day if filtered
+  let filteredData = data;
+  if (dayFilter !== 'all') {
+    filteredData = data.filter(e => e.shifts[parseInt(dayFilter)] !== '');
+  }
+
+  let html = '<table><thead><tr>';
+  html += '<th class="name-col">Name</th>';
+  showDays.forEach(d => { html += `<th>${d}</th>`; });
+  html += '<th>Shifts</th><th>Est. Hours</th></tr></thead><tbody>';
+
+  filteredData.forEach(emp => {
+    html += '<tr>';
+    html += `<td class="name-col">${emp.name}</td>`;
+    showIdxs.forEach(i => {
+      const shift = emp.shifts[i] || '';
+      const cls = shiftClass(shift);
+      html += `<td class="${cls}">${shift || (cls === 'shift-off' ? 'Off' : '')}</td>`;
+    });
+    html += `<td>${emp.shiftCount}</td>`;
+    html += `<td class="hours-col">${emp.hours > 0 ? emp.hours + ' hrs' : '—'}</td>`;
+    html += '</tr>';
+  });
+
+  if (filteredData.length === 0) {
+    html += `<tr><td colspan="${showDays.length + 3}" style="text-align:center;color:#aaa;padding:24px;">No staff scheduled</td></tr>`;
+  }
+
+  html += '</tbody></table>';
+  document.getElementById('table-container').innerHTML = html;
+}
+</script>
+</body>
+</html>
