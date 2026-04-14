@@ -234,8 +234,13 @@ async function init() {
   try {
     const res = await fetch(APPS_SCRIPT);
     const json = await res.json();
-    const skip = ['hours','operational demands','example schedule','sheet1'];
-    allSheets = (json.sheets || []).filter(n => !skip.some(s => n.toLowerCase().includes(s)));
+    // Only include sheets that match a date pattern like 04/12/26 or 4/12/26
+    const datePattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+    allSheets = (json.sheets || []).filter(n => datePattern.test(n.trim()));
+    if (allSheets.length === 0) {
+      setStatus('No schedule sheets found.', 'error');
+      return;
+    }
     populateWeekSelect();
     await loadSchedule();
   } catch(e) {
@@ -282,7 +287,8 @@ function parseTimeToMinutes(t) {
 
 function estimateHours(shift) {
   if (!shift || shift.trim() === '') return 0;
-  const parts = shift.split('-').map(s => s.trim());
+  // Handle both "4-10" and "4 - 10" and "10:15-4:30"
+  const parts = shift.split(/\s*-\s*/).map(s => s.trim());
   if (parts.length < 2) return 0;
   let start = parseTimeToMinutes(parts[0]);
   let end = parseTimeToMinutes(parts[1]);
@@ -292,18 +298,19 @@ function estimateHours(shift) {
 }
 
 function isRoleHeader(row) {
-  // A role header row has no last name in col A and no shift data in cols C-I
-  // but has text somewhere in the middle columns (merged cell text lands in col B or C)
+  // Role headers are merged cells — their text lands in col C (index 2) or beyond
+  // Col A (last name) and Col B (first name) will both be empty
   const lastName  = row[0] ? row[0].toString().trim() : '';
   const firstName = row[1] ? row[1].toString().trim() : '';
-  const hasShifts = DAYS.some((_, i) => row[i + 2] && row[i + 2].toString().trim() !== '');
-  // If no last name and no first name but has some text in any cell, treat as role header
-  if (!lastName && !firstName && !hasShifts) {
-    const anyText = row.some(c => c && c.toString().trim() !== '');
-    return anyText ? row.find(c => c && c.toString().trim() !== '').toString().trim() : null;
+  if (lastName || firstName) return null; // has a name, not a header
+
+  // Check if any of the day columns (C-I, index 2-8) has text
+  for (let i = 2; i <= 8; i++) {
+    const val = row[i] ? row[i].toString().trim() : '';
+    if (val && isNaN(val) && !val.includes('-')) {
+      return val; // this is the role heading text
+    }
   }
-  // If no last name and first name looks like a heading (no shifts, longer text or known role)
-  if (!lastName && firstName && !hasShifts) return firstName;
   return null;
 }
 
@@ -345,7 +352,8 @@ function parseSchedule(rows, sheetName) {
       const col = dayCols[d];
       if (col === undefined) return '';
       const val = row[col] ? row[col].toString().trim() : '';
-      return val.replace(/[^0-9:\-\s\.]/g, '').trim();
+      // Keep digits, colons, dashes and spaces only
+      return val.replace(/[^0-9:\-\s]/g, '').trim();
     });
 
     const shiftCount = shifts.filter(s => s !== '').length;
@@ -355,7 +363,7 @@ function parseSchedule(rows, sheetName) {
     let latestMin = -Infinity;
     shifts.forEach(s => {
       if (!s) return;
-      const parts = s.split('-').map(x => x.trim());
+      const parts = s.split(/\s*-\s*/).map(x => x.trim());
       if (parts[0]) {
         const m = parseTimeToMinutes(parts[0]);
         if (m !== null && m < earliestMin) earliestMin = m;
@@ -430,7 +438,7 @@ function updateCards() {
 
 function shiftClass(shift) {
   if (!shift || shift.trim() === '') return 'shift-off';
-  const parts = shift.split('-').map(s => s.trim());
+  const parts = shift.split(/\s*-\s*/).map(s => s.trim());
   const startMin = parseTimeToMinutes(parts[0]);
   if (startMin === null) return 'shift-mid';
   if (startMin < 12 * 60) return 'shift-open';
