@@ -79,19 +79,18 @@
     .wow.down { background: #fdecea; color: #c0392b; }
     .wow.flat { background: #f0f0f0; color: #888; }
 
-    /* ── Custom Report ── */
+    /* Custom Report */
     .cr-section-title {
-      font-size: 13px; font-weight: 700; color: #378ADD;
+      font-size: 11px; font-weight: 700; color: #378ADD;
       text-transform: uppercase; letter-spacing: 0.5px;
-      margin: 24px 0 12px; padding-bottom: 6px;
-      border-bottom: 1px solid #e8f0fb;
+      margin: 20px 0 10px; padding-bottom: 5px; border-bottom: 1px solid #e8f0fb;
     }
-    .builder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .builder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 16px; }
     .builder-field label {
       display: block; font-size: 11px; font-weight: 700; color: #666;
       margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px;
     }
-    .builder-field select, .builder-field input[type=text] {
+    .builder-field select, .builder-field input[type=text], .builder-field input[type=date] {
       width: 100%; padding: 9px 12px; font-size: 13px;
       border: 0.5px solid #ccc; border-radius: 6px; background: #fff; outline: none; color: #1a1a1a;
     }
@@ -99,79 +98,64 @@
 
     .category-checks { display: flex; flex-wrap: wrap; gap: 8px; }
     .category-checks label {
-      display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 400;
-      color: #1a1a1a; text-transform: none; letter-spacing: 0; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;
       background: #f8f8f8; padding: 6px 12px; border-radius: 20px;
-      border: 0.5px solid #ddd; transition: all 0.15s;
+      border: 0.5px solid #ddd; transition: all 0.15s; font-weight: 400; color: #1a1a1a;
+      text-transform: none; letter-spacing: 0;
     }
     .category-checks label:hover { border-color: #378ADD; background: #f0f7ff; }
     .category-checks input[type=checkbox] { accent-color: #378ADD; width: 14px; height: 14px; }
     .category-checks label.checked { background: #f0f7ff; border-color: #378ADD; color: #378ADD; font-weight: 500; }
 
     /* Range cards */
-    .ranges-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+    .ranges-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
     .range-card {
       background: #f8f9fb; border: 0.5px solid #e0e0e0; border-radius: 10px;
       padding: 14px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      border-left: 4px solid var(--rc, #378ADD);
     }
-    .range-card .range-label {
+    .range-badge {
       font-size: 12px; font-weight: 700; color: #fff;
-      background: var(--rc, #378ADD); padding: 3px 10px; border-radius: 10px; white-space: nowrap;
+      background: var(--rc, #378ADD); padding: 3px 10px; border-radius: 10px; white-space: nowrap; min-width: 70px; text-align: center;
     }
-    .range-card select { padding: 7px 10px; font-size: 13px; border: 0.5px solid #ccc; border-radius: 6px; background: #fff; outline: none; }
-    .range-card select:focus { border-color: #378ADD; }
-    .range-card .remove-btn {
-      margin-left: auto; font-size: 12px; padding: 5px 12px; border-radius: 6px;
-      border: 0.5px solid #ddd; background: #fff; cursor: pointer; color: #888;
-    }
-    .range-card .remove-btn:hover { border-color: #c0392b; color: #c0392b; }
+    .range-dates { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .range-dates label { font-size: 12px; color: #666; font-weight: 600; }
+    .range-dates input[type=date] { padding: 7px 10px; font-size: 13px; border: 0.5px solid #ccc; border-radius: 6px; background: #fff; outline: none; }
+    .range-dates input[type=date]:focus { border-color: #378ADD; }
+    .remove-btn { margin-left: auto; font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 0.5px solid #ddd; background: #fff; cursor: pointer; color: #888; }
+    .remove-btn:hover { border-color: #c0392b; color: #c0392b; }
 
     .add-range-btn {
       font-size: 13px; padding: 8px 16px; border-radius: 6px;
       border: 1.5px dashed #378ADD; background: #f0f7ff; color: #378ADD;
-      cursor: pointer; font-weight: 500; transition: all 0.15s;
+      cursor: pointer; font-weight: 500;
     }
     .add-range-btn:hover { background: #dbeeff; }
 
-    .generate-btn {
-      padding: 11px 28px; font-size: 14px; font-weight: 600;
-      background: #378ADD; color: #fff; border: none; border-radius: 8px; cursor: pointer;
-    }
+    .generate-btn { padding: 11px 28px; font-size: 14px; font-weight: 600; background: #378ADD; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
     .generate-btn:hover { background: #2a6db5; }
-    .export-btn {
-      padding: 9px 20px; font-size: 13px; font-weight: 500;
-      background: #fff; color: #378ADD; border: 1.5px solid #378ADD;
-      border-radius: 8px; cursor: pointer; transition: all 0.15s;
-    }
+    .export-btn { padding: 9px 20px; font-size: 13px; font-weight: 500; background: #fff; color: #378ADD; border: 1.5px solid #378ADD; border-radius: 8px; cursor: pointer; }
     .export-btn:hover { background: #f0f7ff; }
 
-    #custom-chart-panel { display: none; }
-    #comp-chart-panel   { display: none; }
-    #daily-chart-panel  { display: none; }
-
-    .custom-stat { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; border: 0.5px solid #e0e0e0; min-width: 130px; }
-    .custom-stat .cs-label { font-size: 11px; color: #888; margin-bottom: 4px; }
-    .custom-stat .cs-value { font-size: 17px; font-weight: 600; color: #1a1a1a; }
-    #custom-summary, #comp-summary, #daily-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-
-    /* Mode toggle */
-    .mode-toggle { display: flex; gap: 0; margin-bottom: 24px; border-radius: 8px; overflow: hidden; border: 1px solid #378ADD; width: fit-content; }
-    .mode-btn {
-      padding: 9px 20px; font-size: 13px; font-weight: 500; border: none;
-      background: #fff; color: #378ADD; cursor: pointer; transition: all 0.15s;
-    }
+    .mode-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid #378ADD; width: fit-content; margin-bottom: 20px; }
+    .mode-btn { padding: 9px 20px; font-size: 13px; font-weight: 500; border: none; background: #fff; color: #378ADD; cursor: pointer; }
     .mode-btn.active { background: #378ADD; color: #fff; }
     .mode-btn:hover:not(.active) { background: #f0f7ff; }
 
     .mode-section { display: none; }
     .mode-section.active { display: block; }
 
+    .custom-stat { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; border: 0.5px solid #e0e0e0; min-width: 130px; }
+    .custom-stat .cs-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .custom-stat .cs-value { font-size: 17px; font-weight: 600; color: #1a1a1a; }
+    .stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+
     .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
   </style>
 </head>
 <body>
 
-<!-- Password Screen -->
+<!-- Password -->
 <div id="password-screen">
   <div id="password-box">
     <h2>Big Air Asheville</h2>
@@ -195,13 +179,12 @@
   </div>
 </header>
 
-<!-- Tabs -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
-  <button class="tab-btn" onclick="switchTab('custom', this)">🛠 Custom Report</button>
+  <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('custom',this)">🛠 Custom Report</button>
 </div>
 
-<!-- ══════════════════════ DASHBOARD TAB ══════════════════════ -->
+<!-- ══ DASHBOARD ══ -->
 <div id="tab-dashboard" class="tab-content active">
   <div class="cards">
     <div class="card highlight"><div class="label">Total Revenue (all weeks)</div><div class="value" id="c-total">—</div></div>
@@ -211,7 +194,6 @@
     <div class="card"><div class="label">Worst Week</div><div class="value" id="c-worst">—</div><div class="sub" id="c-worst-lbl"></div></div>
     <div class="card"><div class="label">Latest Week vs Prior</div><div class="value" id="c-wow">—</div><div class="sub" id="c-wow-lbl"></div></div>
   </div>
-
   <div class="panel">
     <div class="panel-header">
       <div><div class="panel-title">Weekly Revenue by Category</div><div class="panel-sub">Stacked bars with 4-week rolling average · hover for % breakdown</div></div>
@@ -226,43 +208,40 @@
     <div id="wow-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:22px;"></div>
     <div class="chart-wrap" style="height:380px;"><canvas id="revenueChart"></canvas></div>
   </div>
-
   <div class="panel">
     <div class="panel-header"><div><div class="panel-title">Monthly Revenue</div><div class="panel-sub">Total revenue aggregated by month</div></div></div>
     <div class="chart-wrap" style="height:260px;"><canvas id="monthlyChart"></canvas></div>
   </div>
-
   <div class="panel">
     <div class="panel-header"><div><div class="panel-title">Weekly Attendance</div><div class="panel-sub">Big Air total attendance per week</div></div></div>
     <div class="chart-wrap" style="height:220px;"><canvas id="attendanceChart"></canvas></div>
   </div>
-
   <div class="panel">
     <div class="panel-header"><div><div class="panel-title">Revenue Per Guest</div><div class="panel-sub">Total revenue divided by attendance each week</div></div></div>
     <div class="chart-wrap" style="height:220px;"><canvas id="percapChart"></canvas></div>
   </div>
 </div>
 
-<!-- ══════════════════════ CUSTOM REPORT TAB ══════════════════════ -->
+<!-- ══ CUSTOM REPORT ══ -->
 <div id="tab-custom" class="tab-content">
 
-  <!-- Mode Toggle -->
   <div class="mode-toggle">
-    <button class="mode-btn active" onclick="switchMode('single', this)">Single Report</button>
-    <button class="mode-btn" onclick="switchMode('compare', this)">Comparative Report</button>
-    <button class="mode-btn" onclick="switchMode('daily', this)">Daily Breakdown</button>
+    <button class="mode-btn active" onclick="switchMode('single',this)">Single Report</button>
+    <button class="mode-btn" onclick="switchMode('compare',this)">Comparative Report</button>
+    <button class="mode-btn" onclick="switchMode('daily',this)">Daily Breakdown</button>
   </div>
 
-  <!-- ── SINGLE REPORT ── -->
+  <!-- ── SINGLE ── -->
   <div id="mode-single" class="mode-section active">
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Custom Report Builder</div><div class="panel-sub">Configure filters and generate a chart</div></div></div>
+      <div class="panel-title" style="margin-bottom:4px;">Single Report Builder</div>
+      <div class="panel-sub" style="margin-bottom:0;">Configure filters and generate a chart</div>
 
       <div class="cr-section-title">Chart Settings</div>
       <div class="builder-grid">
         <div class="builder-field" style="grid-column:span 2;">
           <label>Report Title</label>
-          <input type="text" id="cr-title" placeholder="e.g. Q1 2026 — Concessions & Events Revenue" />
+          <input type="text" id="cr-title" placeholder="e.g. Q1 2026 — Concessions Revenue" />
         </div>
         <div class="builder-field">
           <label>Chart Type</label>
@@ -281,64 +260,63 @@
             <option value="percap">Revenue Per Guest</option>
           </select>
         </div>
-      </div>
-
-      <div class="cr-section-title">Date Range & Grouping</div>
-      <div class="builder-grid">
-        <div class="builder-field">
-          <label>From Week</label>
-          <select id="cr-from"></select>
-        </div>
-        <div class="builder-field">
-          <label>To Week</label>
-          <select id="cr-to"></select>
-        </div>
         <div class="builder-field">
           <label>Group By</label>
           <select id="cr-group">
+            <option value="day">Daily</option>
             <option value="week">Weekly</option>
             <option value="month">Monthly</option>
           </select>
         </div>
       </div>
 
-      <div class="cr-section-title">Categories</div>
-      <div class="builder-field" style="margin-bottom:24px;">
-        <div class="category-checks" id="cr-categories">
-          <label class="checked"><input type="checkbox" value="trampoline" checked onchange="toggleCheck(this)"> Trampoline Park</label>
-          <label class="checked"><input type="checkbox" value="concessions" checked onchange="toggleCheck(this)"> Concessions</label>
-          <label class="checked"><input type="checkbox" value="merchandise" checked onchange="toggleCheck(this)"> Merchandise</label>
-          <label class="checked"><input type="checkbox" value="events" checked onchange="toggleCheck(this)"> Events</label>
-          <label><input type="checkbox" value="total" onchange="toggleCheck(this)"> Total Revenue</label>
+      <div class="cr-section-title">Date Range</div>
+      <div class="builder-grid">
+        <div class="builder-field">
+          <label>Start Date</label>
+          <input type="date" id="cr-start" />
+        </div>
+        <div class="builder-field">
+          <label>End Date</label>
+          <input type="date" id="cr-end" />
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <button class="generate-btn" onclick="generateSingleChart()">Generate Chart</button>
-        <button class="export-btn" id="single-export-btn" style="display:none;" onclick="exportChart('customChart','cr-title')">⬇ Export PNG</button>
+      <div class="cr-section-title">Categories</div>
+      <div class="category-checks" id="cr-categories" style="margin-bottom:24px;">
+        <label class="checked"><input type="checkbox" value="trampoline" checked onchange="toggleCheck(this)"> Trampoline Park</label>
+        <label class="checked"><input type="checkbox" value="concessions" checked onchange="toggleCheck(this)"> Concessions</label>
+        <label class="checked"><input type="checkbox" value="merchandise" checked onchange="toggleCheck(this)"> Merchandise</label>
+        <label class="checked"><input type="checkbox" value="events" checked onchange="toggleCheck(this)"> Events</label>
+        <label><input type="checkbox" value="total" onchange="toggleCheck(this)"> Total Revenue</label>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="generate-btn" onclick="generateSingle()">Generate Chart</button>
+        <button class="export-btn" id="single-export" style="display:none;" onclick="doExport('singleChart','cr-title')">⬇ Export PNG</button>
       </div>
     </div>
-
-    <div class="panel" id="custom-chart-panel">
+    <div class="panel" id="single-out" style="display:none;">
       <div class="panel-header">
-        <div><div class="panel-title" id="custom-chart-title">Custom Report</div><div class="panel-sub" id="custom-chart-sub"></div></div>
-        <div class="legend" id="custom-legend"></div>
+        <div><div class="panel-title" id="single-title">Report</div><div class="panel-sub" id="single-sub"></div></div>
+        <div class="legend" id="single-legend"></div>
       </div>
-      <div id="custom-summary"></div>
-      <div class="chart-wrap" style="height:400px;"><canvas id="customChart"></canvas></div>
+      <div class="stat-row" id="single-stats"></div>
+      <div class="chart-wrap" style="height:400px;"><canvas id="singleChart"></canvas></div>
     </div>
   </div>
 
-  <!-- ── COMPARATIVE REPORT ── -->
+  <!-- ── COMPARE ── -->
   <div id="mode-compare" class="mode-section">
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Comparative Report Builder</div><div class="panel-sub">Compare 2 or more date ranges side by side</div></div></div>
+      <div class="panel-title" style="margin-bottom:4px;">Comparative Report Builder</div>
+      <div class="panel-sub" style="margin-bottom:0;">Compare 2 or more custom date ranges side by side</div>
 
       <div class="cr-section-title">Chart Settings</div>
       <div class="builder-grid">
         <div class="builder-field" style="grid-column:span 2;">
           <label>Report Title</label>
-          <input type="text" id="comp-title" placeholder="e.g. January vs February vs March — Revenue" />
+          <input type="text" id="comp-title" placeholder="e.g. January vs February vs March" />
         </div>
         <div class="builder-field">
           <label>Chart Type</label>
@@ -359,331 +337,354 @@
         <div class="builder-field">
           <label>Group By</label>
           <select id="comp-group">
+            <option value="day">Daily</option>
             <option value="week">Weekly</option>
             <option value="month">Monthly</option>
           </select>
         </div>
       </div>
 
-      <div class="cr-section-title">Categories (for Revenue metric)</div>
-      <div class="builder-field" style="margin-bottom:8px;">
-        <div class="category-checks" id="comp-categories">
-          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
+      <div class="cr-section-title">Categories (Revenue metric)</div>
+      <div class="category-checks" id="comp-categories" style="margin-bottom:8px;">
+        <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
+        <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
+        <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
+        <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
+        <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
+      </div>
+
+      <div class="cr-section-title">Date Ranges</div>
+      <div class="ranges-container" id="comp-ranges"></div>
+      <button class="add-range-btn" onclick="addCompRange()" style="margin-bottom:24px;">+ Add Range</button>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="generate-btn" onclick="generateComp()">Generate Comparison</button>
+        <button class="export-btn" id="comp-export" style="display:none;" onclick="doExport('compChart','comp-title')">⬇ Export PNG</button>
+      </div>
+    </div>
+    <div class="panel" id="comp-out" style="display:none;">
+      <div class="panel-header">
+        <div><div class="panel-title" id="comp-title-out">Comparison</div><div class="panel-sub" id="comp-sub"></div></div>
+        <div class="legend" id="comp-legend"></div>
+      </div>
+      <div class="stat-row" id="comp-stats"></div>
+      <div class="chart-wrap" style="height:420px;"><canvas id="compChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── DAILY ── -->
+  <div id="mode-daily" class="mode-section">
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom:4px;">Daily Breakdown</div>
+      <div class="panel-sub" style="margin-bottom:0;">View revenue or attendance broken down by individual day</div>
+
+      <div class="cr-section-title">Sub-Mode</div>
+      <div class="mode-toggle" style="margin-bottom:20px;">
+        <button class="mode-btn active" onclick="switchDailyMode('single-week',this)">Single Week by Day</button>
+        <button class="mode-btn" onclick="switchDailyMode('same-day',this)">Same Day Across Weeks</button>
+        <button class="mode-btn" onclick="switchDailyMode('date-range',this)">Custom Date Range by Day</button>
+      </div>
+
+      <!-- Single week -->
+      <div id="daily-single-week">
+        <div class="builder-grid">
+          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="dsw-title" placeholder="e.g. Week of Jan 5 — Daily Revenue"/></div>
+          <div class="builder-field"><label>Select Week</label><select id="dsw-week"></select></div>
+          <div class="builder-field"><label>Metric</label><select id="dsw-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
+          <div class="builder-field"><label>Chart Type</label><select id="dsw-chart-type"><option value="bar">Bar</option><option value="line">Line</option><option value="line-area">Area</option></select></div>
+        </div>
+        <div class="cr-section-title">Categories</div>
+        <div class="category-checks" id="dsw-cats" style="margin-bottom:24px;">
+          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
           <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
           <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
           <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
           <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
         </div>
-      </div>
-
-      <div class="cr-section-title">Date Ranges</div>
-      <div class="ranges-container" id="ranges-container"></div>
-      <button class="add-range-btn" onclick="addRange()" style="margin-bottom:24px;">+ Add Range</button>
-
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <button class="generate-btn" onclick="generateCompChart()">Generate Comparison</button>
-        <button class="export-btn" id="comp-export-btn" style="display:none;" onclick="exportChart('compChart','comp-title')">⬇ Export PNG</button>
-      </div>
-    </div>
-
-    <div class="panel" id="comp-chart-panel">
-      <div class="panel-header">
-        <div><div class="panel-title" id="comp-chart-title">Comparative Report</div><div class="panel-sub" id="comp-chart-sub"></div></div>
-        <div class="legend" id="comp-legend"></div>
-      </div>
-      <div id="comp-summary"></div>
-      <div class="chart-wrap" style="height:420px;"><canvas id="compChart"></canvas></div>
-    </div>
-  </div>
-
-  <!-- ── DAILY BREAKDOWN ── -->
-  <div id="mode-daily" class="mode-section">
-    <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Daily Breakdown</div><div class="panel-sub">View revenue by individual day, or compare the same day across multiple weeks</div></div></div>
-
-      <div class="cr-section-title">Daily View Mode</div>
-      <div class="mode-toggle" style="margin-bottom:20px;">
-        <button class="mode-btn active" onclick="switchDailyMode('single-week', this)">Single Week by Day</button>
-        <button class="mode-btn" onclick="switchDailyMode('same-day', this)">Same Day Across Weeks</button>
-      </div>
-
-      <!-- Single week daily view -->
-      <div id="daily-single-week">
-        <div class="cr-section-title">Settings</div>
-        <div class="builder-grid">
-          <div class="builder-field" style="grid-column:span 2;">
-            <label>Report Title</label>
-            <input type="text" id="daily-sw-title" placeholder="e.g. Week of Jan 5 — Daily Revenue" />
-          </div>
-          <div class="builder-field">
-            <label>Select Week</label>
-            <select id="daily-sw-week"></select>
-          </div>
-          <div class="builder-field">
-            <label>Metric</label>
-            <select id="daily-sw-metric">
-              <option value="revenue">Revenue ($)</option>
-              <option value="attendance">Attendance</option>
-            </select>
-          </div>
-          <div class="builder-field">
-            <label>Chart Type</label>
-            <select id="daily-sw-chart-type">
-              <option value="bar">Bar Chart</option>
-              <option value="line">Line Chart</option>
-              <option value="line-area">Area Chart</option>
-            </select>
-          </div>
-        </div>
-        <div class="cr-section-title">Categories</div>
-        <div class="builder-field" style="margin-bottom:24px;">
-          <div class="category-checks" id="daily-sw-categories">
-            <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
-            <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-            <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-            <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-            <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <button class="generate-btn" onclick="generateDailySingleWeek()">Generate Chart</button>
-          <button class="export-btn" id="daily-sw-export-btn" style="display:none;" onclick="exportChart('dailySWChart','daily-sw-title')">⬇ Export PNG</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="generate-btn" onclick="generateDSW()">Generate Chart</button>
+          <button class="export-btn" id="dsw-export" style="display:none;" onclick="doExport('dailyChart','dsw-title')">⬇ Export PNG</button>
         </div>
       </div>
 
       <!-- Same day across weeks -->
       <div id="daily-same-day" style="display:none;">
-        <div class="cr-section-title">Settings</div>
         <div class="builder-grid">
-          <div class="builder-field" style="grid-column:span 2;">
-            <label>Report Title</label>
-            <input type="text" id="daily-sd-title" placeholder="e.g. Every Saturday — Revenue Trend" />
-          </div>
-          <div class="builder-field">
-            <label>Day of Week</label>
-            <select id="daily-sd-day">
-              <option value="0">Sunday</option>
-              <option value="1">Monday</option>
-              <option value="2">Tuesday</option>
-              <option value="3">Wednesday</option>
-              <option value="4">Thursday</option>
-              <option value="5">Friday</option>
-              <option value="6">Saturday</option>
-            </select>
-          </div>
-          <div class="builder-field">
-            <label>From Week</label>
-            <select id="daily-sd-from"></select>
-          </div>
-          <div class="builder-field">
-            <label>To Week</label>
-            <select id="daily-sd-to"></select>
-          </div>
-          <div class="builder-field">
-            <label>Metric</label>
-            <select id="daily-sd-metric">
-              <option value="revenue">Revenue ($)</option>
-              <option value="attendance">Attendance</option>
-            </select>
-          </div>
-          <div class="builder-field">
-            <label>Chart Type</label>
-            <select id="daily-sd-chart-type">
-              <option value="line">Line Chart</option>
-              <option value="line-area">Area Chart</option>
-              <option value="bar">Bar Chart</option>
-            </select>
-          </div>
+          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="dsd-title" placeholder="e.g. Every Saturday — Revenue Trend"/></div>
+          <div class="builder-field"><label>Day of Week</label><select id="dsd-day"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div>
+          <div class="builder-field"><label>Start Date</label><input type="date" id="dsd-start"/></div>
+          <div class="builder-field"><label>End Date</label><input type="date" id="dsd-end"/></div>
+          <div class="builder-field"><label>Metric</label><select id="dsd-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
+          <div class="builder-field"><label>Chart Type</label><select id="dsd-chart-type"><option value="line">Line</option><option value="line-area">Area</option><option value="bar">Bar</option></select></div>
         </div>
         <div class="cr-section-title">Categories</div>
-        <div class="builder-field" style="margin-bottom:24px;">
-          <div class="category-checks" id="daily-sd-categories">
-            <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
-            <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-            <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-            <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-            <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-          </div>
+        <div class="category-checks" id="dsd-cats" style="margin-bottom:24px;">
+          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
+          <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
+          <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
+          <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
+          <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <button class="generate-btn" onclick="generateDailySameDay()">Generate Chart</button>
-          <button class="export-btn" id="daily-sd-export-btn" style="display:none;" onclick="exportChart('dailySDChart','daily-sd-title')">⬇ Export PNG</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="generate-btn" onclick="generateDSD()">Generate Chart</button>
+          <button class="export-btn" id="dsd-export" style="display:none;" onclick="doExport('dailyChart','dsd-title')">⬇ Export PNG</button>
+        </div>
+      </div>
+
+      <!-- Custom date range by day -->
+      <div id="daily-date-range" style="display:none;">
+        <div class="builder-grid">
+          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="ddr-title" placeholder="e.g. Jan 7–20 — Daily Revenue"/></div>
+          <div class="builder-field"><label>Start Date</label><input type="date" id="ddr-start"/></div>
+          <div class="builder-field"><label>End Date</label><input type="date" id="ddr-end"/></div>
+          <div class="builder-field"><label>Metric</label><select id="ddr-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
+          <div class="builder-field"><label>Chart Type</label><select id="ddr-chart-type"><option value="bar">Bar</option><option value="line">Line</option><option value="line-area">Area</option></select></div>
+        </div>
+        <div class="cr-section-title">Categories</div>
+        <div class="category-checks" id="ddr-cats" style="margin-bottom:24px;">
+          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
+          <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
+          <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
+          <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
+          <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="generate-btn" onclick="generateDDR()">Generate Chart</button>
+          <button class="export-btn" id="ddr-export" style="display:none;" onclick="doExport('dailyChart','ddr-title')">⬇ Export PNG</button>
         </div>
       </div>
     </div>
 
-    <!-- Daily chart output -->
-    <div class="panel" id="daily-chart-panel">
+    <div class="panel" id="daily-out" style="display:none;">
       <div class="panel-header">
-        <div><div class="panel-title" id="daily-chart-title">Daily Report</div><div class="panel-sub" id="daily-chart-sub"></div></div>
+        <div><div class="panel-title" id="daily-title">Daily Report</div><div class="panel-sub" id="daily-sub"></div></div>
         <div class="legend" id="daily-legend"></div>
       </div>
-      <div id="daily-summary"></div>
-      <div class="chart-wrap" style="height:380px;"><canvas id="dailySWChart" style="display:none;"></canvas><canvas id="dailySDChart" style="display:none;"></canvas></div>
+      <div class="stat-row" id="daily-stats"></div>
+      <div class="chart-wrap" style="height:380px;"><canvas id="dailyChart"></canvas></div>
     </div>
   </div>
 
 </div><!-- end custom tab -->
 
 <div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
-</div><!-- end main-content -->
+</div>
 
 <script>
 const SHEET_ID    = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
 const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz3P-guZK4MPPYZkVhmm9kdYXpTWn_cGg7KfKjsanasbUYm4pHn8PQCTu8Y-rBz_pOU1g/exec';
 const COL_IDX = 8;
-const DAYS_OF_WEEK = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-// Day column indices in the sheet (cols C-I = indices 2-8)
-const DAY_COL_INDICES = [2,3,4,5,6,7,8];
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const CAT_COLORS = {trampoline:'#378ADD',concessions:'#1D9E75',merchandise:'#EF9F27',events:'#D4537E',total:'#7F77DD'};
+const CAT_LABELS = {trampoline:'Trampoline Park',concessions:'Concessions',merchandise:'Merchandise',events:'Events',total:'Total Revenue'};
+const RANGE_COLORS = ['#378ADD','#D4537E','#1D9E75','#EF9F27','#7F77DD','#E8763A','#9B59B6','#1ABC9C'];
 
-const CAT_COLORS = { trampoline:'#378ADD', concessions:'#1D9E75', merchandise:'#EF9F27', events:'#D4537E', total:'#7F77DD', attendance:'#378ADD', percap:'#D4537E' };
-const CAT_LABELS = { trampoline:'Trampoline Park', concessions:'Concessions', merchandise:'Merchandise', events:'Events', total:'Total Revenue' };
-const RANGE_COLORS = ['#378ADD','#D4537E','#1D9E75','#EF9F27','#7F77DD','#E8763A','#9B59B6','#E67E22'];
-
+// Global state
 let charts = {};
-let globalData   = null; // weekly totals data
+let globalData = null;
 let globalLabels = [];
 let globalMonths = [];
-let globalRawRows = {}; // sheetName -> parsed CSV rows (for daily breakdown)
-let globalSheetNames = []; // original sheet names in order
-let rangeCount = 0;
+let globalSheetNames = [];
+let globalRawRows = {}; // sheetName -> rows
+// dailyIndex: array of {date:Date, sheetName, colIdx, dayName} for every day we have data
+let globalDailyIndex = [];
+let compRangeCount = 0;
 let currentDailyMode = 'single-week';
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
-const CORRECT_PASSWORD = 'Asheville2026!';
+const PW = 'Asheville2026!';
 function checkPassword() {
-  const input = document.getElementById('password-input').value;
-  if (input === CORRECT_PASSWORD) {
+  const v = document.getElementById('password-input').value;
+  if (v === PW) {
     sessionStorage.setItem('auth','true');
-    document.getElementById('password-screen').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('password-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
     loadData();
   } else {
-    document.getElementById('password-error').textContent = 'Incorrect password. Please try again.';
-    document.getElementById('password-input').value = '';
+    document.getElementById('password-error').textContent='Incorrect password.';
+    document.getElementById('password-input').value='';
     document.getElementById('password-input').focus();
   }
 }
-if (sessionStorage.getItem('auth') === 'true') {
-  document.getElementById('password-screen').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
+if (sessionStorage.getItem('auth')==='true') {
+  document.getElementById('password-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
   loadData();
 }
 
-// ── Tabs & Modes ──────────────────────────────────────────────────────────────
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+// ── UI Helpers ────────────────────────────────────────────────────────────────
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
-function switchMode(name, btn) {
-  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+function switchMode(name,btn){
+  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('#tab-custom .mode-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('mode-' + name).classList.add('active');
+  document.querySelectorAll('#tab-custom > .mode-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('mode-'+name).classList.add('active');
 }
-function switchDailyMode(name, btn) {
-  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+function switchDailyMode(name,btn){
+  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  currentDailyMode = name;
-  document.getElementById('daily-single-week').style.display = name === 'single-week' ? 'block' : 'none';
-  document.getElementById('daily-same-day').style.display    = name === 'same-day'    ? 'block' : 'none';
-  document.getElementById('daily-chart-panel').style.display = 'none';
+  currentDailyMode=name;
+  ['single-week','same-day','date-range'].forEach(m=>{
+    document.getElementById('daily-'+m).style.display=m===name?'block':'none';
+  });
+  document.getElementById('daily-out').style.display='none';
 }
-function toggleCheck(el) { el.closest('label').classList.toggle('checked', el.checked); }
+function toggleCheck(el){el.closest('label').classList.toggle('checked',el.checked);}
+function setStatus(msg,state){
+  document.getElementById('dot').className='dot'+(state?' '+state:'');
+  document.getElementById('status-text').textContent=msg;
+}
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function fmtY(metric){
+  if(metric==='attendance')return v=>Math.round(v).toLocaleString();
+  if(metric==='percap')return v=>'$'+v.toFixed(2);
+  return v=>'$'+(v/1000).toFixed(0)+'k';
+}
+function rollingAvg(arr,w){return arr.map((_,i)=>i<w-1?null:arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w);}
+function doExport(canvasId,titleId){
+  const c=document.getElementById(canvasId);
+  const t=(document.getElementById(titleId)?.value||'report').replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  const a=document.createElement('a');a.download=t+'.png';a.href=c.toDataURL('image/png');a.click();
+}
 
-// ── Status & Helpers ──────────────────────────────────────────────────────────
-function setStatus(msg, state) {
-  document.getElementById('dot').className = 'dot' + (state ? ' ' + state : '');
-  document.getElementById('status-text').textContent = msg;
+// ── Parse date from sheet row 2 cell like "1/5/26" ───────────────────────────
+function parseCellDate(str){
+  if(!str)return null;
+  const s=str.toString().trim();
+  const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(!m)return null;
+  let yr=parseInt(m[3]);if(yr<100)yr+=2000;
+  return new Date(yr,parseInt(m[1])-1,parseInt(m[2]));
 }
-function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
-function rollingAvg(arr, w) {
-  return arr.map((_,i) => i < w-1 ? null : arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w);
-}
+function dateToKey(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:''; }
+function inputToDate(str){if(!str)return null;const[y,m,d]=str.split('-');return new Date(parseInt(y),parseInt(m)-1,parseInt(d));}
+function fmtDateShort(d){if(!d)return'';const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${months[d.getMonth()]} ${d.getDate()}`;}
 
-// ── Sheet helpers ─────────────────────────────────────────────────────────────
-async function fetchSheetNames() {
-  const res = await fetch(APPS_SCRIPT);
-  if (!res.ok) throw new Error('Failed');
-  return (await res.json()).sheets;
+// ── Fetch helpers ─────────────────────────────────────────────────────────────
+async function fetchSheetNames(){
+  const res=await fetch(APPS_SCRIPT);
+  if(!res.ok)throw new Error('Failed');
+  return(await res.json()).sheets;
 }
-function sheetToMonth(name) {
-  const months = {jan:'January',feb:'February',mar:'March',apr:'April',may:'May',jun:'June',jul:'July',aug:'August',sep:'September',oct:'October',nov:'November',dec:'December'};
-  const yr = (name.match(/\d{4}/)||[''])[0];
-  const parts = name.toLowerCase().replace(/\d{4}/,'').match(/[a-z]+/g)||[];
-  let month='';
-  for (const p of parts){const k=p.slice(0,3);if(months[k])month=months[k];}
+function sheetToMonth(name){
+  const months={jan:'January',feb:'February',mar:'March',apr:'April',may:'May',jun:'June',jul:'July',aug:'August',sep:'September',oct:'October',nov:'November',dec:'December'};
+  const yr=(name.match(/\d{4}/)||[''])[0];
+  const parts=name.toLowerCase().replace(/\d{4}/,'').match(/[a-z]+/g)||[];
+  let month='';for(const p of parts){const k=p.slice(0,3);if(months[k])month=months[k];}
   return month&&yr?`${month} ${yr}`:name;
 }
-function sheetToLabel(name) { return name.replace(/\s*\d{4}/,'').replace(/-/g,'–').trim(); }
-
-async function fetchSheet(name) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Failed: '+name);
-  return Papa.parse(await res.text(), {skipEmptyLines:false}).data;
+function sheetToLabel(name){return name.replace(/\s*\d{4}/,'').replace(/-/g,'–').trim();}
+async function fetchSheet(name){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+  const res=await fetch(url);if(!res.ok)throw new Error('Failed:'+name);
+  return Papa.parse(await res.text(),{skipEmptyLines:false}).data;
 }
-
-function findVal(rows, label) {
-  for (const row of rows) {
-    if (row[0] && row[0].toString().trim().toLowerCase()===label.toLowerCase()) {
-      const cell = row[COL_IDX];
-      if (cell){const v=cell.replace(/[$,"\s]/g,'');if(v&&!isNaN(parseFloat(v)))return parseFloat(v);}
+function findVal(rows,label){
+  for(const row of rows){
+    if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase()){
+      const cell=row[COL_IDX];
+      if(cell){const v=cell.replace(/[$,"\s]/g,'');if(v&&!isNaN(parseFloat(v)))return parseFloat(v);}
     }
   }
   return 0;
 }
-
-// Find daily values for a given category label — returns array of 7 values (Sun–Sat)
-function findDailyVals(rows, label) {
-  for (const row of rows) {
-    if (row[0] && row[0].toString().trim().toLowerCase()===label.toLowerCase()) {
-      return DAY_COL_INDICES.map(ci => {
-        const cell = row[ci];
-        if (!cell) return 0;
-        const v = cell.replace(/[$,"\s]/g,'');
-        return v && !isNaN(parseFloat(v)) ? parseFloat(v) : 0;
-      });
-    }
+function findRowByLabel(rows,label){
+  for(const row of rows){
+    if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase())return row;
   }
-  return [0,0,0,0,0,0,0];
+  return null;
 }
 
-// ── Main Data Load ────────────────────────────────────────────────────────────
-async function loadData() {
+// Build daily index from raw rows — maps each date to {sheetName, colIdx, dayName}
+function buildDailyIndex(sheetName, rows){
+  // Row 0 = day names, Row 1 = dates (1/5/26 etc), cols 2-8 = Sun-Sat
+  const dateRow = rows[1]||[];
+  for(let col=2;col<=8;col++){
+    const d=parseCellDate(dateRow[col]);
+    if(d){
+      globalDailyIndex.push({date:d,key:dateToKey(d),sheetName,colIdx:col,dayName:DAY_NAMES[col-2]});
+    }
+  }
+}
+
+// Get daily value for a specific date entry and category
+function getDayVal(entry, catKey, rows){
+  if(!rows)return 0;
+  if(catKey==='attendance'){
+    const row=findRowByLabel(rows,'Big Air Total Attendance');
+    if(!row)return 0;
+    const v=(row[entry.colIdx]||'').replace(/[$,"\s]/g,'');
+    return isNaN(parseFloat(v))?0:parseFloat(v);
+  }
+  const labelMap={trampoline:'Trampoline Park',merchandise:'Merchandise',concessions:'Concessions',events:'Events'};
+  if(catKey==='total'){
+    return ['trampoline','merchandise','concessions','events'].reduce((s,k)=>s+getDayVal(entry,k,rows),0);
+  }
+  const row=findRowByLabel(rows,labelMap[catKey]);
+  if(!row)return 0;
+  const v=(row[entry.colIdx]||'').replace(/[$,"\s]/g,'');
+  return isNaN(parseFloat(v))?0:parseFloat(v);
+}
+
+// ── Main Load ─────────────────────────────────────────────────────────────────
+async function loadData(){
   setStatus('Loading...','loading');
   let sheetNames;
-  try { sheetNames = await fetchSheetNames(); }
-  catch(e) { setStatus('Could not load sheet list.','error'); return; }
+  try{sheetNames=await fetchSheetNames();}
+  catch(e){setStatus('Could not load sheet list.','error');return;}
 
-  const data = {trampoline:[],merchandise:[],concessions:[],events:[],attendance:[],totals:[]};
-  const labels=[], months=[], rawSheetNames=[];
+  const data={trampoline:[],merchandise:[],concessions:[],events:[],attendance:[],totals:[]};
+  const labels=[],months=[],rawNames=[];
+  globalDailyIndex=[];
+  globalRawRows={};
 
-  for (const name of sheetNames) {
-    try {
-      const rows = await fetchSheet(name);
-      globalRawRows[name] = rows; // cache for daily breakdown
-      const t=findVal(rows,'Trampoline Park'), m=findVal(rows,'Merchandise');
-      const c=findVal(rows,'Concessions'),     e=findVal(rows,'Events');
+  for(const name of sheetNames){
+    try{
+      const rows=await fetchSheet(name);
+      globalRawRows[name]=rows;
+      buildDailyIndex(name,rows);
+      const t=findVal(rows,'Trampoline Park'),m=findVal(rows,'Merchandise');
+      const c=findVal(rows,'Concessions'),e=findVal(rows,'Events');
       const a=findVal(rows,'Big Air Total Attendance');
       const total=t+m+c+e;
-      if (total>0) {
-        data.trampoline.push(t); data.merchandise.push(m);
-        data.concessions.push(c); data.events.push(e);
-        data.attendance.push(a); data.totals.push(total);
-        labels.push(sheetToLabel(name)); months.push(sheetToMonth(name));
-        rawSheetNames.push(name);
+      if(total>0){
+        data.trampoline.push(t);data.merchandise.push(m);
+        data.concessions.push(c);data.events.push(e);
+        data.attendance.push(a);data.totals.push(total);
+        labels.push(sheetToLabel(name));months.push(sheetToMonth(name));rawNames.push(name);
       }
-    } catch(e) { console.warn('Skipping:',name); }
+    }catch(e){console.warn('Skipping:',name);}
   }
 
-  if (!labels.length){setStatus('No data found.','error');return;}
-  globalData=data; globalLabels=labels; globalMonths=months; globalSheetNames=rawSheetNames;
+  if(!labels.length){setStatus('No data found.','error');return;}
+  globalData=data;globalLabels=labels;globalMonths=months;globalSheetNames=rawNames;
 
-  populateAllSelects(labels, rawSheetNames);
-  initRanges();
+  // Set date picker min/max from daily index
+  if(globalDailyIndex.length){
+    const sorted=[...globalDailyIndex].sort((a,b)=>a.date-b.date);
+    const minD=dateToKey(sorted[0].date),maxD=dateToKey(sorted[sorted.length-1].date);
+    ['cr-start','cr-end','dsd-start','dsd-end','ddr-start','ddr-end'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.min=minD;el.max=maxD;}
+    });
+    document.getElementById('cr-start').value=minD;
+    document.getElementById('cr-end').value=maxD;
+    document.getElementById('dsd-start').value=minD;
+    document.getElementById('dsd-end').value=maxD;
+    document.getElementById('ddr-start').value=minD;
+    document.getElementById('ddr-end').value=maxD;
+  }
+
+  // Populate week select for DSW
+  const wSel=document.getElementById('dsw-week');wSel.innerHTML='';
+  rawNames.forEach((n,i)=>{const o=document.createElement('option');o.value=n;o.textContent=labels[i];wSel.appendChild(o);});
+
+  initCompRanges();
   setStatus('Live · Updated '+new Date().toLocaleTimeString());
   updateCards(data,labels,months);
   renderWoW(data.totals,labels);
@@ -693,42 +694,25 @@ async function loadData() {
   renderPerCap(labels,data);
 }
 
-function populateAllSelects(labels, rawNames) {
-  // Single report
-  ['cr-from','cr-to'].forEach(id=>{
-    const sel=document.getElementById(id);sel.innerHTML='';
-    labels.forEach((l,i)=>{const o=document.createElement('option');o.value=i;o.textContent=l;sel.appendChild(o);});
-    if(id==='cr-to') sel.value=labels.length-1;
-  });
-  // Daily breakdown week selects
-  ['daily-sw-week','daily-sd-from','daily-sd-to'].forEach(id=>{
-    const sel=document.getElementById(id);sel.innerHTML='';
-    rawNames.forEach((n,i)=>{const o=document.createElement('option');o.value=n;o.textContent=labels[i];sel.appendChild(o);});
-    if(id==='daily-sd-to') sel.value=rawNames[rawNames.length-1];
-  });
-}
-
 // ── Dashboard Charts ──────────────────────────────────────────────────────────
 function updateCards(data,labels,months){
-  const totals=data.totals;
-  const total=totals.reduce((a,b)=>a+b,0), avg=total/totals.length;
-  const bestIdx=totals.indexOf(Math.max(...totals)), worstIdx=totals.indexOf(Math.min(...totals));
+  const totals=data.totals,total=totals.reduce((a,b)=>a+b,0),avg=total/totals.length;
+  const bi=totals.indexOf(Math.max(...totals)),wi=totals.indexOf(Math.min(...totals));
   const wow=totals.length>1?((totals[totals.length-1]-totals[totals.length-2])/totals[totals.length-2])*100:0;
   const cm=months[months.length-1];
-  const monthTotal=months.reduce((s,m,i)=>m===cm?s+totals[i]:s,0);
-  const monthWeeks=months.filter(m=>m===cm).length;
+  const mt=months.reduce((s,m,i)=>m===cm?s+totals[i]:s,0),mw=months.filter(m=>m===cm).length;
   document.getElementById('c-total').textContent=fmt(total);
   document.getElementById('c-avg').textContent=fmt(avg);
-  document.getElementById('c-best').textContent=fmt(totals[bestIdx]);
-  document.getElementById('c-best-lbl').textContent=labels[bestIdx];
-  document.getElementById('c-worst').textContent=fmt(totals[worstIdx]);
-  document.getElementById('c-worst-lbl').textContent=labels[worstIdx];
+  document.getElementById('c-best').textContent=fmt(totals[bi]);
+  document.getElementById('c-best-lbl').textContent=labels[bi];
+  document.getElementById('c-worst').textContent=fmt(totals[wi]);
+  document.getElementById('c-worst-lbl').textContent=labels[wi];
   document.getElementById('c-month-lbl').textContent=cm+' Revenue';
-  document.getElementById('c-month').textContent=fmt(monthTotal);
-  document.getElementById('c-month-weeks').textContent=monthWeeks+' week'+(monthWeeks!==1?'s':'')+' recorded';
-  const wowEl=document.getElementById('c-wow');
-  wowEl.textContent=(wow>=0?'+':'')+wow.toFixed(1)+'%';
-  wowEl.style.color=wow>=0?'#1D9E75':'#c0392b';
+  document.getElementById('c-month').textContent=fmt(mt);
+  document.getElementById('c-month-weeks').textContent=mw+' week'+(mw!==1?'s':'')+' recorded';
+  const we=document.getElementById('c-wow');
+  we.textContent=(wow>=0?'+':'')+wow.toFixed(1)+'%';
+  we.style.color=wow>=0?'#1D9E75':'#c0392b';
   document.getElementById('c-wow-lbl').textContent=labels[labels.length-1]+' vs prior week';
 }
 function renderWoW(totals,labels){
@@ -737,12 +721,12 @@ function renderWoW(totals,labels){
     const pct=((totals[i]-totals[i-1])/totals[i-1])*100;
     const b=document.createElement('span');
     b.className='wow '+(pct>0?'up':pct<0?'down':'flat');
-    b.title=labels[i];b.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%';
-    c.appendChild(b);
+    b.title=labels[i];b.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%';c.appendChild(b);
   }
 }
 function makeChart(id,type,labels,datasets,yFmt){
   if(charts[id])charts[id].destroy();
+  const isLine=type==='line';
   charts[id]=new Chart(document.getElementById(id),{
     type,data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
@@ -750,15 +734,14 @@ function makeChart(id,type,labels,datasets,yFmt){
         label:ctx=>{
           if(ctx.dataset.label==='4-wk Avg')return '4-wk Avg: '+fmt(ctx.parsed.y);
           if(type==='bar'&&datasets.length>1){
-            const i=ctx.dataIndex;
-            const barDs=datasets.filter(d=>d.type!=='line'&&d.stack==='r');
+            const i=ctx.dataIndex;const barDs=datasets.filter(d=>d.type!=='line'&&d.stack==='r');
             const tot=barDs.reduce((s,d)=>s+(d.data[i]||0),0);
             const pct=tot>0?((ctx.parsed.y/tot)*100).toFixed(1):'0.0';
-            return `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
+            return`${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
           }
-          return `${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
+          return`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
         },
-        footer:items=>{const bi=items.filter(i=>i.dataset.label!=='4-wk Avg');if(bi.length>0&&type==='bar'){const tot=bi.reduce((s,i)=>s+i.parsed.y,0);return `Total: ${fmt(tot)}`;}}
+        footer:items=>{const bi=items.filter(i=>i.dataset.label!=='4-wk Avg');if(bi.length>0&&type==='bar'){const tot=bi.reduce((s,i)=>s+i.parsed.y,0);return`Total: ${fmt(tot)}`;}}
       }}},
       scales:{
         x:{stacked:type==='bar',ticks:{font:{size:11},autoSkip:false,maxRotation:40},grid:{display:false}},
@@ -779,11 +762,11 @@ function renderRevenue(labels,data){
 }
 function renderMonthly(months,totals){
   const map={};months.forEach((m,i)=>{map[m]=(map[m]||0)+totals[i];});
-  const keys=Object.keys(map),values=keys.map(k=>map[k]);
+  const keys=Object.keys(map),vals=keys.map(k=>map[k]);
   const colors=['#378ADD','#1D9E75','#EF9F27','#D4537E','#7F77DD','#E8763A'];
   if(charts['monthlyChart'])charts['monthlyChart'].destroy();
   charts['monthlyChart']=new Chart(document.getElementById('monthlyChart'),{
-    type:'bar',data:{labels:keys,datasets:[{label:'Monthly Revenue',data:values,backgroundColor:keys.map((_,i)=>colors[i%colors.length]),borderWidth:0,borderRadius:6}]},
+    type:'bar',data:{labels:keys,datasets:[{label:'Monthly Revenue',data:vals,backgroundColor:keys.map((_,i)=>colors[i%colors.length]),borderWidth:0,borderRadius:6}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Revenue: '+fmt(ctx.parsed.y)}}},
       scales:{x:{ticks:{font:{size:12}},grid:{display:false}},y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}}}
   });
@@ -792,258 +775,230 @@ function renderAttendance(labels,data){
   makeChart('attendanceChart','line',labels,[{label:'Attendance',data:data.attendance,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#378ADD',fill:true,tension:0.3}],v=>Math.round(v).toLocaleString());
 }
 function renderPerCap(labels,data){
-  const pc=data.totals.map((t,i)=>data.attendance[i]>0?t/data.attendance[i]:0);
+  const pc=globalData.totals.map((t,i)=>globalData.attendance[i]>0?t/globalData.attendance[i]:0);
   makeChart('percapChart','line',labels,[{label:'Revenue per Guest',data:pc,borderColor:'#D4537E',backgroundColor:'rgba(212,83,126,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#D4537E',fill:true,tension:0.3}],v=>'$'+v.toFixed(2));
 }
 
-// ── Chart render helper ───────────────────────────────────────────────────────
-function makeCustomChart(canvasId, type, labels, datasets, yFmt, stacked) {
+// ── Daily index query helpers ─────────────────────────────────────────────────
+// Get all daily entries between two dates (inclusive)
+function getDailyEntriesInRange(startDate, endDate){
+  return globalDailyIndex
+    .filter(e=>e.date>=startDate&&e.date<=endDate)
+    .sort((a,b)=>a.date-b.date);
+}
+
+// Group daily entries by week/month/day
+function groupEntries(entries, groupBy){
+  if(groupBy==='day') return entries.map(e=>({key:fmtDateShort(e.date)+' ('+e.dayName.slice(0,3)+')',entries:[e]}));
+  if(groupBy==='week'){
+    const map={};
+    entries.forEach(e=>{
+      const sheet=e.sheetName;
+      if(!map[sheet])map[sheet]={key:sheetToLabel(sheet),entries:[]};
+      map[sheet].entries.push(e);
+    });
+    return Object.values(map);
+  }
+  if(groupBy==='month'){
+    const map={};
+    entries.forEach(e=>{
+      const mk=`${e.date.getFullYear()}-${String(e.date.getMonth()+1).padStart(2,'0')}`;
+      const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const label=months[e.date.getMonth()]+' '+e.date.getFullYear();
+      if(!map[mk])map[mk]={key:label,entries:[]};
+      map[mk].entries.push(e);
+    });
+    return Object.values(map);
+  }
+  return entries.map(e=>({key:fmtDateShort(e.date),entries:[e]}));
+}
+
+function sumEntriesForCat(entries, catKey){
+  return entries.reduce((s,e)=>s+getDayVal(e,catKey,globalRawRows[e.sheetName]),0);
+}
+
+function buildStats(datasets, labels, metric){
+  const yFmt=fmtY(metric);
+  const allVals=datasets.flatMap(d=>d.data.filter(v=>v!=null&&!isNaN(v)&&v>0));
+  if(!allVals.length)return'';
+  const sum=allVals.reduce((a,b)=>a+b,0),avg=sum/labels.length,max=Math.max(...allVals),min=Math.min(...allVals);
+  return`<div class="custom-stat"><div class="cs-label">Total</div><div class="cs-value">${yFmt(sum)}</div></div>
+    <div class="custom-stat"><div class="cs-label">Average</div><div class="cs-value">${yFmt(avg)}</div></div>
+    <div class="custom-stat"><div class="cs-label">Peak</div><div class="cs-value">${yFmt(max)}</div></div>
+    <div class="custom-stat"><div class="cs-label">Low</div><div class="cs-value">${yFmt(min)}</div></div>
+    <div class="custom-stat"><div class="cs-label">Days</div><div class="cs-value">${labels.length}</div></div>`;
+}
+
+function makeFlexChart(canvasId, chartType, labels, datasets, metric){
+  const yFmt=fmtY(metric);
+  const isLine=chartType==='line'||chartType==='line-area';
+  const isFilled=chartType==='line-area';
+  const isStacked=chartType==='bar-stacked';
   if(charts[canvasId])charts[canvasId].destroy();
-  document.getElementById(canvasId).style.display='block';
   charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type: type==='line'||type==='line-area'?'line':'bar',
+    type:isLine?'line':'bar',
     data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{
         label:ctx=>`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`,
-        footer:stacked?items=>{const tot=items.reduce((s,i)=>s+i.parsed.y,0);return`Total: ${yFmt(tot)}`;}:undefined
+        footer:isStacked?items=>{const t=items.reduce((s,i)=>s+i.parsed.y,0);return`Total: ${yFmt(t)}`;}:undefined
       }}},
       scales:{
-        x:{stacked:!!stacked,ticks:{font:{size:11},autoSkip:false,maxRotation:40},grid:{display:false}},
-        y:{stacked:!!stacked,ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
+        x:{stacked:isStacked,ticks:{font:{size:11},autoSkip:labels.length>20,maxRotation:45},grid:{display:false}},
+        y:{stacked:isStacked,ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
       }
     }
   });
 }
 
-function getYFmt(metric){
-  if(metric==='attendance') return v=>Math.round(v).toLocaleString();
-  if(metric==='percap') return v=>'$'+v.toFixed(2);
-  return v=>'$'+(v/1000).toFixed(0)+'k';
+function buildDatasetsFromGroups(groups, cats, metric, chartType){
+  const isLine=chartType==='line'||chartType==='line-area';
+  const isFilled=chartType==='line-area';
+  if(metric==='attendance'){
+    return [{label:'Attendance',data:groups.map(g=>sumEntriesForCat(g.entries,'attendance')),
+      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
+  }
+  return cats.map(cat=>{
+    const color=CAT_COLORS[cat];
+    return{label:CAT_LABELS[cat],data:groups.map(g=>sumEntriesForCat(g.entries,cat)),
+      borderColor:color,backgroundColor:isFilled?color+'22':color,
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
+      pointRadius:isLine?3:0,pointBackgroundColor:color,borderRadius:6,
+      stack:chartType==='bar-stacked'?'s':undefined};
+  });
 }
 
-function buildSummaryHTML(datasets, finalLabels, metric) {
-  const allVals = datasets.flatMap(d=>d.data.filter(v=>v!=null&&v>0));
-  if(!allVals.length) return '';
-  const yFmt=getYFmt(metric);
-  const sum=allVals.reduce((a,b)=>a+b,0), avg=sum/finalLabels.length;
-  const max=Math.max(...allVals), min=Math.min(...allVals);
-  return `
-    <div class="custom-stat"><div class="cs-label">Period Total</div><div class="cs-value">${yFmt(sum)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Average</div><div class="cs-value">${yFmt(avg)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Peak</div><div class="cs-value">${yFmt(max)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Low</div><div class="cs-value">${yFmt(min)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Data Points</div><div class="cs-value">${finalLabels.length}</div></div>
-  `;
-}
-
-function exportChart(canvasId, titleId) {
-  const canvas=document.getElementById(canvasId);
-  const title=document.getElementById(titleId)?.value||'report';
-  const link=document.createElement('a');
-  link.download=title.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.png';
-  link.href=canvas.toDataURL('image/png'); link.click();
+function showOutput(panelId,titleId,subId,legendId,statsId,exportId,title,sub,datasets,labels,metric){
+  document.getElementById(titleId).textContent=title;
+  document.getElementById(subId).textContent=sub;
+  document.getElementById(legendId).innerHTML=datasets.map(d=>`<span><span class="swatch" style="background:${d.borderColor||d.backgroundColor};"></span>${d.label}</span>`).join('');
+  document.getElementById(statsId).innerHTML=buildStats(datasets,labels,metric);
+  document.getElementById(panelId).style.display='block';
+  document.getElementById(exportId).style.display='inline-block';
+  document.getElementById(panelId).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ── Single Report ─────────────────────────────────────────────────────────────
-function sliceAndGroupData(fromIdx, toIdx, groupBy) {
-  const labels = globalLabels.slice(fromIdx, toIdx+1);
-  const months = globalMonths.slice(fromIdx, toIdx+1);
-  let finalLabels=labels, finalData={};
-
-  if (groupBy==='month') {
-    const map={};
-    months.forEach((m,i)=>{
-      if(!map[m])map[m]={trampoline:0,concessions:0,merchandise:0,events:0,total:0,attendance:0};
-      ['trampoline','concessions','merchandise','events','attendance'].forEach(k=>map[m][k]+=globalData[k][fromIdx+i]);
-      map[m].total+=globalData.totals[fromIdx+i];
-    });
-    finalLabels=Object.keys(map);
-    ['trampoline','concessions','merchandise','events','attendance'].forEach(k=>finalData[k]=finalLabels.map(m=>map[m][k]));
-    finalData.total=finalLabels.map(m=>map[m].total);
-    finalData.percap=finalLabels.map(m=>map[m].attendance>0?map[m].total/map[m].attendance:0);
-  } else {
-    ['trampoline','concessions','merchandise','events','attendance'].forEach(k=>finalData[k]=globalData[k].slice(fromIdx,toIdx+1));
-    finalData.total=globalData.totals.slice(fromIdx,toIdx+1);
-    finalData.percap=globalData.totals.slice(fromIdx,toIdx+1).map((t,i)=>finalData.attendance[i]>0?t/finalData.attendance[i]:0);
-  }
-  return {finalLabels,finalData};
-}
-
-function buildDatasets(selectedCats, metric, finalData, chartType, colors) {
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-  const isStacked=chartType==='bar-stacked';
-
-  if (metric==='attendance') {
-    return [{label:'Attendance',data:finalData.attendance,
-      borderColor:colors[0],backgroundColor:isFilled?colors[0]+'22':colors[0],
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,
-      pointBackgroundColor:colors[0],borderRadius:isLine?0:6}];
-  }
-  if (metric==='percap') {
-    return [{label:'Revenue per Guest',data:finalData.percap,
-      borderColor:colors[0],backgroundColor:isFilled?colors[0]+'22':colors[0],
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,
-      pointBackgroundColor:colors[0],borderRadius:isLine?0:6}];
-  }
-  return selectedCats.map((cat,ci)=>{
-    const color=CAT_COLORS[cat]||colors[ci%colors.length];
-    return {label:CAT_LABELS[cat]||cat,data:finalData[cat]||finalData.total,
-      backgroundColor:isLine?(isFilled?color+'22':color):color,
-      borderColor:color,borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-      pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:isLine?0:6,
-      stack:isStacked?'r':undefined};
-  });
-}
-
-function generateSingleChart() {
-  if (!globalData) return;
-  const chartType=document.getElementById('cr-chart-type').value;
+function generateSingle(){
+  if(!globalData)return;
+  const startDate=inputToDate(document.getElementById('cr-start').value);
+  const endDate=inputToDate(document.getElementById('cr-end').value);
   const metric=document.getElementById('cr-metric').value;
-  const fromIdx=parseInt(document.getElementById('cr-from').value);
-  const toIdx=parseInt(document.getElementById('cr-to').value);
+  const chartType=document.getElementById('cr-chart-type').value;
   const groupBy=document.getElementById('cr-group').value;
-  const titleInput=document.getElementById('cr-title').value;
-  if (fromIdx>toIdx){alert('From Week must be before To Week.');return;}
-  const selectedCats=[...document.querySelectorAll('#cr-categories input:checked')].map(c=>c.value);
-  if (metric==='revenue'&&!selectedCats.length){alert('Select at least one category.');return;}
+  const title=document.getElementById('cr-title').value;
+  const cats=[...document.querySelectorAll('#cr-categories input:checked')].map(c=>c.value);
+  if(!startDate||!endDate){alert('Please select a start and end date.');return;}
+  if(startDate>endDate){alert('Start date must be before end date.');return;}
+  if(metric==='revenue'&&!cats.length){alert('Select at least one category.');return;}
 
-  const {finalLabels,finalData}=sliceAndGroupData(fromIdx,toIdx,groupBy);
-  const datasets=buildDatasets(selectedCats,metric,finalData,chartType,Object.values(CAT_COLORS));
-  const yFmt=getYFmt(metric);
-  const isStacked=chartType==='bar-stacked';
+  const entries=getDailyEntriesInRange(startDate,endDate);
+  if(!entries.length){alert('No data found for that date range.');return;}
+  const groups=groupEntries(entries,groupBy);
+  const labels=groups.map(g=>g.key);
+  const datasets=buildDatasetsFromGroups(groups,cats,metric,chartType);
 
-  document.getElementById('custom-chart-title').textContent=titleInput||'Custom Report';
-  document.getElementById('custom-chart-sub').textContent=`${globalLabels[fromIdx]} → ${globalLabels[toIdx]} · ${groupBy==='month'?'Monthly':'Weekly'} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`;
-  document.getElementById('custom-legend').innerHTML=datasets.map(d=>`<span><span class="swatch" style="background:${d.borderColor||d.backgroundColor};"></span>${d.label}</span>`).join('');
-  document.getElementById('custom-summary').innerHTML=buildSummaryHTML(datasets,finalLabels,metric);
-
-  makeCustomChart('customChart',chartType,finalLabels,datasets,yFmt,isStacked);
-  document.getElementById('custom-chart-panel').style.display='block';
-  document.getElementById('single-export-btn').style.display='inline-block';
-  document.getElementById('custom-chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
+  makeFlexChart('singleChart',chartType,labels,datasets,metric);
+  showOutput('single-out','single-title','single-sub','single-legend','single-stats','single-export',
+    title||'Custom Report',
+    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`,
+    datasets,labels,metric);
 }
 
 // ── Comparative Report ────────────────────────────────────────────────────────
-function initRanges() {
-  rangeCount=0;
-  document.getElementById('ranges-container').innerHTML='';
-  addRange(); addRange(); // start with 2
+function initCompRanges(){
+  compRangeCount=0;
+  document.getElementById('comp-ranges').innerHTML='';
+  addCompRange();addCompRange();
 }
 
-function addRange() {
-  rangeCount++;
-  const color=RANGE_COLORS[(rangeCount-1)%RANGE_COLORS.length];
-  const container=document.getElementById('ranges-container');
+function addCompRange(){
+  compRangeCount++;
+  const color=RANGE_COLORS[(compRangeCount-1)%RANGE_COLORS.length];
+  const sorted=[...globalDailyIndex].sort((a,b)=>a.date-b.date);
+  const minD=sorted.length?dateToKey(sorted[0].date):'';
+  const maxD=sorted.length?dateToKey(sorted[sorted.length-1].date):'';
   const div=document.createElement('div');
-  div.className='range-card'; div.id='range-'+rangeCount;
+  div.className='range-card';div.id='comp-range-'+compRangeCount;
   div.style.setProperty('--rc',color);
-
-  const fromOpts=globalLabels.map((l,i)=>`<option value="${i}">${l}</option>`).join('');
-  const toOpts=globalLabels.map((l,i)=>`<option value="${i}" ${i===globalLabels.length-1?'selected':''}>${l}</option>`).join('');
-
   div.innerHTML=`
-    <span class="range-label">Range ${rangeCount}</span>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <label style="font-size:12px;color:#666;">From</label>
-      <select id="range-from-${rangeCount}">${fromOpts}</select>
-      <label style="font-size:12px;color:#666;">To</label>
-      <select id="range-to-${rangeCount}">${toOpts}</select>
+    <span class="range-badge">Range ${compRangeCount}</span>
+    <div class="range-dates">
+      <label>From</label>
+      <input type="date" id="cr-s-${compRangeCount}" min="${minD}" max="${maxD}" value="${minD}" />
+      <label>To</label>
+      <input type="date" id="cr-e-${compRangeCount}" min="${minD}" max="${maxD}" value="${maxD}" />
     </div>
-    ${rangeCount>2?`<button class="remove-btn" onclick="removeRange(${rangeCount})">✕ Remove</button>`:''}
+    ${compRangeCount>2?`<button class="remove-btn" onclick="removeCompRange(${compRangeCount})">✕</button>`:''}
   `;
-  container.appendChild(div);
+  document.getElementById('comp-ranges').appendChild(div);
 }
 
-function removeRange(id) {
-  const el=document.getElementById('range-'+id);
-  if(el) el.remove();
-}
+function removeCompRange(id){const el=document.getElementById('comp-range-'+id);if(el)el.remove();}
 
-function getRangeName(fromIdx, toIdx) {
-  // Auto-name like "Dec28–Jan4" or "Jan5–Feb1"
-  return `${globalLabels[fromIdx]}${fromIdx!==toIdx?' → '+globalLabels[toIdx]:''}`;
-}
-
-function generateCompChart() {
-  if (!globalData) return;
+function generateComp(){
+  if(!globalData)return;
   const chartType=document.getElementById('comp-chart-type').value;
   const metric=document.getElementById('comp-metric').value;
   const groupBy=document.getElementById('comp-group').value;
-  const titleInput=document.getElementById('comp-title').value;
-  const selectedCats=[...document.querySelectorAll('#comp-categories input:checked')].map(c=>c.value);
-  if (metric==='revenue'&&!selectedCats.length){alert('Select at least one category.');return;}
+  const title=document.getElementById('comp-title').value;
+  const cats=[...document.querySelectorAll('#comp-categories input:checked')].map(c=>c.value);
+  if(metric==='revenue'&&!cats.length){alert('Select at least one category.');return;}
 
-  // Collect all ranges
   const ranges=[];
   document.querySelectorAll('.range-card').forEach(card=>{
-    const id=card.id.split('-')[1];
-    const fromSel=document.getElementById('range-from-'+id);
-    const toSel=document.getElementById('range-to-'+id);
-    if(!fromSel||!toSel)return;
-    const from=parseInt(fromSel.value), to=parseInt(toSel.value);
-    if(from>to){alert(`Range ${id}: From must be before To.`);return;}
-    ranges.push({from,to,name:getRangeName(from,to),color:RANGE_COLORS[(ranges.length)%RANGE_COLORS.length]});
+    const id=card.id.split('-').pop();
+    const sEl=document.getElementById('cr-s-'+id),eEl=document.getElementById('cr-e-'+id);
+    if(!sEl||!eEl)return;
+    const s=inputToDate(sEl.value),e=inputToDate(eEl.value);
+    if(!s||!e){alert('Please fill in all date range fields.');return;}
+    if(s>e){alert('Start must be before end in each range.');return;}
+    const color=RANGE_COLORS[(ranges.length)%RANGE_COLORS.length];
+    ranges.push({start:s,end:e,color,name:`${fmtDateShort(s)}–${fmtDateShort(e)}`});
   });
-  if(ranges.length<2){alert('Add at least 2 ranges to compare.');return;}
+  if(ranges.length<2){alert('Please add at least 2 ranges.');return;}
 
-  const yFmt=getYFmt(metric);
   const isLine=chartType==='line'||chartType==='line-area';
   const isFilled=chartType==='line-area';
 
-  // For comparative: each range becomes a dataset
-  // X-axis = position within range (Week 1, Week 2... or Month 1, Month 2...)
-  // Each range line/bar is labeled with the range name
-
-  // Find longest range for x-axis
+  // Each range becomes one or more datasets
+  // X-axis: position index (Day 1, Day 2... or Week 1...) to normalize lengths
   const processedRanges=ranges.map(r=>{
-    const {finalLabels,finalData}=sliceAndGroupData(r.from,r.to,groupBy);
+    const entries=getDailyEntriesInRange(r.start,r.end);
+    const groups=groupEntries(entries,groupBy);
     let values;
-    if(metric==='attendance') values=finalData.attendance;
-    else if(metric==='percap') values=finalData.percap;
-    else {
-      if(selectedCats.length===1) values=finalData[selectedCats[0]]||finalData.total;
-      else values=finalLabels.map((_,i)=>selectedCats.reduce((s,cat)=>(finalData[cat]||finalData.total)[i]+s,0));
+    if(metric==='attendance') values=groups.map(g=>sumEntriesForCat(g.entries,'attendance'));
+    else if(metric==='percap'){
+      values=groups.map(g=>{
+        const rev=sumEntriesForCat(g.entries,'total');
+        const att=sumEntriesForCat(g.entries,'attendance');
+        return att>0?rev/att:0;
+      });
+    } else {
+      if(cats.length===1) values=groups.map(g=>sumEntriesForCat(g.entries,cats[0]));
+      else values=groups.map(g=>cats.reduce((s,cat)=>s+sumEntriesForCat(g.entries,cat),0));
     }
-    return {...r,values,innerLabels:finalLabels};
+    return{...r,values,innerLabels:groups.map(g=>g.key)};
   });
 
   const maxLen=Math.max(...processedRanges.map(r=>r.values.length));
-  const xLabels=Array.from({length:maxLen},(_, i)=>`${groupBy==='month'?'Month':'Week'} ${i+1}`);
+  const xLabels=Array.from({length:maxLen},(_,i)=>`${groupBy==='month'?'Month':groupBy==='week'?'Week':'Day'} ${i+1}`);
+  const yFmt=fmtY(metric);
 
-  const datasets=processedRanges.map((r,ri)=>({
-    label:r.name,
-    data:r.values,
-    borderColor:r.color,
-    backgroundColor:isFilled?r.color+'22':r.color,
-    borderWidth:isLine?2.5:0,
-    fill:isFilled,tension:0.3,
-    pointRadius:isLine?4:0,
-    pointBackgroundColor:r.color,
-    borderRadius:isLine?0:6
+  const datasets=processedRanges.map(r=>({
+    label:r.name,data:r.values,
+    borderColor:r.color,backgroundColor:isFilled?r.color+'22':r.color,
+    borderWidth:isLine?2.5:0,fill:isFilled,tension:0.3,
+    pointRadius:isLine?4:0,pointBackgroundColor:r.color,borderRadius:6
   }));
 
-  // Build legend with range name + actual dates
-  const legendHTML=processedRanges.map(r=>`<span><span class="swatch" style="background:${r.color};border-radius:50%;"></span>${r.name}</span>`).join('');
-
-  document.getElementById('comp-chart-title').textContent=titleInput||'Comparative Report';
-  document.getElementById('comp-chart-sub').textContent=`${ranges.length} ranges · ${groupBy==='month'?'Monthly':'Weekly'} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`;
-  document.getElementById('comp-legend').innerHTML=legendHTML;
-  document.getElementById('comp-summary').innerHTML=buildSummaryHTML(datasets,xLabels,metric);
-
-  // Show actual dates in tooltip
   if(charts['compChart'])charts['compChart'].destroy();
-  document.getElementById('compChart').style.display='block';
   charts['compChart']=new Chart(document.getElementById('compChart'),{
-    type:isLine?'line':'bar',
-    data:{labels:xLabels,datasets},
+    type:isLine?'line':'bar',data:{labels:xLabels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{
-        title:items=>{
-          const idx=items[0].dataIndex;
-          return processedRanges.map(r=>r.innerLabels[idx]||'').filter(Boolean).join(' / ');
-        },
+        title:items=>{const idx=items[0].dataIndex;return processedRanges.map(r=>r.innerLabels[idx]||'').filter(Boolean).join(' / ');},
         label:ctx=>`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`
       }}},
       scales:{
@@ -1053,116 +1008,136 @@ function generateCompChart() {
     }
   });
 
-  document.getElementById('comp-chart-panel').style.display='block';
-  document.getElementById('comp-export-btn').style.display='inline-block';
-  document.getElementById('comp-chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
+  showOutput('comp-out','comp-title-out','comp-sub','comp-legend','comp-stats','comp-export',
+    title||'Comparative Report',
+    `${ranges.length} ranges · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`,
+    datasets,xLabels,metric);
 }
 
-// ── Daily Breakdown ───────────────────────────────────────────────────────────
-function getDailyData(sheetName, cats, metric) {
+// ── Daily: Single Week ────────────────────────────────────────────────────────
+function generateDSW(){
+  const sheetName=document.getElementById('dsw-week').value;
+  const metric=document.getElementById('dsw-metric').value;
+  const chartType=document.getElementById('dsw-chart-type').value;
+  const title=document.getElementById('dsw-title').value;
+  const cats=[...document.querySelectorAll('#dsw-cats input:checked')].map(c=>c.value);
+  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
+
+  const weekIdx=globalSheetNames.indexOf(sheetName);
+  const weekLabel=weekIdx>=0?globalLabels[weekIdx]:sheetToLabel(sheetName);
   const rows=globalRawRows[sheetName];
-  if(!rows)return null;
+  if(!rows){alert('Sheet data not loaded yet.');return;}
+
+  // Get all day entries for this sheet
+  const entries=globalDailyIndex.filter(e=>e.sheetName===sheetName).sort((a,b)=>a.date-b.date);
+  const labels=entries.map(e=>e.dayName.slice(0,3)+' '+fmtDateShort(e.date));
+  const isLine=chartType==='line'||chartType==='line-area';
+  const isFilled=chartType==='line-area';
+
+  let datasets;
   if(metric==='attendance'){
-    return {attendance:findDailyVals(rows,'Big Air Total Attendance')};
+    datasets=[{label:'Attendance',data:entries.map(e=>getDayVal(e,'attendance',rows)),
+      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
+  } else {
+    datasets=cats.map(cat=>{
+      const color=CAT_COLORS[cat];
+      return{label:CAT_LABELS[cat],data:entries.map(e=>getDayVal(e,cat,rows)),
+        borderColor:color,backgroundColor:isFilled?color+'22':color,
+        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
+        pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:6};
+    });
   }
-  const result={};
-  cats.forEach(cat=>{
-    const label=cat==='total'?null:CAT_LABELS[cat];
-    if(cat==='total'){
-      const t=findDailyVals(rows,'Trampoline Park');
-      const m=findDailyVals(rows,'Merchandise');
-      const c=findDailyVals(rows,'Concessions');
-      const e=findDailyVals(rows,'Events');
-      result.total=t.map((_,i)=>t[i]+m[i]+c[i]+e[i]);
-    } else {
-      result[cat]=findDailyVals(rows,label);
-    }
-  });
-  return result;
+
+  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
+  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','dsw-export',
+    title||`Week of ${weekLabel} — Daily Breakdown`,
+    `${weekLabel} · By Day · ${metric==='revenue'?'Revenue':'Attendance'}`,
+    datasets,labels,metric);
 }
 
-function generateDailySingleWeek() {
-  const sheetName=document.getElementById('daily-sw-week').value;
-  const metric=document.getElementById('daily-sw-metric').value;
-  const chartType=document.getElementById('daily-sw-chart-type').value;
-  const title=document.getElementById('daily-sw-title').value;
-  const selectedCats=[...document.querySelectorAll('#daily-sw-categories input:checked')].map(c=>c.value);
-  if(!selectedCats.length){alert('Select at least one category.');return;}
+// ── Daily: Same Day Across Weeks ──────────────────────────────────────────────
+function generateDSD(){
+  const dayIdx=parseInt(document.getElementById('dsd-day').value);
+  const dayName=DAY_NAMES[dayIdx];
+  const startDate=inputToDate(document.getElementById('dsd-start').value);
+  const endDate=inputToDate(document.getElementById('dsd-end').value);
+  const metric=document.getElementById('dsd-metric').value;
+  const chartType=document.getElementById('dsd-chart-type').value;
+  const title=document.getElementById('dsd-title').value;
+  const cats=[...document.querySelectorAll('#dsd-cats input:checked')].map(c=>c.value);
+  if(!startDate||!endDate){alert('Please select a date range.');return;}
+  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
 
-  const weekLabel=globalLabels[globalSheetNames.indexOf(sheetName)];
-  const dailyData=getDailyData(sheetName,selectedCats,metric);
-  if(!dailyData)return;
+  // Get all entries for the specific day within range
+  const entries=getDailyEntriesInRange(startDate,endDate).filter(e=>DAY_NAMES.indexOf(e.dayName)===dayIdx);
+  if(!entries.length){alert(`No ${dayName} data found in that range.`);return;}
 
-  const yFmt=getYFmt(metric);
+  const labels=entries.map(e=>fmtDateShort(e.date));
   const isLine=chartType==='line'||chartType==='line-area';
   const isFilled=chartType==='line-area';
 
-  const datasets=metric==='attendance'
-    ?[{label:'Attendance',data:dailyData.attendance,borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:isLine?0:6}]
-    :selectedCats.map(cat=>{
-        const color=CAT_COLORS[cat];
-        return {label:CAT_LABELS[cat]||cat,data:dailyData[cat]||[],
-          borderColor:color,backgroundColor:isFilled?color+'22':color,
-          borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-          pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:isLine?0:6};
-      });
+  let datasets;
+  if(metric==='attendance'){
+    datasets=[{label:`${dayName} Attendance`,data:entries.map(e=>getDayVal(e,'attendance',globalRawRows[e.sheetName])),
+      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
+  } else {
+    datasets=cats.map(cat=>{
+      const color=CAT_COLORS[cat];
+      return{label:`${dayName} — ${CAT_LABELS[cat]}`,data:entries.map(e=>getDayVal(e,cat,globalRawRows[e.sheetName])),
+        borderColor:color,backgroundColor:isFilled?color+'22':color,
+        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
+        pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:6};
+    });
+  }
 
-  document.getElementById('daily-chart-title').textContent=title||`Week of ${weekLabel} — Daily Breakdown`;
-  document.getElementById('daily-chart-sub').textContent=`${weekLabel} · By Day · ${metric==='revenue'?'Revenue':'Attendance'}`;
-  document.getElementById('daily-legend').innerHTML=datasets.map(d=>`<span><span class="swatch" style="background:${d.borderColor||d.backgroundColor};"></span>${d.label}</span>`).join('');
-  document.getElementById('daily-summary').innerHTML=buildSummaryHTML(datasets,DAYS_OF_WEEK,metric);
-
-  document.getElementById('dailySDChart').style.display='none';
-  makeCustomChart('dailySWChart',chartType,DAYS_OF_WEEK,datasets,yFmt,false);
-  document.getElementById('daily-chart-panel').style.display='block';
-  document.getElementById('daily-sw-export-btn').style.display='inline-block';
-  document.getElementById('daily-chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
+  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
+  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','dsd-export',
+    title||`Every ${dayName} — ${metric==='revenue'?'Revenue':'Attendance'} Trend`,
+    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${dayName}s only`,
+    datasets,labels,metric);
 }
 
-function generateDailySameDay() {
-  const dayIdx=parseInt(document.getElementById('daily-sd-day').value);
-  const dayName=DAYS_OF_WEEK[dayIdx];
-  const fromName=document.getElementById('daily-sd-from').value;
-  const toName=document.getElementById('daily-sd-to').value;
-  const metric=document.getElementById('daily-sd-metric').value;
-  const chartType=document.getElementById('daily-sd-chart-type').value;
-  const title=document.getElementById('daily-sd-title').value;
-  const selectedCats=[...document.querySelectorAll('#daily-sd-categories input:checked')].map(c=>c.value);
-  if(!selectedCats.length){alert('Select at least one category.');return;}
+// ── Daily: Custom Date Range by Day ──────────────────────────────────────────
+function generateDDR(){
+  const startDate=inputToDate(document.getElementById('ddr-start').value);
+  const endDate=inputToDate(document.getElementById('ddr-end').value);
+  const metric=document.getElementById('ddr-metric').value;
+  const chartType=document.getElementById('ddr-chart-type').value;
+  const title=document.getElementById('ddr-title').value;
+  const cats=[...document.querySelectorAll('#ddr-cats input:checked')].map(c=>c.value);
+  if(!startDate||!endDate){alert('Please select a date range.');return;}
+  if(startDate>endDate){alert('Start must be before end.');return;}
+  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
 
-  const fromIdx=globalSheetNames.indexOf(fromName);
-  const toIdx=globalSheetNames.indexOf(toName);
-  if(fromIdx<0||toIdx<0||fromIdx>toIdx){alert('Invalid date range.');return;}
+  const entries=getDailyEntriesInRange(startDate,endDate);
+  if(!entries.length){alert('No data found for that date range.');return;}
 
-  const sheetsInRange=globalSheetNames.slice(fromIdx,toIdx+1);
-  const labelsInRange=globalLabels.slice(fromIdx,toIdx+1);
-  const yFmt=getYFmt(metric);
+  const labels=entries.map(e=>e.dayName.slice(0,3)+' '+fmtDateShort(e.date));
   const isLine=chartType==='line'||chartType==='line-area';
   const isFilled=chartType==='line-area';
 
-  const datasets=metric==='attendance'
-    ?[{label:`${dayName} Attendance`,data:sheetsInRange.map(n=>{const d=getDailyData(n,['total'],metric);return d?d.attendance[dayIdx]:0;}),
-        borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
-        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:isLine?0:6}]
-    :selectedCats.map(cat=>{
-        const color=CAT_COLORS[cat];
-        return {label:`${dayName} — ${CAT_LABELS[cat]||cat}`,
-          data:sheetsInRange.map(n=>{const d=getDailyData(n,selectedCats,'revenue');return d&&d[cat]?d[cat][dayIdx]:0;}),
-          borderColor:color,backgroundColor:isFilled?color+'22':color,
-          borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-          pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:isLine?0:6};
-      });
+  let datasets;
+  if(metric==='attendance'){
+    datasets=[{label:'Attendance',data:entries.map(e=>getDayVal(e,'attendance',globalRawRows[e.sheetName])),
+      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
+  } else {
+    datasets=cats.map(cat=>{
+      const color=CAT_COLORS[cat];
+      return{label:CAT_LABELS[cat],data:entries.map(e=>getDayVal(e,cat,globalRawRows[e.sheetName])),
+        borderColor:color,backgroundColor:isFilled?color+'22':color,
+        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
+        pointRadius:isLine?3:0,pointBackgroundColor:color,borderRadius:6};
+    });
+  }
 
-  document.getElementById('daily-chart-title').textContent=title||`Every ${dayName} — ${metric==='revenue'?'Revenue':'Attendance'} Trend`;
-  document.getElementById('daily-chart-sub').textContent=`${labelsInRange[0]} → ${labelsInRange[labelsInRange.length-1]} · ${dayName}s only`;
-  document.getElementById('daily-legend').innerHTML=datasets.map(d=>`<span><span class="swatch" style="background:${d.borderColor||d.backgroundColor};"></span>${d.label}</span>`).join('');
-  document.getElementById('daily-summary').innerHTML=buildSummaryHTML(datasets,labelsInRange,metric);
-
-  document.getElementById('dailySWChart').style.display='none';
-  makeCustomChart('dailySDChart',chartType,labelsInRange,datasets,yFmt,false);
-  document.getElementById('daily-chart-panel').style.display='block';
-  document.getElementById('daily-sd-export-btn').style.display='inline-block';
-  document.getElementById('daily-chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
+  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
+  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','ddr-export',
+    title||`${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} — Daily Breakdown`,
+    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · Every day · ${metric==='revenue'?'Revenue':'Attendance'}`,
+    datasets,labels,metric);
 }
 </script>
 </body>
