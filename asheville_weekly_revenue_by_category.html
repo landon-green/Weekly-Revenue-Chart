@@ -257,7 +257,8 @@
           <select id="cr-metric">
             <option value="revenue">Revenue ($)</option>
             <option value="attendance">Attendance</option>
-            <option value="percap">Revenue Per Guest</option>
+            <option value="percap">Revenue Per Guest (Total)</option>
+            <option value="percap_breakdown">Per Cap by Category</option>
           </select>
         </div>
         <div class="builder-field">
@@ -282,13 +283,18 @@
         </div>
       </div>
 
-      <div class="cr-section-title">Categories</div>
-      <div class="category-checks" id="cr-categories" style="margin-bottom:24px;">
+      <div class="cr-section-title">Categories <span id="cr-cats-note" style="font-size:11px;color:#999;text-transform:none;letter-spacing:0;"> (for Revenue metric)</span></div>
+      <div class="category-checks" id="cr-categories" style="margin-bottom:8px;">
         <label class="checked"><input type="checkbox" value="trampoline" checked onchange="toggleCheck(this)"> Trampoline Park</label>
         <label class="checked"><input type="checkbox" value="concessions" checked onchange="toggleCheck(this)"> Concessions</label>
         <label class="checked"><input type="checkbox" value="merchandise" checked onchange="toggleCheck(this)"> Merchandise</label>
         <label class="checked"><input type="checkbox" value="events" checked onchange="toggleCheck(this)"> Events</label>
         <label><input type="checkbox" value="total" onchange="toggleCheck(this)"> Total Revenue</label>
+      </div>
+      <div class="category-checks" id="cr-percap-categories" style="margin-bottom:24px;display:none;">
+        <label class="checked"><input type="checkbox" value="concessions_percap" checked onchange="toggleCheck(this)"> Concession Per Cap</label>
+        <label class="checked"><input type="checkbox" value="merchandise_percap" checked onchange="toggleCheck(this)"> Merchandise Per Cap</label>
+        <label class="checked"><input type="checkbox" value="events_percap" checked onchange="toggleCheck(this)"> Events Per Cap</label>
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
@@ -331,7 +337,8 @@
           <select id="comp-metric">
             <option value="revenue">Revenue ($)</option>
             <option value="attendance">Attendance</option>
-            <option value="percap">Revenue Per Guest</option>
+            <option value="percap">Revenue Per Guest (Total)</option>
+            <option value="percap_breakdown">Per Cap by Category</option>
           </select>
         </div>
         <div class="builder-field">
@@ -344,13 +351,18 @@
         </div>
       </div>
 
-      <div class="cr-section-title">Categories (Revenue metric)</div>
+      <div class="cr-section-title">Categories <span style="font-size:11px;color:#999;text-transform:none;letter-spacing:0;"> (for Revenue / Per Cap metrics)</span></div>
       <div class="category-checks" id="comp-categories" style="margin-bottom:8px;">
         <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
         <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
         <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
         <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
         <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
+      </div>
+      <div class="category-checks" id="comp-percap-categories" style="margin-bottom:8px;display:none;">
+        <label class="checked"><input type="checkbox" value="concessions_percap" checked onchange="toggleCheck(this)"> Concession Per Cap</label>
+        <label class="checked"><input type="checkbox" value="merchandise_percap" checked onchange="toggleCheck(this)"> Merchandise Per Cap</label>
+        <label class="checked"><input type="checkbox" value="events_percap" checked onchange="toggleCheck(this)"> Events Per Cap</label>
       </div>
 
       <div class="cr-section-title">Date Ranges</div>
@@ -475,8 +487,8 @@ const SHEET_ID    = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
 const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz3P-guZK4MPPYZkVhmm9kdYXpTWn_cGg7KfKjsanasbUYm4pHn8PQCTu8Y-rBz_pOU1g/exec';
 const COL_IDX = 8;
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const CAT_COLORS = {trampoline:'#378ADD',concessions:'#1D9E75',merchandise:'#EF9F27',events:'#D4537E',total:'#7F77DD'};
-const CAT_LABELS = {trampoline:'Trampoline Park',concessions:'Concessions',merchandise:'Merchandise',events:'Events',total:'Total Revenue'};
+const CAT_COLORS = {trampoline:'#378ADD',concessions:'#1D9E75',merchandise:'#EF9F27',events:'#D4537E',total:'#7F77DD',concessions_percap:'#1D9E75',merchandise_percap:'#EF9F27',events_percap:'#D4537E'};
+const CAT_LABELS = {trampoline:'Trampoline Park',concessions:'Concessions',merchandise:'Merchandise',events:'Events',total:'Total Revenue',concessions_percap:'Concession Per Cap',merchandise_percap:'Merchandise Per Cap',events_percap:'Events Per Cap'};
 const RANGE_COLORS = ['#378ADD','#D4537E','#1D9E75','#EF9F27','#7F77DD','#E8763A','#9B59B6','#1ABC9C'];
 
 // Global state
@@ -542,7 +554,7 @@ function setStatus(msg,state){
 function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
 function fmtY(metric){
   if(metric==='attendance')return v=>Math.round(v).toLocaleString();
-  if(metric==='percap')return v=>'$'+v.toFixed(2);
+  if(metric==='percap'||metric==='percap_breakdown')return v=>'$'+v.toFixed(2);
   return v=>'$'+(v/1000).toFixed(0)+'k';
 }
 function rollingAvg(arr,w){return arr.map((_,i)=>i<w-1?null:arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w);}
@@ -621,7 +633,15 @@ function getDayVal(entry, catKey, rows){
     const v=(row[entry.colIdx]||'').replace(/[$,"\s]/g,'');
     return isNaN(parseFloat(v))?0:parseFloat(v);
   }
-  const labelMap={trampoline:'Trampoline Park',merchandise:'Merchandise',concessions:'Concessions',events:'Events'};
+  const labelMap={
+    trampoline:'Trampoline Park',
+    merchandise:'Merchandise',
+    concessions:'Concessions',
+    events:'Events',
+    concessions_percap:'Concession Per Cap',
+    merchandise_percap:'Merchandise Per Cap',
+    events_percap:'Events Per Cap'
+  };
   if(catKey==='total'){
     return ['trampoline','merchandise','concessions','events'].reduce((s,k)=>s+getDayVal(entry,k,rows),0);
   }
@@ -859,6 +879,16 @@ function buildDatasetsFromGroups(groups, cats, metric, chartType){
       borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
       borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
   }
+  if(metric==='percap'){
+    // Total per cap = total revenue / attendance per group
+    return [{label:'Revenue per Guest',data:groups.map(g=>{
+      const rev=sumEntriesForCat(g.entries,'total');
+      const att=sumEntriesForCat(g.entries,'attendance');
+      return att>0?rev/att:0;
+    }),borderColor:'#D4537E',backgroundColor:isFilled?'rgba(212,83,126,0.12)':'#D4537E',
+      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#D4537E',borderRadius:6}];
+  }
+  // revenue or percap_breakdown — use category keys directly
   return cats.map(cat=>{
     const color=CAT_COLORS[cat];
     return{label:CAT_LABELS[cat],data:groups.map(g=>sumEntriesForCat(g.entries,cat)),
@@ -879,6 +909,17 @@ function showOutput(panelId,titleId,subId,legendId,statsId,exportId,title,sub,da
   document.getElementById(panelId).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// Show/hide correct category checkboxes based on metric selection
+document.getElementById('cr-metric').addEventListener('change', function(){
+  const isPercap = this.value === 'percap_breakdown';
+  document.getElementById('cr-categories').style.display = isPercap ? 'none' : 'flex';
+  document.getElementById('cr-percap-categories').style.display = isPercap ? 'flex' : 'none';
+});
+document.getElementById('comp-metric').addEventListener('change', function(){
+  const isPercap = this.value === 'percap_breakdown';
+  document.getElementById('comp-categories').style.display = isPercap ? 'none' : 'flex';
+  document.getElementById('comp-percap-categories').style.display = isPercap ? 'flex' : 'none';
+});
 // ── Single Report ─────────────────────────────────────────────────────────────
 function generateSingle(){
   if(!globalData)return;
@@ -888,10 +929,11 @@ function generateSingle(){
   const chartType=document.getElementById('cr-chart-type').value;
   const groupBy=document.getElementById('cr-group').value;
   const title=document.getElementById('cr-title').value;
-  const cats=[...document.querySelectorAll('#cr-categories input:checked')].map(c=>c.value);
+  const catsSelector = metric==='percap_breakdown' ? '#cr-percap-categories input:checked' : '#cr-categories input:checked';
+  const cats=[...document.querySelectorAll(catsSelector)].map(c=>c.value);
   if(!startDate||!endDate){alert('Please select a start and end date.');return;}
   if(startDate>endDate){alert('Start date must be before end date.');return;}
-  if(metric==='revenue'&&!cats.length){alert('Select at least one category.');return;}
+  if((metric==='revenue'||metric==='percap_breakdown')&&!cats.length){alert('Select at least one category.');return;}
 
   const entries=getDailyEntriesInRange(startDate,endDate);
   if(!entries.length){alert('No data found for that date range.');return;}
@@ -902,7 +944,7 @@ function generateSingle(){
   makeFlexChart('singleChart',chartType,labels,datasets,metric);
   showOutput('single-out','single-title','single-sub','single-legend','single-stats','single-export',
     title||'Custom Report',
-    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`,
+    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':metric==='percap_breakdown'?'Per Cap by Category':'Per Guest'}`,
     datasets,labels,metric);
 }
 
@@ -943,8 +985,9 @@ function generateComp(){
   const metric=document.getElementById('comp-metric').value;
   const groupBy=document.getElementById('comp-group').value;
   const title=document.getElementById('comp-title').value;
-  const cats=[...document.querySelectorAll('#comp-categories input:checked')].map(c=>c.value);
-  if(metric==='revenue'&&!cats.length){alert('Select at least one category.');return;}
+  const catsSelector = metric==='percap_breakdown' ? '#comp-percap-categories input:checked' : '#comp-categories input:checked';
+  const cats=[...document.querySelectorAll(catsSelector)].map(c=>c.value);
+  if((metric==='revenue'||metric==='percap_breakdown')&&!cats.length){alert('Select at least one category.');return;}
 
   const ranges=[];
   document.querySelectorAll('.range-card').forEach(card=>{
@@ -975,6 +1018,11 @@ function generateComp(){
         const att=sumEntriesForCat(g.entries,'attendance');
         return att>0?rev/att:0;
       });
+    } else if(metric==='percap_breakdown'){
+      // Sum all selected per cap cats averaged across entries
+      values=groups.map(g=>cats.length===1
+        ? sumEntriesForCat(g.entries,cats[0])
+        : cats.reduce((s,cat)=>s+sumEntriesForCat(g.entries,cat),0)/cats.length);
     } else {
       if(cats.length===1) values=groups.map(g=>sumEntriesForCat(g.entries,cats[0]));
       else values=groups.map(g=>cats.reduce((s,cat)=>s+sumEntriesForCat(g.entries,cat),0));
