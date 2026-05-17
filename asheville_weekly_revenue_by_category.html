@@ -151,6 +151,48 @@
     .stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 
     .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
+
+    /* Item Performance Tab */
+    .ip-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 20px; }
+    .ip-controls .builder-field { min-width: 160px; }
+    .ip-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .ip-filter-btn {
+      padding: 6px 14px; font-size: 13px; border-radius: 20px; border: 0.5px solid #ddd;
+      background: #f8f8f8; cursor: pointer; font-weight: 400; color: #1a1a1a; transition: all 0.15s;
+    }
+    .ip-filter-btn:hover { border-color: #378ADD; background: #f0f7ff; }
+    .ip-filter-btn.active { background: #378ADD; color: #fff; border-color: #378ADD; font-weight: 500; }
+
+    /* Leaderboard table */
+    .lb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .lb-table th {
+      background: #f0f4f8; padding: 10px 14px; text-align: left;
+      font-weight: 600; font-size: 11px; color: #555; border-bottom: 1px solid #e0e0e0;
+      text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; user-select: none;
+    }
+    .lb-table th:hover { background: #e4ecf5; }
+    .lb-table th.sorted { color: #378ADD; }
+    .lb-table td { padding: 10px 14px; border-bottom: 0.5px solid #f0f0f0; vertical-align: middle; }
+    .lb-table tr:hover td { background: #fafbfc; }
+    .lb-rank { font-size: 13px; font-weight: 700; color: #aaa; width: 32px; }
+    .lb-rank.gold { color: #F5A623; }
+    .lb-rank.silver { color: #9B9B9B; }
+    .lb-rank.bronze { color: #C67C52; }
+    .lb-name { font-weight: 500; color: #1a1a1a; }
+    .lb-category { font-size: 11px; color: #fff; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+    .lb-bar-wrap { width: 140px; }
+    .lb-bar { height: 8px; border-radius: 4px; background: #378ADD; transition: width 0.4s; }
+    .lb-wow { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
+    .lb-wow.up { background: #e6f7f0; color: #1D9E75; }
+    .lb-wow.down { background: #fdecea; color: #c0392b; }
+    .lb-wow.flat { background: #f0f0f0; color: #888; }
+    .lb-wow.na { background: #f0f0f0; color: #bbb; }
+
+    /* Item trend sparkline */
+    .sparkline-wrap { width: 80px; height: 30px; display: inline-block; }
+
+    /* Category color dots */
+    .cat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
   </style>
 </head>
 <body>
@@ -181,6 +223,7 @@
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('items',this)">🏆 Item Performance</button>
   <button class="tab-btn" onclick="switchTab('custom',this)">🛠 Custom Report</button>
 </div>
 
@@ -221,6 +264,108 @@
     <div class="chart-wrap" style="height:220px;"><canvas id="percapChart"></canvas></div>
   </div>
 </div>
+
+<!-- ══ ITEM PERFORMANCE ══ -->
+<div id="tab-items" class="tab-content">
+
+  <!-- Controls -->
+  <div class="ip-controls">
+    <div class="builder-field">
+      <label>Time Period</label>
+      <select id="ip-period" onchange="onIPPeriodChange()">
+        <option value="current-month">Current Month</option>
+        <option value="last-month">Last Month</option>
+        <option value="all-time">All Time</option>
+        <option value="custom">Custom Date Range</option>
+      </select>
+    </div>
+    <div class="builder-field" id="ip-start-wrap" style="display:none;">
+      <label>Start Date</label>
+      <input type="date" id="ip-start" />
+    </div>
+    <div class="builder-field" id="ip-end-wrap" style="display:none;">
+      <label>End Date</label>
+      <input type="date" id="ip-end" />
+    </div>
+    <div class="builder-field">
+      <label>Sort By</label>
+      <select id="ip-sort" onchange="renderItemTab()">
+        <option value="revenue">Revenue (High→Low)</option>
+        <option value="revenue-asc">Revenue (Low→High)</option>
+        <option value="wow">Week over Week Change</option>
+        <option value="name">Name (A→Z)</option>
+        <option value="pct">% of Category</option>
+      </select>
+    </div>
+    <div class="builder-field">
+      <label>Show</label>
+      <select id="ip-show" onchange="renderItemTab()">
+        <option value="10">Top 10</option>
+        <option value="20">Top 20</option>
+        <option value="all">All Items</option>
+      </select>
+    </div>
+    <button class="generate-btn" style="margin-top:20px;" onclick="renderItemTab()">Update</button>
+  </div>
+
+  <!-- Category filter pills -->
+  <div class="ip-filter-bar" id="ip-cat-filter">
+    <button class="ip-filter-btn active" data-cat="all" onclick="setIPCat(this)">All Categories</button>
+    <button class="ip-filter-btn" data-cat="Merchandise" onclick="setIPCat(this)">🛍 Merchandise</button>
+    <button class="ip-filter-btn" data-cat="Concessions" onclick="setIPCat(this)">🍔 Concessions</button>
+    <button class="ip-filter-btn" data-cat="Events" onclick="setIPCat(this)">🎉 Events</button>
+    <button class="ip-filter-btn" data-cat="Trampoline Park" onclick="setIPCat(this)">🦘 Trampoline Park</button>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="cards" id="ip-cards" style="margin-bottom:24px;"></div>
+
+  <!-- Top items chart -->
+  <div class="panel">
+    <div class="panel-header">
+      <div><div class="panel-title" id="ip-chart-title">Top Items by Revenue</div><div class="panel-sub" id="ip-chart-sub"></div></div>
+      <button class="export-btn" onclick="doExport('ipBarChart','ip-period')">⬇ Export PNG</button>
+    </div>
+    <div class="chart-wrap" style="height:360px;"><canvas id="ipBarChart"></canvas></div>
+  </div>
+
+  <!-- Leaderboard table -->
+  <div class="panel">
+    <div class="panel-header">
+      <div><div class="panel-title" id="ip-table-title">Item Leaderboard</div><div class="panel-sub">Click column headers to sort · WoW = latest week vs prior week</div></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="lb-table" id="ip-table">
+        <thead>
+          <tr>
+            <th onclick="setIPSort('rank')">#</th>
+            <th onclick="setIPSort('name')">Item</th>
+            <th onclick="setIPSort('category')">Category</th>
+            <th onclick="setIPSort('revenue')">Period Revenue ↕</th>
+            <th onclick="setIPSort('pct')">% of Category</th>
+            <th onclick="setIPSort('weekly-avg')">Weekly Avg</th>
+            <th onclick="setIPSort('wow')">WoW Change</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody id="ip-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Revenue share donut -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;" id="ip-bottom-panels">
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Revenue Share by Item</div><div class="panel-sub">Top items as % of total</div></div></div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="ipDonutChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Weekly Trend — Top 5 Items</div><div class="panel-sub">Revenue per week for top performers</div></div></div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="ipTrendChart"></canvas></div>
+    </div>
+  </div>
+
+</div><!-- end items tab -->
 
 <!-- ══ CUSTOM REPORT ══ -->
 <div id="tab-custom" class="tab-content">
@@ -530,6 +675,7 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  if(name==='items' && globalData) renderItemTab();
 }
 function switchMode(name,btn){
   btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
@@ -1186,6 +1332,352 @@ function generateDDR(){
     title||`${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} — Daily Breakdown`,
     `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · Every day · ${metric==='revenue'?'Revenue':'Attendance'}`,
     datasets,labels,metric);
+}
+
+// ── Item Performance ──────────────────────────────────────────────────────────
+
+// Map of category name -> color
+const IP_CAT_COLORS = {
+  'Merchandise':    '#EF9F27',
+  'Concessions':    '#1D9E75',
+  'Events':         '#D4537E',
+  'Trampoline Park':'#378ADD'
+};
+
+// Known sub-item rows and which category they belong to
+// Parsed dynamically from sheet but we need the category section headers
+const IP_CAT_HEADERS = ['Merchandise','Concessions','Events','Trampoline Park'];
+
+let ipCurrentCat = 'all';
+let ipCurrentSort = 'revenue';
+
+function onIPPeriodChange(){
+  const val = document.getElementById('ip-period').value;
+  const isCustom = val === 'custom';
+  document.getElementById('ip-start-wrap').style.display = isCustom ? 'block' : 'none';
+  document.getElementById('ip-end-wrap').style.display   = isCustom ? 'block' : 'none';
+}
+
+function setIPCat(btn){
+  document.querySelectorAll('.ip-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ipCurrentCat = btn.dataset.cat;
+  renderItemTab();
+}
+
+function setIPSort(col){
+  document.getElementById('ip-sort').value = col==='revenue'?'revenue':col==='wow'?'wow':col==='name'?'name':col==='pct'?'pct':'revenue';
+  renderItemTab();
+}
+
+// Parse sub-items from a sheet's raw rows
+// Returns array of {name, category, weeklyTotal, dailyVals[7]}
+function parseItemsFromRows(rows){
+  const items = [];
+  let currentCat = null;
+  // Find the "Category" header row first (row 23 area)
+  let inItemSection = false;
+  for(let r=0; r<rows.length; r++){
+    const row = rows[r];
+    const cellA = row[0] ? row[0].toString().trim() : '';
+    const cellI = row[COL_IDX] ? row[COL_IDX].toString().replace(/[$,"\s]/g,'') : '';
+
+    // Detect "Category" header row
+    if(cellA.toLowerCase()==='category'){ inItemSection=true; continue; }
+    if(!inItemSection) continue;
+
+    // Detect category section headers
+    if(IP_CAT_HEADERS.includes(cellA)){
+      currentCat = cellA;
+      continue;
+    }
+
+    // Skip blank rows, % rows, per cap rows, # rows, known non-item rows
+    if(!cellA) continue;
+    if(cellA.startsWith('%')) continue;
+    if(cellA.toLowerCase().includes('per cap')) continue;
+    if(cellA.startsWith('#')) continue;
+    if(!currentCat) continue;
+
+    // Parse total from col I
+    const total = cellI && !isNaN(parseFloat(cellI)) ? parseFloat(cellI) : 0;
+
+    // Parse daily values cols B-H (indices 1-7)
+    const dailyVals = [1,2,3,4,5,6,7].map(ci=>{
+      const v = row[ci] ? row[ci].toString().replace(/[$,"\s]/g,'') : '';
+      return v && !isNaN(parseFloat(v)) ? parseFloat(v) : 0;
+    });
+
+    items.push({ name: cellA, category: currentCat, weeklyTotal: total, dailyVals });
+  }
+  return items;
+}
+
+// Get date range for selected period
+function getIPDateRange(){
+  const period = document.getElementById('ip-period').value;
+  const sorted = [...globalDailyIndex].sort((a,b)=>a.date-b.date);
+  if(!sorted.length) return {start:null,end:null};
+
+  const now = sorted[sorted.length-1].date;
+  const currentMonth = now.getMonth();
+  const currentYear  = now.getFullYear();
+
+  if(period==='current-month'){
+    return {
+      start: new Date(currentYear, currentMonth, 1),
+      end:   new Date(currentYear, currentMonth+1, 0)
+    };
+  }
+  if(period==='last-month'){
+    return {
+      start: new Date(currentYear, currentMonth-1, 1),
+      end:   new Date(currentYear, currentMonth, 0)
+    };
+  }
+  if(period==='all-time'){
+    return { start: sorted[0].date, end: now };
+  }
+  if(period==='custom'){
+    return {
+      start: inputToDate(document.getElementById('ip-start').value),
+      end:   inputToDate(document.getElementById('ip-end').value)
+    };
+  }
+  return {start:null,end:null};
+}
+
+// Aggregate item data across all sheets in date range
+function getItemData(startDate, endDate){
+  if(!startDate||!endDate) return [];
+
+  // Get all sheets that overlap with date range
+  const relevantSheets = globalSheetNames.filter(name=>{
+    const entries = globalDailyIndex.filter(e=>e.sheetName===name);
+    if(!entries.length) return false;
+    const sheetDates = entries.map(e=>e.date);
+    const sheetStart = new Date(Math.min(...sheetDates));
+    const sheetEnd   = new Date(Math.max(...sheetDates));
+    return sheetEnd >= startDate && sheetStart <= endDate;
+  });
+
+  if(!relevantSheets.length) return [];
+
+  // For each sheet, parse items and sum up only days in range
+  const itemMap = {}; // name -> {category, total, weeklyTotals:[]}
+
+  relevantSheets.forEach(sheetName=>{
+    const rows = globalRawRows[sheetName];
+    if(!rows) return;
+    const items = parseItemsFromRows(rows);
+
+    // Get day entries for this sheet within range
+    const sheetEntries = globalDailyIndex
+      .filter(e=>e.sheetName===sheetName && e.date>=startDate && e.date<=endDate)
+      .sort((a,b)=>a.date-b.date);
+
+    // Map colIdx to day index offset (col 1=Mon, 2=Tue... but depends on sheet)
+    // Daily vals in parseItemsFromRows use cols B-H (indices 1-7 = Mon-Sun based on screenshot)
+    // We need to map those cols to the actual dates
+    const sheetAllEntries = globalDailyIndex.filter(e=>e.sheetName===sheetName).sort((a,b)=>a.date-b.date);
+
+    items.forEach(item=>{
+      if(!itemMap[item.name]){
+        itemMap[item.name] = { name:item.name, category:item.category, total:0, weeklyTotals:{} };
+      }
+      // Sum daily values for days within range
+      let itemTotal = 0;
+      sheetAllEntries.forEach((entry, di)=>{
+        if(entry.date >= startDate && entry.date <= endDate){
+          // colIdx 2=Sun,3=Mon,4=Tue,5=Wed,6=Thu,7=Fri,8=Sat
+          // dailyVals uses indices 1-7 = cols B-H
+          // entry.colIdx is 2-8 (Sun=2, Mon=3... Sat=8)
+          // dailyVals index = entry.colIdx - 1 (so Sun=1, Mon=2... Sat=7)
+          const dv = item.dailyVals[entry.colIdx - 1] || 0;
+          itemTotal += dv;
+        }
+      });
+      itemMap[item.name].total += itemTotal;
+      // Store weekly total for trend
+      itemMap[item.name].weeklyTotals[sheetName] = (itemMap[item.name].weeklyTotals[sheetName]||0) + itemTotal;
+    });
+  });
+
+  return Object.values(itemMap).filter(i=>i.total>0||Object.values(i.weeklyTotals).some(v=>v>0));
+}
+
+// Get WoW change for an item
+function getItemWoW(item){
+  const weeks = globalSheetNames.filter(n=>n in item.weeklyTotals);
+  if(weeks.length < 2) return null;
+  const last  = item.weeklyTotals[weeks[weeks.length-1]] || 0;
+  const prior = item.weeklyTotals[weeks[weeks.length-2]] || 0;
+  if(prior===0) return null;
+  return ((last-prior)/prior)*100;
+}
+
+function renderItemTab(){
+  if(!globalData){ return; }
+  const {start, end} = getIPDateRange();
+  if(!start||!end){ alert('Please select a date range.'); return; }
+
+  const sortVal = document.getElementById('ip-sort').value;
+  const showVal = document.getElementById('ip-show').value;
+
+  let items = getItemData(start, end);
+  if(!items.length){ document.getElementById('ip-table-body').innerHTML='<tr><td colspan="8" style="text-align:center;color:#aaa;padding:24px;">No item data found for this period.</td></tr>'; return; }
+
+  // Filter by category
+  if(ipCurrentCat !== 'all') items = items.filter(i=>i.category===ipCurrentCat);
+
+  // Calculate category totals for % calc
+  const catTotals = {};
+  items.forEach(i=>{ catTotals[i.category]=(catTotals[i.category]||0)+i.total; });
+
+  // Attach computed fields
+  items = items.map(i=>({
+    ...i,
+    wow: getItemWoW(i),
+    pct: catTotals[i.category]>0 ? (i.total/catTotals[i.category])*100 : 0,
+    weeklyAvg: i.total / Math.max(1, Object.keys(i.weeklyTotals).length)
+  }));
+
+  // Sort
+  items.sort((a,b)=>{
+    if(sortVal==='revenue') return b.total-a.total;
+    if(sortVal==='revenue-asc') return a.total-b.total;
+    if(sortVal==='wow') return (b.wow??-999)-(a.wow??-999);
+    if(sortVal==='name') return a.name.localeCompare(b.name);
+    if(sortVal==='pct') return b.pct-a.pct;
+    return b.total-a.total;
+  });
+
+  // Limit
+  const displayItems = showVal==='all' ? items : items.slice(0, parseInt(showVal));
+  const maxRevenue = displayItems[0]?.total || 1;
+
+  const periodLabel = getPeriodLabel(start, end);
+  const totalRevenue = items.reduce((s,i)=>s+i.total, 0);
+  const topItem = items[0];
+  const topCat = Object.entries(catTotals).sort((a,b)=>b[1]-a[1])[0];
+
+  // Update summary cards
+  document.getElementById('ip-cards').innerHTML = `
+    <div class="card highlight"><div class="label">Items Tracked</div><div class="value">${items.length}</div><div class="sub">${periodLabel}</div></div>
+    <div class="card"><div class="label">Top Item</div><div class="value" style="font-size:16px;">${topItem?.name||'—'}</div><div class="sub">${topItem?fmt(topItem.total):''}</div></div>
+    <div class="card"><div class="label">Top Category</div><div class="value" style="font-size:16px;">${topCat?topCat[0]:'—'}</div><div class="sub">${topCat?fmt(topCat[1]):''}</div></div>
+    <div class="card"><div class="label">Total Item Revenue</div><div class="value">${fmt(totalRevenue)}</div><div class="sub">${periodLabel}</div></div>
+  `;
+
+  document.getElementById('ip-chart-title').textContent = `Top Items by Revenue — ${periodLabel}`;
+  document.getElementById('ip-chart-sub').textContent = ipCurrentCat==='all'?'All categories':ipCurrentCat;
+  document.getElementById('ip-table-title').textContent = `Item Leaderboard — ${periodLabel}`;
+
+  // Bar chart
+  const barColors = displayItems.map(i=>IP_CAT_COLORS[i.category]||'#378ADD');
+  if(charts['ipBarChart']) charts['ipBarChart'].destroy();
+  charts['ipBarChart'] = new Chart(document.getElementById('ipBarChart'),{
+    type:'bar',
+    data:{
+      labels: displayItems.map(i=>i.name),
+      datasets:[{label:'Revenue',data:displayItems.map(i=>i.total),backgroundColor:barColors,borderWidth:0,borderRadius:6}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${fmt(ctx.parsed.x)} (${displayItems[ctx.dataIndex].pct.toFixed(1)}% of ${displayItems[ctx.dataIndex].category})`}}},
+      scales:{
+        x:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}},
+        y:{ticks:{font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+
+  // Leaderboard table
+  const tbody = document.getElementById('ip-table-body');
+  tbody.innerHTML = displayItems.map((item, idx)=>{
+    const rankClass = idx===0?'gold':idx===1?'silver':idx===2?'bronze':'';
+    const catColor = IP_CAT_COLORS[item.category]||'#aaa';
+    const barPct = Math.round((item.total/maxRevenue)*100);
+    const wow = item.wow;
+    const wowHTML = wow===null
+      ? '<span class="lb-wow na">N/A</span>'
+      : `<span class="lb-wow ${wow>0?'up':wow<0?'down':'flat'}">${wow>=0?'+':''}${wow.toFixed(1)}%</span>`;
+
+    // Mini sparkline data
+    const sparkVals = globalSheetNames.map(n=>item.weeklyTotals[n]||0);
+    const sparkMax = Math.max(...sparkVals, 1);
+    const sparkPoints = sparkVals.map((v,i)=>`${Math.round((i/(sparkVals.length-1||1))*70)},${Math.round((1-(v/sparkMax))*24)+3}`).join(' ');
+
+    return `<tr>
+      <td class="lb-rank ${rankClass}">${idx+1}</td>
+      <td class="lb-name">${item.name}</td>
+      <td><span class="lb-category" style="background:${catColor};">${item.category}</span></td>
+      <td>
+        <div style="font-weight:600;">${fmt(item.total)}</div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${barPct}%;background:${catColor};"></div></div>
+      </td>
+      <td>${item.pct.toFixed(1)}%</td>
+      <td>${fmt(item.weeklyAvg)}/wk</td>
+      <td>${wowHTML}</td>
+      <td>
+        <svg class="sparkline-wrap" viewBox="0 0 70 30" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="${sparkPoints}" fill="none" stroke="${catColor}" stroke-width="1.5"/>
+        </svg>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Donut chart — top 8 items + "Other"
+  const top8 = items.slice(0,8);
+  const otherTotal = items.slice(8).reduce((s,i)=>s+i.total,0);
+  const donutLabels = [...top8.map(i=>i.name), ...(otherTotal>0?['Other']:[])];
+  const donutData   = [...top8.map(i=>i.total), ...(otherTotal>0?[otherTotal]:[])];
+  const donutColors = [...top8.map(i=>IP_CAT_COLORS[i.category]||'#aaa'), '#ccc'];
+
+  if(charts['ipDonutChart']) charts['ipDonutChart'].destroy();
+  charts['ipDonutChart'] = new Chart(document.getElementById('ipDonutChart'),{
+    type:'doughnut',
+    data:{labels:donutLabels,datasets:[{data:donutData,backgroundColor:donutColors,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.parsed)} (${((ctx.parsed/totalRevenue)*100).toFixed(1)}%)`}}}}
+  });
+
+  // Trend chart — top 5 items across weeks
+  const top5 = items.slice(0,5);
+  const trendLabels = globalSheetNames.map(n=>sheetToLabel(n));
+  const trendDatasets = top5.map(item=>({
+    label: item.name,
+    data: globalSheetNames.map(n=>item.weeklyTotals[n]||0),
+    borderColor: IP_CAT_COLORS[item.category]||'#378ADD',
+    backgroundColor:'transparent',
+    borderWidth:2, pointRadius:3,
+    pointBackgroundColor: IP_CAT_COLORS[item.category]||'#378ADD',
+    tension:0.3
+  }));
+
+  if(charts['ipTrendChart']) charts['ipTrendChart'].destroy();
+  charts['ipTrendChart'] = new Chart(document.getElementById('ipTrendChart'),{
+    type:'line',
+    data:{labels:trendLabels,datasets:trendDatasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{ticks:{font:{size:10},autoSkip:true,maxRotation:40},grid:{display:false}},
+        y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
+      }
+    }
+  });
+}
+
+function getPeriodLabel(start, end){
+  const period = document.getElementById('ip-period').value;
+  if(period==='current-month'||period==='last-month'){
+    const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return months[start.getMonth()]+' '+start.getFullYear();
+  }
+  if(period==='all-time') return 'All Time';
+  return `${fmtDateShort(start)} – ${fmtDateShort(end)}`;
 }
 </script>
 </body>
