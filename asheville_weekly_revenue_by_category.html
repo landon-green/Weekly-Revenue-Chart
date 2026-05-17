@@ -1399,6 +1399,16 @@ function parseItemsFromRows(rows){
     if(cellA.startsWith('#')) continue;
     if(!currentCat) continue;
 
+    // Skip known summary/expense rows that are not items
+    const excludedRows = [
+      'total sales','total hours','total labor ($)','total labor',
+      'total estimated labor tax (12%)','total estimated labor tax',
+      'estimated fixed daily expenses','estimated expenses',
+      'revenue - total expenses','revenue- total expenses',
+      'labor : sales','expense : sales'
+    ];
+    if(excludedRows.includes(cellA.toLowerCase())) continue;
+
     // Parse total from col I
     const total = cellI && !isNaN(parseFloat(cellI)) ? parseFloat(cellI) : 0;
 
