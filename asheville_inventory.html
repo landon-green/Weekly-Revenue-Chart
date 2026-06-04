@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Air Asheville — Inventory</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1e2333;
+      --border: #2a2f42;
+      --accent: #4f8ef7;
+      --accent2: #34d399;
+      --warn: #f59e0b;
+      --danger: #f43f5e;
+      --text: #e8ecf4;
+      --text2: #8b92a9;
+      --text3: #545c75;
+      --socks: #7c6af7;
+      --bands: #34d399;
+      --cleaning: #4f8ef7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Password ── */
+    #pw-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center; z-index: 999;
+    }
+    .pw-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 44px 48px; width: 360px; text-align: center;
+    }
+    .pw-logo {
+      width: 48px; height: 48px; background: var(--accent);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin: 0 auto 20px;
+    }
+    .pw-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .pw-card p { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+    .pw-card input {
+      width: 100%; padding: 12px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); outline: none; margin-bottom: 12px; transition: border 0.2s;
+    }
+    .pw-card input:focus { border-color: var(--accent); }
+    .pw-card button {
+      width: 100%; padding: 12px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      background: var(--accent); color: #fff; border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.2s;
+    }
+    .pw-card button:hover { opacity: 0.88; }
+    #pw-error { font-size: 12px; color: var(--danger); margin-top: 10px; min-height: 16px; }
+    #main { display: none; }
+
+    /* ── Layout ── */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 32px; border-bottom: 1px solid var(--border);
+      background: var(--surface); position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-logo {
+      width: 36px; height: 36px; background: var(--accent); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .topbar h1 { font-size: 16px; font-weight: 700; }
+    .topbar p { font-size: 12px; color: var(--text2); }
+    #status-pill {
+      display: flex; align-items: center; gap: 6px; font-size: 12px;
+      color: var(--text2); background: var(--surface2); padding: 6px 12px;
+      border-radius: 20px; border: 1px solid var(--border);
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); }
+    .status-dot.loading { background: var(--warn); animation: pulse 1s infinite; }
+    .status-dot.error { background: var(--danger); }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; gap: 2px; padding: 20px 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      padding: 10px 22px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      border: none; background: transparent; color: var(--text2); cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      border-radius: 6px 6px 0 0; transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); background: var(--surface2); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .tab-content { display: none; padding: 28px 32px; }
+    .tab-content.active { display: block; }
+
+    /* ── Form ── */
+    .form-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    .form-header h2 { font-size: 20px; font-weight: 700; }
+    .form-header p { font-size: 13px; color: var(--text2); margin-top: 3px; }
+    .staff-field {
+      display: flex; align-items: center; gap: 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px;
+    }
+    .staff-field label { font-size: 13px; color: var(--text2); white-space: nowrap; font-weight: 500; }
+    .staff-field input {
+      background: transparent; border: none; outline: none; font-size: 14px;
+      font-family: 'DM Sans', sans-serif; color: var(--text); width: 200px;
+    }
+    .staff-field input::placeholder { color: var(--text3); }
+
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; margin-bottom: 20px; overflow: hidden;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+    }
+    .section-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .section-header h3 { font-size: 14px; font-weight: 700; }
+    .section-header span { font-size: 12px; color: var(--text2); margin-left: auto; }
+
+    .items-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; padding: 18px 20px;
+    }
+    .item-field { display: flex; flex-direction: column; gap: 6px; }
+    .item-field label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    .item-field input {
+      padding: 10px 14px; font-size: 15px; font-family: 'DM+Mono', monospace;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); outline: none; transition: all 0.15s; text-align: center;
+    }
+    .item-field input:focus { border-color: var(--accent); background: var(--bg); }
+    .item-field .unit-hint { font-size: 10px; color: var(--text3); text-align: center; }
+
+    .submit-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 24px; margin-top: 8px; flex-wrap: wrap; gap: 14px;
+    }
+    .submit-bar p { font-size: 13px; color: var(--text2); }
+    .submit-bar p strong { color: var(--text); }
+    .submit-btn {
+      padding: 13px 36px; font-size: 14px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+    }
+    .submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .submit-msg { font-size: 13px; margin-top: 4px; }
+    .submit-msg.ok  { color: var(--accent2); }
+    .submit-msg.err { color: var(--danger); }
+
+    /* ── Current Inventory ── */
+    .inv-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .inv-header h2 { font-size: 20px; font-weight: 700; }
+    .inv-meta { font-size: 12px; color: var(--text2); }
+    .refresh-btn {
+      padding: 8px 16px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
+    }
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .inv-summary-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px; margin-bottom: 28px;
+    }
+    .inv-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px;
+    }
+    .inv-card .ic-label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+    .inv-card .ic-value { font-size: 24px; font-weight: 700; }
+    .inv-card .ic-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .inv-card.ok-card { border-left: 3px solid var(--accent2); }
+    .inv-card.warn-card { border-left: 3px solid var(--danger); }
+
+    /* Order list */
+    .order-panel {
+      background: var(--surface); border: 1px solid var(--danger);
+      border-radius: 14px; padding: 20px 24px; margin-bottom: 24px;
+    }
+    .order-panel h3 { font-size: 14px; font-weight: 700; color: var(--danger); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; }
+    .order-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--surface2); border-radius: 8px; padding: 10px 14px;
+      border-left: 3px solid var(--danger);
+    }
+    .order-item .oi-name { font-size: 13px; font-weight: 500; }
+    .order-item .oi-detail { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .order-item .oi-need { font-size: 13px; font-weight: 700; color: var(--danger); }
+
+    /* Inventory table */
+    .inv-section { margin-bottom: 28px; }
+    .inv-section-title {
+      font-size: 12px; font-weight: 700; color: var(--text2);
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .inv-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .inv-table { width: 100%; border-collapse: collapse; }
+    .inv-table th {
+      text-align: left; padding: 8px 14px; font-size: 11px; font-weight: 700;
+      color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .inv-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .inv-table tr:last-child td { border-bottom: none; }
+    .inv-table tr:hover td { background: var(--surface2); }
+    .status-badge {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .status-ok     { background: rgba(52,211,153,0.15); color: var(--accent2); }
+    .status-low    { background: rgba(244,63,94,0.15);  color: var(--danger); }
+    .status-nopar  { background: rgba(139,146,169,0.12); color: var(--text3); }
+    .count-val { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; }
+    .par-val   { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text2); }
+
+    /* History table */
+    .history-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .history-panel h3 { font-size: 14px; font-weight: 700; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .history-scroll { overflow-x: auto; }
+    .history-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .history-table th { background: var(--surface2); padding: 8px 14px; text-align: left; color: var(--text3); font-weight: 600; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .history-table td { padding: 9px 14px; border-bottom: 0.5px solid var(--border); white-space: nowrap; font-family: 'DM Mono', monospace; }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: var(--surface2); }
+    .history-ts { font-size: 11px; color: var(--text2); font-family: 'DM Sans', monospace; }
+    .history-name { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--accent); }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
+    .empty-state .es-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<!-- Password -->
+<div id="pw-screen">
+  <div class="pw-card">
+    <div class="pw-logo">📦</div>
+    <h2>Inventory Tracker</h2>
+    <p>Big Air Asheville · Park Ops</p>
+    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPW()" />
+    <button onclick="checkPW()">Sign In</button>
+    <div id="pw-error"></div>
+  </div>
+</div>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">📦</div>
+      <div>
+        <h1>Big Air Asheville — Inventory</h1>
+        <p>Park Ops · Weekly Tracker</p>
+      </div>
+    </div>
+    <div id="status-pill">
+      <span class="status-dot loading" id="sdot"></span>
+      <span id="stext">Loading...</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('submit',this)">📝 Submit Count</button>
+    <button class="tab-btn" onclick="switchTab('current',this)">📊 Current Inventory</button>
+    <button class="tab-btn" onclick="switchTab('history',this)">🕐 Submission History</button>
+  </div>
+
+  <!-- ══ SUBMIT ══ -->
+  <div id="tab-submit" class="tab-content active">
+    <div class="form-header">
+      <div>
+        <h2>Weekly Inventory Count</h2>
+        <p id="form-date">Loading date...</p>
+      </div>
+      <div class="staff-field">
+        <label>👤 Staff Name</label>
+        <input type="text" id="staff-name" placeholder="Your name" />
+      </div>
+    </div>
+
+    <!-- Socks -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-dot" style="background:var(--socks);"></div>
+        <h3>Socks</h3>
+        <span>Unit: Boxes</span>
+      </div>
+      <div class="items-grid">
+        <div class="item-field"><label>XXS</label><input type="number" id="f-xxs" min="0" placeholder="0"/><div class="unit-hint">PAR: 2 boxes</div></div>
+        <div class="item-field"><label>XS</label><input type="number" id="f-xs" min="0" placeholder="0"/><div class="unit-hint">PAR: 2 boxes</div></div>
+        <div class="item-field"><label>S</label><input type="number" id="f-s" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>M</label><input type="number" id="f-m" min="0" placeholder="0"/><div class="unit-hint">PAR: 5 boxes</div></div>
+        <div class="item-field"><label>L</label><input type="number" id="f-l" min="0" placeholder="0"/><div class="unit-hint">PAR: 5 boxes</div></div>
+        <div class="item-field"><label>XL</label><input type="number" id="f-xl" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>XXL</label><input type="number" id="f-xxl" min="0" placeholder="0"/><div class="unit-hint">PAR: 2 boxes</div></div>
+      </div>
+    </div>
+
+    <!-- Wrist Bands -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-dot" style="background:var(--bands);"></div>
+        <h3>Wrist Bands</h3>
+        <span>Unit: Boxes</span>
+      </div>
+      <div class="items-grid">
+        <div class="item-field"><label>Player Pass</label><input type="number" id="f-playerpass" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>All Day</label><input type="number" id="f-allday" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>00</label><input type="number" id="f-wb00" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>15</label><input type="number" id="f-wb15" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>30</label><input type="number" id="f-wb30" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>45</label><input type="number" id="f-wb45" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>Toddler Time</label><input type="number" id="f-toddler" min="0" placeholder="0"/><div class="unit-hint">PAR: 2 boxes</div></div>
+        <div class="item-field"><label>Midday Madness</label><input type="number" id="f-midday" min="0" placeholder="0"/><div class="unit-hint">PAR: 2 boxes</div></div>
+        <div class="item-field"><label>Cosmic Blue</label><input type="number" id="f-cosmicblue" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+        <div class="item-field"><label>Cosmic Purple</label><input type="number" id="f-cosmicpurple" min="0" placeholder="0"/><div class="unit-hint">PAR: 3 boxes</div></div>
+      </div>
+    </div>
+
+    <!-- Cleaning Materials -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-dot" style="background:var(--cleaning);"></div>
+        <h3>Cleaning Materials</h3>
+        <span>Unit: Individual units · No PAR</span>
+      </div>
+      <div class="items-grid">
+        <div class="item-field"><label>Bar Towels</label><input type="number" id="f-bartowels" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Microfiber Towels</label><input type="number" id="f-microtowels" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Paper Towels</label><input type="number" id="f-papertowels" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Toilet Paper</label><input type="number" id="f-toiletpaper" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Mop Heads</label><input type="number" id="f-mopheads" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Floor Sweeper Heads</label><input type="number" id="f-sweeperheads" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Hand Soap</label><input type="number" id="f-handsoap" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Hand Sanitizer</label><input type="number" id="f-handsanitizer" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>33 Gallon Bags</label><input type="number" id="f-bags33" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>40 Gallon Bags</label><input type="number" id="f-bags40" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Tough Green</label><input type="number" id="f-toughgreen" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Effecticide</label><input type="number" id="f-effecticide" min="0" placeholder="0"/></div>
+        <div class="item-field"><label>Multishine</label><input type="number" id="f-multishine" min="0" placeholder="0"/></div>
+      </div>
+    </div>
+
+    <div class="submit-bar">
+      <div>
+        <p><strong>Ready to submit?</strong> Make sure all counts are filled in and your name is entered above.</p>
+        <div class="submit-msg" id="submit-msg"></div>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="submitInventory()">Submit Inventory Count ✓</button>
+    </div>
+  </div>
+
+  <!-- ══ CURRENT INVENTORY ══ -->
+  <div id="tab-current" class="tab-content">
+    <div class="inv-header">
+      <div>
+        <h2>Current Inventory</h2>
+        <div class="inv-meta" id="inv-meta">Loading latest submission...</div>
+      </div>
+      <button class="refresh-btn" onclick="loadInventory()">↻ Refresh</button>
+    </div>
+
+    <div class="inv-summary-cards" id="inv-cards"></div>
+    <div id="order-section"></div>
+
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="section-dot" style="background:var(--socks);display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;"></span>Socks</div>
+      <table class="inv-table" id="inv-socks-table">
+        <thead><tr><th>Item</th><th>Count</th><th>PAR</th><th>Status</th><th>Needed to Order</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="section-dot" style="background:var(--bands);display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;"></span>Wrist Bands</div>
+      <table class="inv-table" id="inv-bands-table">
+        <thead><tr><th>Item</th><th>Count</th><th>PAR</th><th>Status</th><th>Needed to Order</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="section-dot" style="background:var(--cleaning);display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;"></span>Cleaning Materials</div>
+      <table class="inv-table" id="inv-cleaning-table">
+        <thead><tr><th>Item</th><th>Count</th><th>PAR</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY ══ -->
+  <div id="tab-history" class="tab-content">
+    <div class="inv-header">
+      <div><h2>Submission History</h2><div class="inv-meta">All inventory submissions, most recent first</div></div>
+      <button class="refresh-btn" onclick="loadInventory()">↻ Refresh</button>
+    </div>
+    <div class="history-panel">
+      <h3>📋 All Submissions</h3>
+      <div class="history-scroll" id="history-container">
+        <div class="empty-state"><div class="es-icon">📭</div><p>No submissions yet</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwFtYd90XBfQXfo7lo8H_VnpKod3XYN0vGzLdehHaF1veyHpN-pN8ifxLVO-7zrDfkqGw/exec';
+const PW = 'Asheville2026!';
+
+// Item definitions — order must match what we send to the sheet
+const ITEMS = [
+  // Socks
+  {id:'xxs',        label:'XXS',                 section:'socks',    par:2},
+  {id:'xs',         label:'XS',                  section:'socks',    par:2},
+  {id:'s',          label:'S',                   section:'socks',    par:3},
+  {id:'m',          label:'M',                   section:'socks',    par:5},
+  {id:'l',          label:'L',                   section:'socks',    par:5},
+  {id:'xl',         label:'XL',                  section:'socks',    par:3},
+  {id:'xxl',        label:'XXL',                 section:'socks',    par:2},
+  // Wrist Bands
+  {id:'playerpass', label:'Player Pass',         section:'bands',    par:3},
+  {id:'allday',     label:'All Day',              section:'bands',    par:3},
+  {id:'wb00',       label:'00',                  section:'bands',    par:3},
+  {id:'wb15',       label:'15',                  section:'bands',    par:3},
+  {id:'wb30',       label:'30',                  section:'bands',    par:3},
+  {id:'wb45',       label:'45',                  section:'bands',    par:3},
+  {id:'toddler',    label:'Toddler Time',         section:'bands',    par:2},
+  {id:'midday',     label:'Midday Madness',       section:'bands',    par:2},
+  {id:'cosmicblue', label:'Cosmic Blue',          section:'bands',    par:3},
+  {id:'cosmicpurple',label:'Cosmic Purple',       section:'bands',    par:3},
+  // Cleaning
+  {id:'bartowels',      label:'Bar Towels',           section:'cleaning', par:null},
+  {id:'microtowels',    label:'Microfiber Towels',    section:'cleaning', par:null},
+  {id:'papertowels',    label:'Paper Towels',          section:'cleaning', par:null},
+  {id:'toiletpaper',    label:'Toilet Paper',          section:'cleaning', par:null},
+  {id:'mopheads',       label:'Mop Heads',             section:'cleaning', par:null},
+  {id:'sweeperheads',   label:'Floor Sweeper Heads',   section:'cleaning', par:null},
+  {id:'handsoap',       label:'Hand Soap',             section:'cleaning', par:null},
+  {id:'handsanitizer',  label:'Hand Sanitizer',        section:'cleaning', par:null},
+  {id:'bags33',         label:'33 Gallon Bags',        section:'cleaning', par:null},
+  {id:'bags40',         label:'40 Gallon Bags',        section:'cleaning', par:null},
+  {id:'toughgreen',     label:'Tough Green',           section:'cleaning', par:null},
+  {id:'effecticide',    label:'Effecticide',           section:'cleaning', par:null},
+  {id:'multishine',     label:'Multishine',            section:'cleaning', par:null},
+];
+
+let allRows = [];
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function checkPW(){
+  const v = document.getElementById('pw-input').value;
+  if(v === PW){
+    sessionStorage.setItem('invAuth','true');
+    document.getElementById('pw-screen').style.display='none';
+    document.getElementById('main').style.display='block';
+    init();
+  } else {
+    document.getElementById('pw-error').textContent='Incorrect password.';
+    document.getElementById('pw-input').value='';
+  }
+}
+if(sessionStorage.getItem('invAuth')==='true'){
+  document.getElementById('pw-screen').style.display='none';
+  document.getElementById('main').style.display='block';
+  init();
+}
+
+function setStatus(msg,state){
+  document.getElementById('sdot').className='status-dot'+(state?' '+state:'');
+  document.getElementById('stext').textContent=msg;
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function init(){
+  // Set form date
+  const now = new Date();
+  document.getElementById('form-date').textContent =
+    'Week of ' + now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  loadInventory();
+}
+
+// ── Load data ─────────────────────────────────────────────────────────────────
+async function loadInventory(){
+  setStatus('Loading...','loading');
+  try {
+    const res = await fetch(APPS_SCRIPT+'?action=read');
+    const json = await res.json();
+    allRows = (json.rows||[]).slice(1); // skip header row if present
+    setStatus('Live · '+new Date().toLocaleTimeString());
+    renderCurrentInventory();
+    renderHistory();
+  } catch(e){
+    setStatus('Could not load data','error');
+  }
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+async function submitInventory(){
+  const staffName = document.getElementById('staff-name').value.trim();
+  if(!staffName){ alert('Please enter your name before submitting.'); return; }
+
+  const counts = ITEMS.map(item=>{
+    const el = document.getElementById('f-'+item.id);
+    return el ? (parseFloat(el.value)||0) : 0;
+  });
+
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('submit-msg');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  msg.textContent = '';
+  msg.className = 'submit-msg';
+
+  try {
+    const payload = { staffName, counts };
+    const url = `${APPS_SCRIPT}?action=submit&data=${encodeURIComponent(JSON.stringify(payload))}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    if(json.success){
+      msg.textContent = '✓ Inventory submitted successfully!';
+      msg.className = 'submit-msg ok';
+      btn.textContent = '✓ Submitted!';
+      // Reset form
+      ITEMS.forEach(item=>{
+        const el=document.getElementById('f-'+item.id);
+        if(el) el.value='';
+      });
+      document.getElementById('staff-name').value='';
+      await loadInventory();
+      setTimeout(()=>{
+        btn.disabled=false;
+        btn.textContent='Submit Inventory Count ✓';
+        msg.textContent='';
+      }, 4000);
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch(e){
+    msg.textContent = '✗ Submission failed. Please try again.';
+    msg.className = 'submit-msg err';
+    btn.disabled = false;
+    btn.textContent = 'Submit Inventory Count ✓';
+  }
+}
+
+// ── Render Current Inventory ──────────────────────────────────────────────────
+function renderCurrentInventory(){
+  if(!allRows.length){
+    document.getElementById('inv-meta').textContent='No submissions yet';
+    document.getElementById('inv-cards').innerHTML='<div class="empty-state"><div class="es-icon">📭</div><p>No inventory data yet. Submit the first count!</p></div>';
+    return;
+  }
+
+  // Most recent row
+  const latest = allRows[allRows.length-1];
+  const timestamp = latest[0]||'Unknown';
+  const staffName = latest[1]||'Unknown';
+  document.getElementById('inv-meta').textContent=`Last submitted: ${timestamp} by ${staffName}`;
+
+  // Build item count map from latest row
+  const counts = {};
+  ITEMS.forEach((item,i)=>{ counts[item.id] = parseFloat(latest[i+2])||0; });
+
+  // Summary cards
+  const itemsWithPar = ITEMS.filter(i=>i.par!==null);
+  const belowPar = itemsWithPar.filter(i=>counts[i.id]<i.par);
+  const okItems  = itemsWithPar.filter(i=>counts[i.id]>=i.par);
+
+  document.getElementById('inv-cards').innerHTML=`
+    <div class="inv-card ok-card">
+      <div class="ic-label">Items OK</div>
+      <div class="ic-value" style="color:var(--accent2);">${okItems.length}</div>
+      <div class="ic-sub">At or above PAR</div>
+    </div>
+    <div class="inv-card warn-card">
+      <div class="ic-label">Need to Order</div>
+      <div class="ic-value" style="color:var(--danger);">${belowPar.length}</div>
+      <div class="ic-sub">Below PAR level</div>
+    </div>
+    <div class="inv-card">
+      <div class="ic-label">Last Submitted</div>
+      <div class="ic-value" style="font-size:15px;">${staffName}</div>
+      <div class="ic-sub">${timestamp}</div>
+    </div>
+    <div class="inv-card">
+      <div class="ic-label">Total Submissions</div>
+      <div class="ic-value">${allRows.length}</div>
+      <div class="ic-sub">All time</div>
+    </div>
+  `;
+
+  // Order list
+  const orderSection = document.getElementById('order-section');
+  if(belowPar.length>0){
+    const orderItems = belowPar.map(item=>`
+      <div class="order-item">
+        <div>
+          <div class="oi-name">${item.label}</div>
+          <div class="oi-detail">Have: ${counts[item.id]} · PAR: ${item.par}</div>
+        </div>
+        <div class="oi-need">+${item.par - counts[item.id]} boxes</div>
+      </div>
+    `).join('');
+    orderSection.innerHTML=`
+      <div class="order-panel">
+        <h3>🛒 Order List — ${belowPar.length} item${belowPar.length!==1?'s':''} below PAR</h3>
+        <div class="order-grid">${orderItems}</div>
+      </div>`;
+  } else {
+    orderSection.innerHTML=`<div style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:12px;padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--accent2);font-weight:600;">✓ All stocked items are at or above PAR level — nothing to order!</div>`;
+  }
+
+  // Render tables
+  renderInvTable('inv-socks-table', ITEMS.filter(i=>i.section==='socks'), counts, true);
+  renderInvTable('inv-bands-table', ITEMS.filter(i=>i.section==='bands'), counts, true);
+  renderInvTable('inv-cleaning-table', ITEMS.filter(i=>i.section==='cleaning'), counts, false);
+}
+
+function renderInvTable(tableId, items, counts, showOrder){
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  tbody.innerHTML = items.map(item=>{
+    const count = counts[item.id];
+    const hasPar = item.par !== null;
+    const isLow  = hasPar && count < item.par;
+    const needed = hasPar ? Math.max(0, item.par - count) : 0;
+    const statusHTML = hasPar
+      ? `<span class="status-badge ${isLow?'status-low':'status-ok'}">${isLow?'ORDER':'OK'}</span>`
+      : `<span class="status-badge status-nopar">Tracking</span>`;
+    const orderHTML = showOrder
+      ? `<td>${needed>0?`<span style="color:var(--danger);font-weight:700;">+${needed} boxes</span>`:'<span style="color:var(--text3);">—</span>'}</td>`
+      : '';
+    return `<tr>
+      <td style="font-weight:500;">${item.label}</td>
+      <td><span class="count-val">${count}</span></td>
+      <td><span class="par-val">${hasPar?item.par:'—'}</span></td>
+      <td>${statusHTML}</td>
+      ${orderHTML}
+    </tr>`;
+  }).join('');
+}
+
+// ── Render History ────────────────────────────────────────────────────────────
+function renderHistory(){
+  const container = document.getElementById('history-container');
+  if(!allRows.length){
+    container.innerHTML='<div class="empty-state"><div class="es-icon">📭</div><p>No submissions yet</p></div>';
+    return;
+  }
+
+  const reversed = [...allRows].reverse();
+  const headers = ['Timestamp','Staff Name',...ITEMS.map(i=>i.label)];
+  const headerHTML = headers.map(h=>`<th>${h}</th>`).join('');
+  const rowsHTML = reversed.map(row=>`
+    <tr>
+      <td class="history-ts">${row[0]||'—'}</td>
+      <td class="history-name">${row[1]||'—'}</td>
+      ${ITEMS.map((_,i)=>`<td>${row[i+2]??'—'}</td>`).join('')}
+    </tr>
+  `).join('');
+
+  container.innerHTML=`
+    <table class="history-table">
+      <thead><tr>${headerHTML}</tr></thead>
+      <tbody>${rowsHTML}</tbody>
+    </table>`;
+}
+</script>
+</body>
+</html>
