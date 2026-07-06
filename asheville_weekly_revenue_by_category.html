@@ -10,33 +10,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Arial, sans-serif; background: #f4f6f9; color: #1a1a1a; padding: 28px 32px; }
 
-    #password-screen {
-      position: fixed; inset: 0; background: #f4f6f9;
-      display: flex; align-items: center; justify-content: center; z-index: 9999;
-    }
-    #password-box {
-      background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0;
-      padding: 36px 40px; width: 340px; text-align: center;
-    }
+    #password-screen { position: fixed; inset: 0; background: #f4f6f9; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    #password-box { background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0; padding: 36px 40px; width: 340px; text-align: center; }
     #password-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
     #password-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
-    #password-box input {
-      width: 100%; padding: 10px 14px; font-size: 14px;
-      border: 0.5px solid #ccc; border-radius: 6px; margin-bottom: 12px; outline: none;
-    }
+    #password-box input { width: 100%; padding: 10px 14px; font-size: 14px; border: 0.5px solid #ccc; border-radius: 6px; margin-bottom: 12px; outline: none; }
     #password-box input:focus { border-color: #378ADD; }
-    #password-box button.pw-btn {
-      width: 100%; padding: 10px; font-size: 14px; font-weight: 600;
-      background: #378ADD; color: #fff; border: none; border-radius: 6px; cursor: pointer;
-    }
+    #password-box button.pw-btn { width: 100%; padding: 10px; font-size: 14px; font-weight: 600; background: #378ADD; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
     #password-box button.pw-btn:hover { background: #2a6db5; }
     #password-error { font-size: 12px; color: #c0392b; margin-top: 10px; min-height: 16px; }
     #main-content { display: none; }
 
-    header {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      margin-bottom: 20px; border-bottom: 2px solid #378ADD; padding-bottom: 12px;
-    }
+    header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 2px solid #378ADD; padding-bottom: 12px; }
     header h1 { font-size: 22px; font-weight: 600; }
     header p { font-size: 13px; color: #666; margin-top: 3px; }
     #status { font-size: 12px; color: #888; display: flex; align-items: center; gap: 6px; }
@@ -48,11 +33,7 @@
     button.refresh:hover { background: #f0f0f0; }
 
     .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid #e0e0e0; }
-    .tab-btn {
-      padding: 10px 20px; font-size: 14px; font-weight: 500; border: none;
-      background: transparent; cursor: pointer; color: #888; border-bottom: 2px solid transparent;
-      margin-bottom: -2px; border-radius: 6px 6px 0 0; transition: all 0.15s;
-    }
+    .tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 500; border: none; background: transparent; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; border-radius: 6px 6px 0 0; transition: all 0.15s; }
     .tab-btn:hover { color: #378ADD; background: #f0f7ff; }
     .tab-btn.active { color: #378ADD; border-bottom: 2px solid #378ADD; background: #f0f7ff; font-weight: 600; }
     .tab-content { display: none; }
@@ -79,120 +60,66 @@
     .wow.down { background: #fdecea; color: #c0392b; }
     .wow.flat { background: #f0f0f0; color: #888; }
 
-    /* Custom Report */
-    .cr-section-title {
-      font-size: 11px; font-weight: 700; color: #378ADD;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin: 20px 0 10px; padding-bottom: 5px; border-bottom: 1px solid #e8f0fb;
-    }
-    .builder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 16px; }
-    .builder-field label {
-      display: block; font-size: 11px; font-weight: 700; color: #666;
-      margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px;
-    }
-    .builder-field select, .builder-field input[type=text], .builder-field input[type=date] {
-      width: 100%; padding: 9px 12px; font-size: 13px;
-      border: 0.5px solid #ccc; border-radius: 6px; background: #fff; outline: none; color: #1a1a1a;
-    }
-    .builder-field select:focus, .builder-field input:focus { border-color: #378ADD; }
+    /* Controls */
+    .control-bar { background:#fff; border:0.5px solid #e0e0e0; border-radius:10px; padding:18px 22px; margin-bottom:20px; }
+    .control-row { display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    .field label { font-size:11px; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:0.4px; }
+    .field input[type=date], .field select { padding:9px 12px; font-size:13px; border:0.5px solid #ccc; border-radius:6px; background:#fff; outline:none; color:#1a1a1a; }
+    .field input[type=date]:focus, .field select:focus { border-color:#378ADD; }
 
-    .category-checks { display: flex; flex-wrap: wrap; gap: 8px; }
-    .category-checks label {
-      display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;
-      background: #f8f8f8; padding: 6px 12px; border-radius: 20px;
-      border: 0.5px solid #ddd; transition: all 0.15s; font-weight: 400; color: #1a1a1a;
-      text-transform: none; letter-spacing: 0;
-    }
-    .category-checks label:hover { border-color: #378ADD; background: #f0f7ff; }
-    .category-checks input[type=checkbox] { accent-color: #378ADD; width: 14px; height: 14px; }
-    .category-checks label.checked { background: #f0f7ff; border-color: #378ADD; color: #378ADD; font-weight: 500; }
+    .seg { display:inline-flex; border:1px solid #378ADD; border-radius:8px; overflow:hidden; }
+    .seg button { padding:9px 18px; font-size:13px; font-weight:500; border:none; background:#fff; color:#378ADD; cursor:pointer; }
+    .seg button.active { background:#378ADD; color:#fff; }
+    .seg button:hover:not(.active) { background:#f0f7ff; }
 
-    /* Range cards */
-    .ranges-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-    .range-card {
-      background: #f8f9fb; border: 0.5px solid #e0e0e0; border-radius: 10px;
-      padding: 14px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-      border-left: 4px solid var(--rc, #378ADD);
-    }
-    .range-badge {
-      font-size: 12px; font-weight: 700; color: #fff;
-      background: var(--rc, #378ADD); padding: 3px 10px; border-radius: 10px; white-space: nowrap; min-width: 70px; text-align: center;
-    }
-    .range-dates { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .range-dates label { font-size: 12px; color: #666; font-weight: 600; }
-    .range-dates input[type=date] { padding: 7px 10px; font-size: 13px; border: 0.5px solid #ccc; border-radius: 6px; background: #fff; outline: none; }
-    .range-dates input[type=date]:focus { border-color: #378ADD; }
-    .remove-btn { margin-left: auto; font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 0.5px solid #ddd; background: #fff; cursor: pointer; color: #888; }
-    .remove-btn:hover { border-color: #c0392b; color: #c0392b; }
+    .btn-primary { padding:11px 26px; font-size:14px; font-weight:600; background:#378ADD; color:#fff; border:none; border-radius:8px; cursor:pointer; }
+    .btn-primary:hover { background:#2a6db5; }
+    .btn-outline { padding:9px 18px; font-size:13px; font-weight:500; background:#fff; color:#378ADD; border:1.5px solid #378ADD; border-radius:8px; cursor:pointer; }
+    .btn-outline:hover { background:#f0f7ff; }
+    .btn-ghost { padding:8px 14px; font-size:13px; background:#f0f7ff; color:#378ADD; border:1.5px dashed #378ADD; border-radius:6px; cursor:pointer; font-weight:500; }
+    .btn-ghost:hover { background:#dbeeff; }
 
-    .add-range-btn {
-      font-size: 13px; padding: 8px 16px; border-radius: 6px;
-      border: 1.5px dashed #378ADD; background: #f0f7ff; color: #378ADD;
-      cursor: pointer; font-weight: 500;
-    }
-    .add-range-btn:hover { background: #dbeeff; }
+    /* Range cards (comparative) */
+    .range-list { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+    .range-card { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#f8f9fb; border:0.5px solid #e0e0e0; border-left:4px solid var(--rc,#378ADD); border-radius:10px; padding:12px 16px; }
+    .range-badge { font-size:12px; font-weight:700; color:#fff; background:var(--rc,#378ADD); padding:3px 10px; border-radius:10px; min-width:72px; text-align:center; }
+    .range-card input[type=date] { padding:7px 10px; font-size:13px; border:0.5px solid #ccc; border-radius:6px; outline:none; }
+    .range-card input[type=date]:focus { border-color:#378ADD; }
+    .range-card .rc-lbl { font-size:12px; color:#666; font-weight:600; }
+    .range-card .rc-remove { margin-left:auto; font-size:12px; padding:5px 12px; border-radius:6px; border:0.5px solid #ddd; background:#fff; cursor:pointer; color:#888; }
+    .range-card .rc-remove:hover { border-color:#c0392b; color:#c0392b; }
 
-    .generate-btn { padding: 11px 28px; font-size: 14px; font-weight: 600; background: #378ADD; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
-    .generate-btn:hover { background: #2a6db5; }
-    .export-btn { padding: 9px 20px; font-size: 13px; font-weight: 500; background: #fff; color: #378ADD; border: 1.5px solid #378ADD; border-radius: 8px; cursor: pointer; }
-    .export-btn:hover { background: #f0f7ff; }
+    /* Comparison table */
+    .cmp-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .cmp-table th, .cmp-table td { padding:11px 14px; text-align:right; border-bottom:0.5px solid #eee; }
+    .cmp-table th:first-child, .cmp-table td:first-child { text-align:left; }
+    .cmp-table thead th { font-size:11px; text-transform:uppercase; letter-spacing:0.4px; color:#666; border-bottom:1px solid #e0e0e0; }
+    .cmp-table tbody tr:hover td { background:#fafbfc; }
+    .cmp-metric { font-weight:500; color:#1a1a1a; }
+    .cmp-chip { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; }
 
-    .mode-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid #378ADD; width: fit-content; margin-bottom: 20px; }
-    .mode-btn { padding: 9px 20px; font-size: 13px; font-weight: 500; border: none; background: #fff; color: #378ADD; cursor: pointer; }
-    .mode-btn.active { background: #378ADD; color: #fff; }
-    .mode-btn:hover:not(.active) { background: #f0f7ff; }
+    /* Leaderboard */
+    .lb-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .lb-table th { background:#f0f4f8; padding:9px 14px; text-align:left; font-weight:600; font-size:11px; color:#555; border-bottom:1px solid #e0e0e0; text-transform:uppercase; letter-spacing:0.4px; }
+    .lb-table td { padding:9px 14px; border-bottom:0.5px solid #f0f0f0; }
+    .lb-table tr:hover td { background:#fafbfc; }
+    .lb-rank { font-weight:700; color:#aaa; width:30px; }
+    .lb-rank.g1{color:#F5A623;} .lb-rank.g2{color:#9B9B9B;} .lb-rank.g3{color:#C67C52;}
+    .lb-cat { font-size:11px; color:#fff; padding:2px 8px; border-radius:10px; }
+    .lb-bar-wrap { width:120px; height:7px; background:#eef1f5; border-radius:4px; margin-top:5px; }
+    .lb-bar { height:7px; border-radius:4px; }
 
-    .mode-section { display: none; }
-    .mode-section.active { display: block; }
+    .ip-pills { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+    .ip-pill { padding:6px 14px; font-size:13px; border-radius:20px; border:0.5px solid #ddd; background:#f8f8f8; cursor:pointer; color:#1a1a1a; }
+    .ip-pill:hover { border-color:#378ADD; background:#f0f7ff; }
+    .ip-pill.active { background:#378ADD; color:#fff; border-color:#378ADD; }
 
-    .custom-stat { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; border: 0.5px solid #e0e0e0; min-width: 130px; }
-    .custom-stat .cs-label { font-size: 11px; color: #888; margin-bottom: 4px; }
-    .custom-stat .cs-value { font-size: 17px; font-weight: 600; color: #1a1a1a; }
-    .stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media (max-width:820px){ .grid-2 { grid-template-columns:1fr; } }
 
     .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
-
-    /* Item Performance Tab */
-    .ip-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 20px; }
-    .ip-controls .builder-field { min-width: 160px; }
-    .ip-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .ip-filter-btn {
-      padding: 6px 14px; font-size: 13px; border-radius: 20px; border: 0.5px solid #ddd;
-      background: #f8f8f8; cursor: pointer; font-weight: 400; color: #1a1a1a; transition: all 0.15s;
-    }
-    .ip-filter-btn:hover { border-color: #378ADD; background: #f0f7ff; }
-    .ip-filter-btn.active { background: #378ADD; color: #fff; border-color: #378ADD; font-weight: 500; }
-
-    /* Leaderboard table */
-    .lb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .lb-table th {
-      background: #f0f4f8; padding: 10px 14px; text-align: left;
-      font-weight: 600; font-size: 11px; color: #555; border-bottom: 1px solid #e0e0e0;
-      text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; user-select: none;
-    }
-    .lb-table th:hover { background: #e4ecf5; }
-    .lb-table th.sorted { color: #378ADD; }
-    .lb-table td { padding: 10px 14px; border-bottom: 0.5px solid #f0f0f0; vertical-align: middle; }
-    .lb-table tr:hover td { background: #fafbfc; }
-    .lb-rank { font-size: 13px; font-weight: 700; color: #aaa; width: 32px; }
-    .lb-rank.gold { color: #F5A623; }
-    .lb-rank.silver { color: #9B9B9B; }
-    .lb-rank.bronze { color: #C67C52; }
-    .lb-name { font-weight: 500; color: #1a1a1a; }
-    .lb-category { font-size: 11px; color: #fff; padding: 2px 8px; border-radius: 10px; display: inline-block; }
-    .lb-bar-wrap { width: 140px; }
-    .lb-bar { height: 8px; border-radius: 4px; background: #378ADD; transition: width 0.4s; }
-    .lb-wow { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
-    .lb-wow.up { background: #e6f7f0; color: #1D9E75; }
-    .lb-wow.down { background: #fdecea; color: #c0392b; }
-    .lb-wow.flat { background: #f0f0f0; color: #888; }
-    .lb-wow.na { background: #f0f0f0; color: #bbb; }
-
-    /* Item trend sparkline */
-    .sparkline-wrap { width: 80px; height: 30px; display: inline-block; }
-
-    /* Category color dots */
-    .cat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .muted { color:#aaa; font-size:13px; text-align:center; padding:24px; }
   </style>
 </head>
 <body>
@@ -202,7 +129,7 @@
   <div id="password-box">
     <h2>Big Air Asheville</h2>
     <p>Enter the password to view the dashboard</p>
-    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()" />
     <button class="pw-btn" onclick="checkPassword()">View Dashboard</button>
     <div id="password-error"></div>
   </div>
@@ -212,7 +139,7 @@
 <header>
   <div>
     <h1>Big Air Asheville — Weekly Performance</h1>
-    <p>Revenue, attendance & per cap trends · Auto-updating from Google Sheets</p>
+    <p>Revenue, attendance &amp; per-cap trends · Auto-updating from Google Sheets</p>
   </div>
   <div id="status">
     <span class="dot loading" id="dot"></span>
@@ -252,7 +179,7 @@
     <div class="chart-wrap" style="height:380px;"><canvas id="revenueChart"></canvas></div>
   </div>
   <div class="panel">
-    <div class="panel-header"><div><div class="panel-title">Monthly Revenue</div><div class="panel-sub">Total revenue aggregated by month</div></div></div>
+    <div class="panel-header"><div><div class="panel-title">Monthly Revenue</div><div class="panel-sub">Each day counted in its true calendar month (boundary weeks split correctly)</div></div></div>
     <div class="chart-wrap" style="height:260px;"><canvas id="monthlyChart"></canvas></div>
   </div>
   <div class="panel">
@@ -267,392 +194,206 @@
 
 <!-- ══ ITEM PERFORMANCE ══ -->
 <div id="tab-items" class="tab-content">
-
-  <!-- Controls -->
-  <div class="ip-controls">
-    <div class="builder-field">
-      <label>Time Period</label>
-      <select id="ip-period" onchange="onIPPeriodChange()">
-        <option value="current-month">Current Month</option>
-        <option value="last-month">Last Month</option>
-        <option value="all-time">All Time</option>
-        <option value="custom">Custom Date Range</option>
-      </select>
+  <div class="control-bar">
+    <div class="control-row">
+      <div class="field">
+        <label>Time Period</label>
+        <select id="ip-period" onchange="onIPPeriodChange()">
+          <option value="current-month">Current Month</option>
+          <option value="last-month">Last Month</option>
+          <option value="all-time">All Time</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+      <div class="field" id="ip-start-wrap" style="display:none;"><label>Start Date</label><input type="date" id="ip-start" onchange="renderItemTab()"/></div>
+      <div class="field" id="ip-end-wrap" style="display:none;"><label>End Date</label><input type="date" id="ip-end" onchange="renderItemTab()"/></div>
+      <div class="field"><label>Sort By</label>
+        <select id="ip-sort" onchange="renderItemTab()">
+          <option value="revenue">Revenue (High→Low)</option>
+          <option value="revenue-asc">Revenue (Low→High)</option>
+          <option value="wow">WoW Change</option>
+          <option value="pct">% of Category</option>
+          <option value="name">Name (A→Z)</option>
+        </select>
+      </div>
+      <div class="field"><label>Show</label>
+        <select id="ip-show" onchange="renderItemTab()">
+          <option value="10">Top 10</option>
+          <option value="20">Top 20</option>
+          <option value="all">All Items</option>
+        </select>
+      </div>
     </div>
-    <div class="builder-field" id="ip-start-wrap" style="display:none;">
-      <label>Start Date</label>
-      <input type="date" id="ip-start" />
-    </div>
-    <div class="builder-field" id="ip-end-wrap" style="display:none;">
-      <label>End Date</label>
-      <input type="date" id="ip-end" />
-    </div>
-    <div class="builder-field">
-      <label>Sort By</label>
-      <select id="ip-sort" onchange="renderItemTab()">
-        <option value="revenue">Revenue (High→Low)</option>
-        <option value="revenue-asc">Revenue (Low→High)</option>
-        <option value="wow">Week over Week Change</option>
-        <option value="name">Name (A→Z)</option>
-        <option value="pct">% of Category</option>
-      </select>
-    </div>
-    <div class="builder-field">
-      <label>Show</label>
-      <select id="ip-show" onchange="renderItemTab()">
-        <option value="10">Top 10</option>
-        <option value="20">Top 20</option>
-        <option value="all">All Items</option>
-      </select>
-    </div>
-    <button class="generate-btn" style="margin-top:20px;" onclick="renderItemTab()">Update</button>
   </div>
 
-  <!-- Category filter pills -->
-  <div class="ip-filter-bar" id="ip-cat-filter">
-    <button class="ip-filter-btn active" data-cat="all" onclick="setIPCat(this)">All Categories</button>
-    <button class="ip-filter-btn" data-cat="Merchandise" onclick="setIPCat(this)">🛍 Merchandise</button>
-    <button class="ip-filter-btn" data-cat="Concessions" onclick="setIPCat(this)">🍔 Concessions</button>
-    <button class="ip-filter-btn" data-cat="Events" onclick="setIPCat(this)">🎉 Events</button>
-    <button class="ip-filter-btn" data-cat="Trampoline Park" onclick="setIPCat(this)">🦘 Trampoline Park</button>
+  <div class="ip-pills" id="ip-cat-filter">
+    <button class="ip-pill active" data-cat="all" onclick="setIPCat(this)">All Categories</button>
+    <button class="ip-pill" data-cat="Merchandise" onclick="setIPCat(this)">Merchandise</button>
+    <button class="ip-pill" data-cat="Concessions" onclick="setIPCat(this)">Concessions</button>
+    <button class="ip-pill" data-cat="Events" onclick="setIPCat(this)">Events</button>
+    <button class="ip-pill" data-cat="Trampoline Park" onclick="setIPCat(this)">Trampoline Park</button>
   </div>
 
-  <!-- Summary cards -->
-  <div class="cards" id="ip-cards" style="margin-bottom:24px;"></div>
+  <div class="cards" id="ip-cards"></div>
 
-  <!-- Top items chart -->
   <div class="panel">
     <div class="panel-header">
       <div><div class="panel-title" id="ip-chart-title">Top Items by Revenue</div><div class="panel-sub" id="ip-chart-sub"></div></div>
-      <button class="export-btn" onclick="doExport('ipBarChart','ip-period')">⬇ Export PNG</button>
+      <button class="btn-outline" onclick="doExport('ipBarChart','ip-export-name')">⬇ Export PNG</button>
     </div>
     <div class="chart-wrap" style="height:360px;"><canvas id="ipBarChart"></canvas></div>
   </div>
 
-  <!-- Leaderboard table -->
   <div class="panel">
-    <div class="panel-header">
-      <div><div class="panel-title" id="ip-table-title">Item Leaderboard</div><div class="panel-sub">Click column headers to sort · WoW = latest week vs prior week</div></div>
-    </div>
+    <div class="panel-header"><div><div class="panel-title" id="ip-table-title">Item Leaderboard</div><div class="panel-sub">WoW = latest week vs prior week for that item</div></div></div>
     <div style="overflow-x:auto;">
       <table class="lb-table" id="ip-table">
-        <thead>
-          <tr>
-            <th onclick="setIPSort('rank')">#</th>
-            <th onclick="setIPSort('name')">Item</th>
-            <th onclick="setIPSort('category')">Category</th>
-            <th onclick="setIPSort('revenue')">Period Revenue ↕</th>
-            <th onclick="setIPSort('pct')">% of Category</th>
-            <th onclick="setIPSort('weekly-avg')">Weekly Avg</th>
-            <th onclick="setIPSort('wow')">WoW Change</th>
-            <th>Trend</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>Item</th><th>Category</th><th>Revenue</th><th>% of Cat.</th><th>Weekly Avg</th><th>WoW</th></tr></thead>
         <tbody id="ip-table-body"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- Revenue share donut -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;" id="ip-bottom-panels">
-    <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Revenue Share by Item</div><div class="panel-sub">Top items as % of total</div></div></div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="ipDonutChart"></canvas></div>
-    </div>
-    <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Weekly Trend — Top 5 Items</div><div class="panel-sub">Revenue per week for top performers</div></div></div>
-      <div class="chart-wrap" style="height:300px;"><canvas id="ipTrendChart"></canvas></div>
-    </div>
+  <div class="grid-2">
+    <div class="panel"><div class="panel-header"><div><div class="panel-title">Revenue Share by Item</div><div class="panel-sub">Top 8 items + Other</div></div></div><div class="chart-wrap" style="height:300px;"><canvas id="ipDonutChart"></canvas></div></div>
+    <div class="panel"><div class="panel-header"><div><div class="panel-title">Weekly Trend — Top 5</div><div class="panel-sub">Revenue per week</div></div></div><div class="chart-wrap" style="height:300px;"><canvas id="ipTrendChart"></canvas></div></div>
   </div>
-
-</div><!-- end items tab -->
+</div>
 
 <!-- ══ CUSTOM REPORT ══ -->
 <div id="tab-custom" class="tab-content">
-
-  <div class="mode-toggle">
-    <button class="mode-btn active" onclick="switchMode('single',this)">Single Report</button>
-    <button class="mode-btn" onclick="switchMode('compare',this)">Comparative Report</button>
-    <button class="mode-btn" onclick="switchMode('daily',this)">Daily Breakdown</button>
-  </div>
-
-  <!-- ── SINGLE ── -->
-  <div id="mode-single" class="mode-section active">
-    <div class="panel">
-      <div class="panel-title" style="margin-bottom:4px;">Single Report Builder</div>
-      <div class="panel-sub" style="margin-bottom:0;">Configure filters and generate a chart</div>
-
-      <div class="cr-section-title">Chart Settings</div>
-      <div class="builder-grid">
-        <div class="builder-field" style="grid-column:span 2;">
-          <label>Report Title</label>
-          <input type="text" id="cr-title" placeholder="e.g. Q1 2026 — Concessions Revenue" />
-        </div>
-        <div class="builder-field">
-          <label>Chart Type</label>
-          <select id="cr-chart-type">
-            <option value="bar">Bar Chart</option>
-            <option value="bar-stacked">Stacked Bar</option>
-            <option value="line">Line Chart</option>
-            <option value="line-area">Area Chart</option>
-          </select>
-        </div>
-        <div class="builder-field">
-          <label>Metric</label>
-          <select id="cr-metric">
-            <option value="revenue">Revenue ($)</option>
-            <option value="attendance">Attendance</option>
-            <option value="percap">Revenue Per Guest (Total)</option>
-            <option value="percap_breakdown">Per Cap by Category</option>
-          </select>
-        </div>
-        <div class="builder-field">
-          <label>Group By</label>
-          <select id="cr-group">
-            <option value="day">Daily</option>
-            <option value="week">Weekly</option>
-            <option value="month">Monthly</option>
-          </select>
+  <div class="control-bar">
+    <div class="control-row" style="margin-bottom:16px;">
+      <div class="field">
+        <label>Mode</label>
+        <div class="seg" id="cr-mode-seg">
+          <button class="active" data-mode="single" onclick="setCRMode('single',this)">Single Range</button>
+          <button data-mode="compare" onclick="setCRMode('compare',this)">Comparative</button>
         </div>
       </div>
-
-      <div class="cr-section-title">Date Range</div>
-      <div class="builder-grid">
-        <div class="builder-field">
-          <label>Start Date</label>
-          <input type="date" id="cr-start" />
-        </div>
-        <div class="builder-field">
-          <label>End Date</label>
-          <input type="date" id="cr-end" />
+      <div class="field" id="cr-group-field">
+        <label>Group Charts By</label>
+        <div class="seg" id="cr-group-seg">
+          <button data-group="day" onclick="setCRGroup('day',this)">Day</button>
+          <button class="active" data-group="week" onclick="setCRGroup('week',this)">Week</button>
+          <button data-group="month" onclick="setCRGroup('month',this)">Month</button>
         </div>
       </div>
+    </div>
 
-      <div class="cr-section-title">Categories <span id="cr-cats-note" style="font-size:11px;color:#999;text-transform:none;letter-spacing:0;"> (for Revenue metric)</span></div>
-      <div class="category-checks" id="cr-categories" style="margin-bottom:8px;">
-        <label class="checked"><input type="checkbox" value="trampoline" checked onchange="toggleCheck(this)"> Trampoline Park</label>
-        <label class="checked"><input type="checkbox" value="concessions" checked onchange="toggleCheck(this)"> Concessions</label>
-        <label class="checked"><input type="checkbox" value="merchandise" checked onchange="toggleCheck(this)"> Merchandise</label>
-        <label class="checked"><input type="checkbox" value="events" checked onchange="toggleCheck(this)"> Events</label>
-        <label><input type="checkbox" value="total" onchange="toggleCheck(this)"> Total Revenue</label>
-      </div>
-      <div class="category-checks" id="cr-percap-categories" style="margin-bottom:24px;display:none;">
-        <label class="checked"><input type="checkbox" value="concessions_percap" checked onchange="toggleCheck(this)"> Concession Per Cap</label>
-        <label class="checked"><input type="checkbox" value="merchandise_percap" checked onchange="toggleCheck(this)"> Merchandise Per Cap</label>
-        <label class="checked"><input type="checkbox" value="events_percap" checked onchange="toggleCheck(this)"> Events Per Cap</label>
-      </div>
+    <!-- Single range inputs -->
+    <div id="cr-single-inputs" class="control-row">
+      <div class="field"><label>Start Date</label><input type="date" id="cr-start"/></div>
+      <div class="field"><label>End Date</label><input type="date" id="cr-end"/></div>
+      <button class="btn-primary" onclick="generateSingle()">Generate Report</button>
+    </div>
 
+    <!-- Comparative range inputs -->
+    <div id="cr-compare-inputs" style="display:none;">
+      <div class="range-list" id="cr-ranges"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <button class="generate-btn" onclick="generateSingle()">Generate Chart</button>
-        <button class="export-btn" id="single-export" style="display:none;" onclick="doExport('singleChart','cr-title')">⬇ Export PNG</button>
+        <button class="btn-ghost" onclick="addRange()">+ Add Range</button>
+        <button class="btn-primary" onclick="generateCompare()">Generate Comparison</button>
       </div>
-    </div>
-    <div class="panel" id="single-out" style="display:none;">
-      <div class="panel-header">
-        <div><div class="panel-title" id="single-title">Report</div><div class="panel-sub" id="single-sub"></div></div>
-        <div class="legend" id="single-legend"></div>
-      </div>
-      <div class="stat-row" id="single-stats"></div>
-      <div class="chart-wrap" style="height:400px;"><canvas id="singleChart"></canvas></div>
     </div>
   </div>
 
-  <!-- ── COMPARE ── -->
-  <div id="mode-compare" class="mode-section">
+  <!-- Single output -->
+  <div id="cr-single-out" style="display:none;">
+    <div class="panel-header" style="margin-bottom:14px;">
+      <div><div class="panel-title" id="cr-single-title" style="font-size:18px;">Report</div><div class="panel-sub" id="cr-single-sub"></div></div>
+      <button class="btn-outline" onclick="doExport('crRevChart','cr-export-name')">⬇ Export Revenue Chart</button>
+    </div>
+    <div class="cards" id="cr-single-cards"></div>
     <div class="panel">
-      <div class="panel-title" style="margin-bottom:4px;">Comparative Report Builder</div>
-      <div class="panel-sub" style="margin-bottom:0;">Compare 2 or more custom date ranges side by side</div>
-
-      <div class="cr-section-title">Chart Settings</div>
-      <div class="builder-grid">
-        <div class="builder-field" style="grid-column:span 2;">
-          <label>Report Title</label>
-          <input type="text" id="comp-title" placeholder="e.g. January vs February vs March" />
-        </div>
-        <div class="builder-field">
-          <label>Chart Type</label>
-          <select id="comp-chart-type">
-            <option value="bar">Bar Chart</option>
-            <option value="line">Line Chart</option>
-            <option value="line-area">Area Chart</option>
-          </select>
-        </div>
-        <div class="builder-field">
-          <label>Metric</label>
-          <select id="comp-metric">
-            <option value="revenue">Revenue ($)</option>
-            <option value="attendance">Attendance</option>
-            <option value="percap">Revenue Per Guest (Total)</option>
-            <option value="percap_breakdown">Per Cap by Category</option>
-          </select>
-        </div>
-        <div class="builder-field">
-          <label>Group By</label>
-          <select id="comp-group">
-            <option value="day">Daily</option>
-            <option value="week">Weekly</option>
-            <option value="month">Monthly</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="cr-section-title">Categories <span style="font-size:11px;color:#999;text-transform:none;letter-spacing:0;"> (for Revenue / Per Cap metrics)</span></div>
-      <div class="category-checks" id="comp-categories" style="margin-bottom:8px;">
-        <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total Revenue</label>
-        <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-        <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-        <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-        <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-      </div>
-      <div class="category-checks" id="comp-percap-categories" style="margin-bottom:8px;display:none;">
-        <label class="checked"><input type="checkbox" value="concessions_percap" checked onchange="toggleCheck(this)"> Concession Per Cap</label>
-        <label class="checked"><input type="checkbox" value="merchandise_percap" checked onchange="toggleCheck(this)"> Merchandise Per Cap</label>
-        <label class="checked"><input type="checkbox" value="events_percap" checked onchange="toggleCheck(this)"> Events Per Cap</label>
-      </div>
-
-      <div class="cr-section-title">Date Ranges</div>
-      <div class="ranges-container" id="comp-ranges"></div>
-      <button class="add-range-btn" onclick="addCompRange()" style="margin-bottom:24px;">+ Add Range</button>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <button class="generate-btn" onclick="generateComp()">Generate Comparison</button>
-        <button class="export-btn" id="comp-export" style="display:none;" onclick="doExport('compChart','comp-title')">⬇ Export PNG</button>
-      </div>
-    </div>
-    <div class="panel" id="comp-out" style="display:none;">
       <div class="panel-header">
-        <div><div class="panel-title" id="comp-title-out">Comparison</div><div class="panel-sub" id="comp-sub"></div></div>
-        <div class="legend" id="comp-legend"></div>
+        <div><div class="panel-title">Revenue by Category</div><div class="panel-sub" id="cr-rev-sub"></div></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#378ADD;"></span>Trampoline</span>
+          <span><span class="swatch" style="background:#1D9E75;"></span>Concessions</span>
+          <span><span class="swatch" style="background:#EF9F27;"></span>Merchandise</span>
+          <span><span class="swatch" style="background:#D4537E;"></span>Events</span>
+        </div>
       </div>
-      <div class="stat-row" id="comp-stats"></div>
-      <div class="chart-wrap" style="height:420px;"><canvas id="compChart"></canvas></div>
+      <div class="chart-wrap" style="height:340px;"><canvas id="crRevChart"></canvas></div>
     </div>
-  </div>
-
-  <!-- ── DAILY ── -->
-  <div id="mode-daily" class="mode-section">
+    <div class="grid-2">
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Attendance</div></div></div><div class="chart-wrap" style="height:240px;"><canvas id="crAttChart"></canvas></div></div>
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Revenue Per Guest</div></div></div><div class="chart-wrap" style="height:240px;"><canvas id="crPcChart"></canvas></div></div>
+    </div>
     <div class="panel">
-      <div class="panel-title" style="margin-bottom:4px;">Daily Breakdown</div>
-      <div class="panel-sub" style="margin-bottom:0;">View revenue or attendance broken down by individual day</div>
-
-      <div class="cr-section-title">Sub-Mode</div>
-      <div class="mode-toggle" style="margin-bottom:20px;">
-        <button class="mode-btn active" onclick="switchDailyMode('single-week',this)">Single Week by Day</button>
-        <button class="mode-btn" onclick="switchDailyMode('same-day',this)">Same Day Across Weeks</button>
-        <button class="mode-btn" onclick="switchDailyMode('date-range',this)">Custom Date Range by Day</button>
+      <div class="panel-header"><div><div class="panel-title">Top Items</div><div class="panel-sub">Highest-revenue items in this range</div></div></div>
+      <div style="overflow-x:auto;">
+        <table class="lb-table"><thead><tr><th>#</th><th>Item</th><th>Category</th><th>Revenue</th><th>% of Cat.</th></tr></thead><tbody id="cr-items-body"></tbody></table>
       </div>
-
-      <!-- Single week -->
-      <div id="daily-single-week">
-        <div class="builder-grid">
-          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="dsw-title" placeholder="e.g. Week of Jan 5 — Daily Revenue"/></div>
-          <div class="builder-field"><label>Select Week</label><select id="dsw-week"></select></div>
-          <div class="builder-field"><label>Metric</label><select id="dsw-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
-          <div class="builder-field"><label>Chart Type</label><select id="dsw-chart-type"><option value="bar">Bar</option><option value="line">Line</option><option value="line-area">Area</option></select></div>
-        </div>
-        <div class="cr-section-title">Categories</div>
-        <div class="category-checks" id="dsw-cats" style="margin-bottom:24px;">
-          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
-          <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-          <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-          <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-          <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="generate-btn" onclick="generateDSW()">Generate Chart</button>
-          <button class="export-btn" id="dsw-export" style="display:none;" onclick="doExport('dailyChart','dsw-title')">⬇ Export PNG</button>
-        </div>
-      </div>
-
-      <!-- Same day across weeks -->
-      <div id="daily-same-day" style="display:none;">
-        <div class="builder-grid">
-          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="dsd-title" placeholder="e.g. Every Saturday — Revenue Trend"/></div>
-          <div class="builder-field"><label>Day of Week</label><select id="dsd-day"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div>
-          <div class="builder-field"><label>Start Date</label><input type="date" id="dsd-start"/></div>
-          <div class="builder-field"><label>End Date</label><input type="date" id="dsd-end"/></div>
-          <div class="builder-field"><label>Metric</label><select id="dsd-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
-          <div class="builder-field"><label>Chart Type</label><select id="dsd-chart-type"><option value="line">Line</option><option value="line-area">Area</option><option value="bar">Bar</option></select></div>
-        </div>
-        <div class="cr-section-title">Categories</div>
-        <div class="category-checks" id="dsd-cats" style="margin-bottom:24px;">
-          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
-          <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-          <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-          <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-          <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="generate-btn" onclick="generateDSD()">Generate Chart</button>
-          <button class="export-btn" id="dsd-export" style="display:none;" onclick="doExport('dailyChart','dsd-title')">⬇ Export PNG</button>
-        </div>
-      </div>
-
-      <!-- Custom date range by day -->
-      <div id="daily-date-range" style="display:none;">
-        <div class="builder-grid">
-          <div class="builder-field" style="grid-column:span 2;"><label>Report Title</label><input type="text" id="ddr-title" placeholder="e.g. Jan 7–20 — Daily Revenue"/></div>
-          <div class="builder-field"><label>Start Date</label><input type="date" id="ddr-start"/></div>
-          <div class="builder-field"><label>End Date</label><input type="date" id="ddr-end"/></div>
-          <div class="builder-field"><label>Metric</label><select id="ddr-metric"><option value="revenue">Revenue ($)</option><option value="attendance">Attendance</option></select></div>
-          <div class="builder-field"><label>Chart Type</label><select id="ddr-chart-type"><option value="bar">Bar</option><option value="line">Line</option><option value="line-area">Area</option></select></div>
-        </div>
-        <div class="cr-section-title">Categories</div>
-        <div class="category-checks" id="ddr-cats" style="margin-bottom:24px;">
-          <label class="checked"><input type="checkbox" value="total" checked onchange="toggleCheck(this)"> Total</label>
-          <label><input type="checkbox" value="trampoline" onchange="toggleCheck(this)"> Trampoline Park</label>
-          <label><input type="checkbox" value="concessions" onchange="toggleCheck(this)"> Concessions</label>
-          <label><input type="checkbox" value="merchandise" onchange="toggleCheck(this)"> Merchandise</label>
-          <label><input type="checkbox" value="events" onchange="toggleCheck(this)"> Events</label>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="generate-btn" onclick="generateDDR()">Generate Chart</button>
-          <button class="export-btn" id="ddr-export" style="display:none;" onclick="doExport('dailyChart','ddr-title')">⬇ Export PNG</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" id="daily-out" style="display:none;">
-      <div class="panel-header">
-        <div><div class="panel-title" id="daily-title">Daily Report</div><div class="panel-sub" id="daily-sub"></div></div>
-        <div class="legend" id="daily-legend"></div>
-      </div>
-      <div class="stat-row" id="daily-stats"></div>
-      <div class="chart-wrap" style="height:380px;"><canvas id="dailyChart"></canvas></div>
     </div>
   </div>
 
-</div><!-- end custom tab -->
+  <!-- Comparative output -->
+  <div id="cr-compare-out" style="display:none;">
+    <div class="panel-header" style="margin-bottom:14px;">
+      <div><div class="panel-title" id="cr-cmp-title" style="font-size:18px;">Comparison</div><div class="panel-sub" id="cr-cmp-sub"></div></div>
+      <button class="btn-outline" onclick="doExport('cmpRevChart','cr-cmp-export-name')">⬇ Export Revenue Chart</button>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div><div class="panel-title">Key Metrics</div><div class="panel-sub">Side-by-side across ranges</div></div></div>
+      <div style="overflow-x:auto;"><table class="cmp-table" id="cmp-table"></table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div><div class="panel-title">Revenue by Category</div><div class="panel-sub">One stacked bar per range</div></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#378ADD;"></span>Trampoline</span>
+          <span><span class="swatch" style="background:#1D9E75;"></span>Concessions</span>
+          <span><span class="swatch" style="background:#EF9F27;"></span>Merchandise</span>
+          <span><span class="swatch" style="background:#D4537E;"></span>Events</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:340px;"><canvas id="cmpRevChart"></canvas></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Attendance</div></div></div><div class="chart-wrap" style="height:260px;"><canvas id="cmpAttChart"></canvas></div></div>
+      <div class="panel"><div class="panel-header"><div><div class="panel-title">Revenue Per Guest</div></div></div><div class="chart-wrap" style="height:260px;"><canvas id="cmpPcChart"></canvas></div></div>
+    </div>
+  </div>
+</div>
 
 <div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
 </div>
 
+<input type="hidden" id="cr-export-name" value="custom_report"/>
+<input type="hidden" id="cr-cmp-export-name" value="comparison_report"/>
+<input type="hidden" id="ip-export-name" value="item_performance"/>
+
 <script>
 const SHEET_ID    = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
 const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz3P-guZK4MPPYZkVhmm9kdYXpTWn_cGg7KfKjsanasbUYm4pHn8PQCTu8Y-rBz_pOU1g/exec';
-const COL_IDX = 8;
+const COL_IDX = 8; // Column I = weekly Totals
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const CAT_COLORS = {trampoline:'#378ADD',concessions:'#1D9E75',merchandise:'#EF9F27',events:'#D4537E',total:'#7F77DD',concessions_percap:'#1D9E75',merchandise_percap:'#EF9F27',events_percap:'#D4537E'};
-const CAT_LABELS = {trampoline:'Trampoline Park',concessions:'Concessions',merchandise:'Merchandise',events:'Events',total:'Total Revenue',concessions_percap:'Concession Per Cap',merchandise_percap:'Merchandise Per Cap',events_percap:'Events Per Cap'};
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CAT_KEYS = ['trampoline','concessions','merchandise','events'];
+const CAT_COLOR = { trampoline:'#378ADD', concessions:'#1D9E75', merchandise:'#EF9F27', events:'#D4537E', total:'#7F77DD' };
+const CAT_LABEL = { trampoline:'Trampoline Park', concessions:'Concessions', merchandise:'Merchandise', events:'Events', total:'Total Revenue' };
+const CAT_SHEET_ROW = { trampoline:'Trampoline Park', merchandise:'Merchandise', concessions:'Concessions', events:'Events' };
 const RANGE_COLORS = ['#378ADD','#D4537E','#1D9E75','#EF9F27','#7F77DD','#E8763A','#9B59B6','#1ABC9C'];
+const IP_CAT_COLORS = { 'Merchandise':'#EF9F27','Concessions':'#1D9E75','Events':'#D4537E','Trampoline Park':'#378ADD' };
+const IP_CAT_HEADERS = ['Merchandise','Concessions','Events','Trampoline Park'];
 
-// Global state
 let charts = {};
-let globalData = null;
-let globalLabels = [];
-let globalMonths = [];
-let globalSheetNames = [];
-let globalRawRows = {}; // sheetName -> rows
-// dailyIndex: array of {date:Date, sheetName, colIdx, dayName} for every day we have data
-let globalDailyIndex = [];
+let globalData = null;              // weekly aggregates (from col I)
+let globalLabels = [];              // week labels
+let globalSheetNames = [];          // sheet names for weeks with data
+let globalRawRows = {};             // sheetName -> parsed rows
+let globalDailyIndex = [];          // [{date, key, sheetName, colIdx, dayName}]
+let crMode = 'single';
+let crGroup = 'week';
 let compRangeCount = 0;
-let currentDailyMode = 'single-week';
+let ipCurrentCat = 'all';
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 const PW = 'Asheville2026!';
-function checkPassword() {
-  const v = document.getElementById('password-input').value;
-  if (v === PW) {
+function checkPassword(){
+  if(document.getElementById('password-input').value === PW){
     sessionStorage.setItem('auth','true');
     document.getElementById('password-screen').style.display='none';
     document.getElementById('main-content').style.display='block';
@@ -663,13 +404,13 @@ function checkPassword() {
     document.getElementById('password-input').focus();
   }
 }
-if (sessionStorage.getItem('auth')==='true') {
+if(sessionStorage.getItem('auth')==='true'){
   document.getElementById('password-screen').style.display='none';
   document.getElementById('main-content').style.display='block';
   loadData();
 }
 
-// ── UI Helpers ────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function switchTab(name,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
@@ -677,1016 +418,536 @@ function switchTab(name,btn){
   btn.classList.add('active');
   if(name==='items' && globalData) renderItemTab();
 }
-function switchMode(name,btn){
-  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#tab-custom > .mode-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('mode-'+name).classList.add('active');
+function setStatus(msg,state){ document.getElementById('dot').className='dot'+(state?' '+state:''); document.getElementById('status-text').textContent=msg; }
+function fmt(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+function fmt2(n){ return '$'+n.toFixed(2); }
+function num(n){ return Math.round(n).toLocaleString('en-US'); }
+function rollingAvg(arr,w){ return arr.map((_,i)=>i<w-1?null:arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w); }
+function doExport(canvasId, nameId){
+  const c=document.getElementById(canvasId); if(!c)return;
+  const t=(document.getElementById(nameId)?.value||'report').replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  const a=document.createElement('a'); a.download=t+'.png'; a.href=c.toDataURL('image/png'); a.click();
 }
-function switchDailyMode(name,btn){
-  btn.closest('.mode-toggle').querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  currentDailyMode=name;
-  ['single-week','same-day','date-range'].forEach(m=>{
-    document.getElementById('daily-'+m).style.display=m===name?'block':'none';
-  });
-  document.getElementById('daily-out').style.display='none';
-}
-function toggleCheck(el){el.closest('label').classList.toggle('checked',el.checked);}
-function setStatus(msg,state){
-  document.getElementById('dot').className='dot'+(state?' '+state:'');
-  document.getElementById('status-text').textContent=msg;
-}
-function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
-function fmtY(metric){
-  if(metric==='attendance')return v=>Math.round(v).toLocaleString();
-  if(metric==='percap'||metric==='percap_breakdown')return v=>'$'+v.toFixed(2);
-  return v=>'$'+(v/1000).toFixed(0)+'k';
-}
-function rollingAvg(arr,w){return arr.map((_,i)=>i<w-1?null:arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w);}
-function doExport(canvasId,titleId){
-  const c=document.getElementById(canvasId);
-  const t=(document.getElementById(titleId)?.value||'report').replace(/[^a-z0-9]/gi,'_').toLowerCase();
-  const a=document.createElement('a');a.download=t+'.png';a.href=c.toDataURL('image/png');a.click();
-}
-
-// ── Parse date from sheet row 2 cell like "1/5/26" ───────────────────────────
 function parseCellDate(str){
   if(!str)return null;
-  const s=str.toString().trim();
-  const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  const m=str.toString().trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
   if(!m)return null;
-  let yr=parseInt(m[3]);if(yr<100)yr+=2000;
+  let yr=parseInt(m[3]); if(yr<100)yr+=2000;
   return new Date(yr,parseInt(m[1])-1,parseInt(m[2]));
 }
-function dateToKey(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:''; }
-function inputToDate(str){if(!str)return null;const[y,m,d]=str.split('-');return new Date(parseInt(y),parseInt(m)-1,parseInt(d));}
-function fmtDateShort(d){if(!d)return'';const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${months[d.getMonth()]} ${d.getDate()}`;}
+function dateToKey(d){ return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:''; }
+function inputToDate(s){ if(!s)return null; const[y,m,d]=s.split('-'); return new Date(+y,+m-1,+d); }
+function fmtDateShort(d){ return d?`${MONTH_NAMES[d.getMonth()].slice(0,3)} ${d.getDate()}`:''; }
+function sheetToLabel(name){ return name.replace(/\s*\d{4}/,'').replace(/-/g,'–').trim(); }
 
-// ── Fetch helpers ─────────────────────────────────────────────────────────────
-async function fetchSheetNames(){
-  const res=await fetch(APPS_SCRIPT);
-  if(!res.ok)throw new Error('Failed');
-  return(await res.json()).sheets;
-}
-function sheetToMonth(name){
-  const months={jan:'January',feb:'February',mar:'March',apr:'April',may:'May',jun:'June',jul:'July',aug:'August',sep:'September',oct:'October',nov:'November',dec:'December'};
-  const yr=(name.match(/\d{4}/)||[''])[0];
-  const parts=name.toLowerCase().replace(/\d{4}/,'').match(/[a-z]+/g)||[];
-  let month='';for(const p of parts){const k=p.slice(0,3);if(months[k])month=months[k];}
-  return month&&yr?`${month} ${yr}`:name;
-}
-function sheetToLabel(name){return name.replace(/\s*\d{4}/,'').replace(/-/g,'–').trim();}
+// ── Fetch ─────────────────────────────────────────────────────────────────────
+async function fetchSheetNames(){ const r=await fetch(APPS_SCRIPT); if(!r.ok)throw new Error(); return (await r.json()).sheets; }
 async function fetchSheet(name){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
-  const res=await fetch(url);if(!res.ok)throw new Error('Failed:'+name);
-  return Papa.parse(await res.text(),{skipEmptyLines:false}).data;
-}
-function findVal(rows,label){
-  for(const row of rows){
-    if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase()){
-      const cell=row[COL_IDX];
-      if(cell){const v=cell.replace(/[$,"\s]/g,'');if(v&&!isNaN(parseFloat(v)))return parseFloat(v);}
-    }
-  }
-  return 0;
+  const r=await fetch(url); if(!r.ok)throw new Error('Failed:'+name);
+  return Papa.parse(await r.text(),{skipEmptyLines:false}).data;
 }
 function findRowByLabel(rows,label){
-  for(const row of rows){
-    if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase())return row;
-  }
+  for(const row of rows) if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase()) return row;
   return null;
 }
+function cellNum(v){ if(!v)return 0; const x=v.toString().replace(/[$,"\s]/g,''); return x&&!isNaN(parseFloat(x))?parseFloat(x):0; }
+// weekly total (column I) for a category label
+function weekTotal(rows,label){ const row=findRowByLabel(rows,label); return row?cellNum(row[COL_IDX]):0; }
 
-// Build daily index from raw rows — maps each date to {sheetName, colIdx, dayName}
+// Build daily index. Day columns are B–H (indices 1–7); Totals in I (index 8).
+// Row 0 = day names, Row 1 = dates. Day name derived from the parsed date itself.
 function buildDailyIndex(sheetName, rows){
-  // Row 0 = day names, Row 1 = dates (1/5/26 etc), cols 2-8 = Sun-Sat
   const dateRow = rows[1]||[];
-  for(let col=2;col<=8;col++){
+  for(let col=1; col<=7; col++){
     const d=parseCellDate(dateRow[col]);
-    if(d){
-      globalDailyIndex.push({date:d,key:dateToKey(d),sheetName,colIdx:col,dayName:DAY_NAMES[col-2]});
-    }
+    if(d) globalDailyIndex.push({ date:d, key:dateToKey(d), sheetName, colIdx:col, dayName:DAY_NAMES[d.getDay()] });
   }
 }
-
-// Get daily value for a specific date entry and category
-function getDayVal(entry, catKey, rows){
-  if(!rows)return 0;
-  if(catKey==='attendance'){
-    const row=findRowByLabel(rows,'Big Air Total Attendance');
-    if(!row)return 0;
-    const v=(row[entry.colIdx]||'').replace(/[$,"\s]/g,'');
-    return isNaN(parseFloat(v))?0:parseFloat(v);
-  }
-  const labelMap={
-    trampoline:'Trampoline Park',
-    merchandise:'Merchandise',
-    concessions:'Concessions',
-    events:'Events',
-    concessions_percap:'Concession Per Cap',
-    merchandise_percap:'Merchandise Per Cap',
-    events_percap:'Events Per Cap'
-  };
-  if(catKey==='total'){
-    return ['trampoline','merchandise','concessions','events'].reduce((s,k)=>s+getDayVal(entry,k,rows),0);
-  }
-  const row=findRowByLabel(rows,labelMap[catKey]);
-  if(!row)return 0;
-  const v=(row[entry.colIdx]||'').replace(/[$,"\s]/g,'');
-  return isNaN(parseFloat(v))?0:parseFloat(v);
+// value of one category on one day-entry
+function dayCatVal(entry, catKey){
+  const rows=globalRawRows[entry.sheetName]; if(!rows)return 0;
+  if(catKey==='attendance'){ const row=findRowByLabel(rows,'Big Air Total Attendance'); return row?cellNum(row[entry.colIdx]):0; }
+  if(catKey==='total'){ return CAT_KEYS.reduce((s,k)=>s+dayCatVal(entry,k),0); }
+  const row=findRowByLabel(rows,CAT_SHEET_ROW[catKey]); return row?cellNum(row[entry.colIdx]):0;
 }
+function sumCat(entries, catKey){ return entries.reduce((s,e)=>s+dayCatVal(e,catKey),0); }
 
-// ── Main Load ─────────────────────────────────────────────────────────────────
+// ── Load ──────────────────────────────────────────────────────────────────────
 async function loadData(){
   setStatus('Loading...','loading');
   let sheetNames;
-  try{sheetNames=await fetchSheetNames();}
-  catch(e){setStatus('Could not load sheet list.','error');return;}
+  try{ sheetNames=await fetchSheetNames(); }catch(e){ setStatus('Could not load sheet list.','error'); return; }
 
   const data={trampoline:[],merchandise:[],concessions:[],events:[],attendance:[],totals:[]};
-  const labels=[],months=[],rawNames=[];
-  globalDailyIndex=[];
-  globalRawRows={};
+  const labels=[], rawNames=[];
+  globalDailyIndex=[]; globalRawRows={};
 
   for(const name of sheetNames){
     try{
       const rows=await fetchSheet(name);
       globalRawRows[name]=rows;
       buildDailyIndex(name,rows);
-      const t=findVal(rows,'Trampoline Park'),m=findVal(rows,'Merchandise');
-      const c=findVal(rows,'Concessions'),e=findVal(rows,'Events');
-      const a=findVal(rows,'Big Air Total Attendance');
-      const total=t+m+c+e;
+      const t=weekTotal(rows,'Trampoline Park'), m=weekTotal(rows,'Merchandise');
+      const c=weekTotal(rows,'Concessions'), ev=weekTotal(rows,'Events');
+      const a=weekTotal(rows,'Big Air Total Attendance');
+      const total=t+m+c+ev;
       if(total>0){
-        data.trampoline.push(t);data.merchandise.push(m);
-        data.concessions.push(c);data.events.push(e);
-        data.attendance.push(a);data.totals.push(total);
-        labels.push(sheetToLabel(name));months.push(sheetToMonth(name));rawNames.push(name);
+        data.trampoline.push(t); data.merchandise.push(m); data.concessions.push(c);
+        data.events.push(ev); data.attendance.push(a); data.totals.push(total);
+        labels.push(sheetToLabel(name)); rawNames.push(name);
       }
-    }catch(e){console.warn('Skipping:',name);}
+    }catch(e){ console.warn('Skipping',name); }
   }
+  if(!labels.length){ setStatus('No data found.','error'); return; }
 
-  if(!labels.length){setStatus('No data found.','error');return;}
-  globalData=data;globalLabels=labels;globalMonths=months;globalSheetNames=rawNames;
+  globalData=data; globalLabels=labels; globalSheetNames=rawNames;
 
-  // Set date picker min/max from daily index
+  // Date picker bounds
   if(globalDailyIndex.length){
     const sorted=[...globalDailyIndex].sort((a,b)=>a.date-b.date);
-    const minD=dateToKey(sorted[0].date),maxD=dateToKey(sorted[sorted.length-1].date);
-    ['cr-start','cr-end','dsd-start','dsd-end','ddr-start','ddr-end'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){el.min=minD;el.max=maxD;}
-    });
+    const minD=dateToKey(sorted[0].date), maxD=dateToKey(sorted[sorted.length-1].date);
+    ['cr-start','cr-end','ip-start','ip-end'].forEach(id=>{ const el=document.getElementById(id); if(el){el.min=minD;el.max=maxD;} });
     document.getElementById('cr-start').value=minD;
     document.getElementById('cr-end').value=maxD;
-    document.getElementById('dsd-start').value=minD;
-    document.getElementById('dsd-end').value=maxD;
-    document.getElementById('ddr-start').value=minD;
-    document.getElementById('ddr-end').value=maxD;
+    document.getElementById('ip-start').value=minD;
+    document.getElementById('ip-end').value=maxD;
   }
 
-  // Populate week select for DSW
-  const wSel=document.getElementById('dsw-week');wSel.innerHTML='';
-  rawNames.forEach((n,i)=>{const o=document.createElement('option');o.value=n;o.textContent=labels[i];wSel.appendChild(o);});
-
-  initCompRanges();
+  initRanges();
   setStatus('Live · Updated '+new Date().toLocaleTimeString());
-  updateCards(data,labels,months);
-  renderWoW(data.totals,labels);
-  renderRevenue(labels,data);
-  renderMonthly(months,data.totals);
-  renderAttendance(labels,data);
-  renderPerCap(labels,data);
+  renderDashboard();
 }
 
-// ── Dashboard Charts ──────────────────────────────────────────────────────────
-function updateCards(data,labels,months){
-  const totals=data.totals,total=totals.reduce((a,b)=>a+b,0),avg=total/totals.length;
-  const bi=totals.indexOf(Math.max(...totals)),wi=totals.indexOf(Math.min(...totals));
-  const wow=totals.length>1?((totals[totals.length-1]-totals[totals.length-2])/totals[totals.length-2])*100:0;
-  const cm=months[months.length-1];
-  const mt=months.reduce((s,m,i)=>m===cm?s+totals[i]:s,0),mw=months.filter(m=>m===cm).length;
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+// Month totals built from daily index (accurate calendar-month attribution)
+function buildMonthlyTotals(){
+  const map={}; // 'YYYY-MM' -> {label, total, sheets:Set}
+  globalDailyIndex.forEach(e=>{
+    const key=`${e.date.getFullYear()}-${String(e.date.getMonth()+1).padStart(2,'0')}`;
+    if(!map[key]) map[key]={ label:`${MONTH_NAMES[e.date.getMonth()]} ${e.date.getFullYear()}`, total:0, sheets:new Set() };
+    map[key].total += dayCatVal(e,'total');
+    map[key].sheets.add(e.sheetName);
+  });
+  return map;
+}
+function renderDashboard(){
+  const totals=globalData.totals, labels=globalLabels;
+  const total=totals.reduce((a,b)=>a+b,0), avg=total/totals.length;
+  const bi=totals.indexOf(Math.max(...totals)), wi=totals.indexOf(Math.min(...totals));
+  const wow=totals.length>1?((totals.at(-1)-totals.at(-2))/totals.at(-2))*100:0;
+
+  const monthMap=buildMonthlyTotals();
+  const monthKeys=Object.keys(monthMap).sort();
+  // current month = month of latest date
+  const latest=[...globalDailyIndex].sort((a,b)=>a.date-b.date).at(-1);
+  const curKey=`${latest.date.getFullYear()}-${String(latest.date.getMonth()+1).padStart(2,'0')}`;
+  const cur=monthMap[curKey];
+
   document.getElementById('c-total').textContent=fmt(total);
   document.getElementById('c-avg').textContent=fmt(avg);
   document.getElementById('c-best').textContent=fmt(totals[bi]);
   document.getElementById('c-best-lbl').textContent=labels[bi];
   document.getElementById('c-worst').textContent=fmt(totals[wi]);
   document.getElementById('c-worst-lbl').textContent=labels[wi];
-  document.getElementById('c-month-lbl').textContent=cm+' Revenue';
-  document.getElementById('c-month').textContent=fmt(mt);
-  document.getElementById('c-month-weeks').textContent=mw+' week'+(mw!==1?'s':'')+' recorded';
+  document.getElementById('c-month-lbl').textContent=(cur?cur.label:'Current Month')+' Revenue';
+  document.getElementById('c-month').textContent=cur?fmt(cur.total):'—';
+  document.getElementById('c-month-weeks').textContent=cur?`${cur.sheets.size} week${cur.sheets.size!==1?'s':''} · calendar-accurate`:'';
   const we=document.getElementById('c-wow');
-  we.textContent=(wow>=0?'+':'')+wow.toFixed(1)+'%';
-  we.style.color=wow>=0?'#1D9E75':'#c0392b';
-  document.getElementById('c-wow-lbl').textContent=labels[labels.length-1]+' vs prior week';
-}
-function renderWoW(totals,labels){
-  const c=document.getElementById('wow-badges');c.innerHTML='';
+  we.textContent=(wow>=0?'+':'')+wow.toFixed(1)+'%'; we.style.color=wow>=0?'#1D9E75':'#c0392b';
+  document.getElementById('c-wow-lbl').textContent=labels.at(-1)+' vs prior week';
+
+  // WoW badges
+  const wb=document.getElementById('wow-badges'); wb.innerHTML='';
   for(let i=1;i<totals.length;i++){
     const pct=((totals[i]-totals[i-1])/totals[i-1])*100;
     const b=document.createElement('span');
     b.className='wow '+(pct>0?'up':pct<0?'down':'flat');
-    b.title=labels[i];b.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%';c.appendChild(b);
+    b.title=labels[i]; b.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%'; wb.appendChild(b);
   }
+
+  // Weekly revenue stacked + 4wk avg
+  const avg4=rollingAvg(totals,4);
+  drawChart('revenueChart','bar',labels,[
+    {label:'Trampoline Park',data:globalData.trampoline,backgroundColor:'#378ADD',borderWidth:0,stack:'r',type:'bar'},
+    {label:'Concessions',data:globalData.concessions,backgroundColor:'#1D9E75',borderWidth:0,stack:'r',type:'bar'},
+    {label:'Merchandise',data:globalData.merchandise,backgroundColor:'#EF9F27',borderWidth:0,stack:'r',type:'bar'},
+    {label:'Events',data:globalData.events,backgroundColor:'#D4537E',borderWidth:0,stack:'r',type:'bar'},
+    {label:'4-wk Avg',data:avg4,type:'line',borderColor:'#7F77DD',backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#7F77DD',tension:0.3,spanGaps:false,order:0}
+  ], v=>'$'+(v/1000).toFixed(0)+'k', {stacked:true});
+
+  // Monthly
+  const mLabels=monthKeys.map(k=>monthMap[k].label), mVals=monthKeys.map(k=>monthMap[k].total);
+  const mColors=['#378ADD','#1D9E75','#EF9F27','#D4537E','#7F77DD','#E8763A'];
+  drawChart('monthlyChart','bar',mLabels,[{label:'Monthly Revenue',data:mVals,backgroundColor:mLabels.map((_,i)=>mColors[i%mColors.length]),borderWidth:0,borderRadius:6}], v=>'$'+(v/1000).toFixed(0)+'k',{simpleTip:'Revenue'});
+
+  // Attendance + per guest
+  drawChart('attendanceChart','line',labels,[{label:'Attendance',data:globalData.attendance,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#378ADD',fill:true,tension:0.3}], v=>num(v));
+  const pc=totals.map((t,i)=>globalData.attendance[i]>0?t/globalData.attendance[i]:0);
+  drawChart('percapChart','line',labels,[{label:'Revenue per Guest',data:pc,borderColor:'#D4537E',backgroundColor:'rgba(212,83,126,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#D4537E',fill:true,tension:0.3}], v=>fmt2(v));
 }
-function makeChart(id,type,labels,datasets,yFmt){
+
+// generic chart drawer
+function drawChart(id,type,labels,datasets,yFmt,opts={}){
   if(charts[id])charts[id].destroy();
-  const isLine=type==='line';
+  const stacked=!!opts.stacked;
   charts[id]=new Chart(document.getElementById(id),{
     type,data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{
         label:ctx=>{
           if(ctx.dataset.label==='4-wk Avg')return '4-wk Avg: '+fmt(ctx.parsed.y);
-          if(type==='bar'&&datasets.length>1){
-            const i=ctx.dataIndex;const barDs=datasets.filter(d=>d.type!=='line'&&d.stack==='r');
-            const tot=barDs.reduce((s,d)=>s+(d.data[i]||0),0);
+          if(opts.simpleTip) return opts.simpleTip+': '+fmt(ctx.parsed.y);
+          if(type==='bar'&&stacked&&datasets.filter(d=>d.stack==='r').length>1){
+            const i=ctx.dataIndex;
+            const tot=datasets.filter(d=>d.stack==='r').reduce((s,d)=>s+(d.data[i]||0),0);
             const pct=tot>0?((ctx.parsed.y/tot)*100).toFixed(1):'0.0';
-            return`${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
+            return `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} (${pct}%)`;
           }
-          return`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
+          return `${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`;
         },
-        footer:items=>{const bi=items.filter(i=>i.dataset.label!=='4-wk Avg');if(bi.length>0&&type==='bar'){const tot=bi.reduce((s,i)=>s+i.parsed.y,0);return`Total: ${fmt(tot)}`;}}
+        footer:items=>{ if(type==='bar'&&stacked){ const bi=items.filter(i=>i.dataset.label!=='4-wk Avg'); if(bi.length>1){ const t=bi.reduce((s,i)=>s+i.parsed.y,0); return 'Total: '+fmt(t);}}}
       }}},
       scales:{
-        x:{stacked:type==='bar',ticks:{font:{size:11},autoSkip:false,maxRotation:40},grid:{display:false}},
-        y:{stacked:type==='bar',ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
+        x:{stacked,ticks:{font:{size:11},autoSkip:labels.length>18,maxRotation:40},grid:{display:false}},
+        y:{stacked,ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
       }
     }
   });
 }
-function renderRevenue(labels,data){
-  const avg4=rollingAvg(data.totals,4);
-  makeChart('revenueChart','bar',labels,[
-    {label:'Trampoline Park',data:data.trampoline,backgroundColor:'#378ADD',borderWidth:0,stack:'r',type:'bar'},
-    {label:'Concessions',data:data.concessions,backgroundColor:'#1D9E75',borderWidth:0,stack:'r',type:'bar'},
-    {label:'Merchandise',data:data.merchandise,backgroundColor:'#EF9F27',borderWidth:0,stack:'r',type:'bar'},
-    {label:'Events',data:data.events,backgroundColor:'#D4537E',borderWidth:0,stack:'r',type:'bar'},
-    {label:'4-wk Avg',data:avg4,type:'line',borderColor:'#7F77DD',backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:'#7F77DD',tension:0.3,spanGaps:false,order:0}
-  ],v=>'$'+(v/1000).toFixed(0)+'k');
-}
-function renderMonthly(months,totals){
-  const map={};months.forEach((m,i)=>{map[m]=(map[m]||0)+totals[i];});
-  const keys=Object.keys(map),vals=keys.map(k=>map[k]);
-  const colors=['#378ADD','#1D9E75','#EF9F27','#D4537E','#7F77DD','#E8763A'];
-  if(charts['monthlyChart'])charts['monthlyChart'].destroy();
-  charts['monthlyChart']=new Chart(document.getElementById('monthlyChart'),{
-    type:'bar',data:{labels:keys,datasets:[{label:'Monthly Revenue',data:vals,backgroundColor:keys.map((_,i)=>colors[i%colors.length]),borderWidth:0,borderRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Revenue: '+fmt(ctx.parsed.y)}}},
-      scales:{x:{ticks:{font:{size:12}},grid:{display:false}},y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}}}
-  });
-}
-function renderAttendance(labels,data){
-  makeChart('attendanceChart','line',labels,[{label:'Attendance',data:data.attendance,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#378ADD',fill:true,tension:0.3}],v=>Math.round(v).toLocaleString());
-}
-function renderPerCap(labels,data){
-  const pc=globalData.totals.map((t,i)=>globalData.attendance[i]>0?t/globalData.attendance[i]:0);
-  makeChart('percapChart','line',labels,[{label:'Revenue per Guest',data:pc,borderColor:'#D4537E',backgroundColor:'rgba(212,83,126,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#D4537E',fill:true,tension:0.3}],v=>'$'+v.toFixed(2));
-}
 
-// ── Daily index query helpers ─────────────────────────────────────────────────
-// Get all daily entries between two dates (inclusive)
-function getDailyEntriesInRange(startDate, endDate){
-  return globalDailyIndex
-    .filter(e=>e.date>=startDate&&e.date<=endDate)
-    .sort((a,b)=>a.date-b.date);
-}
-
-// Group daily entries by week/month/day
+// ── Grouping (day/week/month) over a date range ──────────────────────────────
+function entriesInRange(start,end){ return globalDailyIndex.filter(e=>e.date>=start&&e.date<=end).sort((a,b)=>a.date-b.date); }
 function groupEntries(entries, groupBy){
-  if(groupBy==='day') return entries.map(e=>({key:fmtDateShort(e.date)+' ('+e.dayName.slice(0,3)+')',entries:[e]}));
-  if(groupBy==='week'){
-    const map={};
-    entries.forEach(e=>{
-      const sheet=e.sheetName;
-      if(!map[sheet])map[sheet]={key:sheetToLabel(sheet),entries:[]};
-      map[sheet].entries.push(e);
-    });
-    return Object.values(map);
-  }
+  if(groupBy==='day') return entries.map(e=>({key:`${DAY_NAMES[e.date.getDay()].slice(0,3)} ${fmtDateShort(e.date)}`, entries:[e]}));
   if(groupBy==='month'){
     const map={};
-    entries.forEach(e=>{
-      const mk=`${e.date.getFullYear()}-${String(e.date.getMonth()+1).padStart(2,'0')}`;
-      const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const label=months[e.date.getMonth()]+' '+e.date.getFullYear();
-      if(!map[mk])map[mk]={key:label,entries:[]};
-      map[mk].entries.push(e);
-    });
-    return Object.values(map);
+    entries.forEach(e=>{ const k=`${e.date.getFullYear()}-${String(e.date.getMonth()+1).padStart(2,'0')}`; if(!map[k])map[k]={key:`${MONTH_NAMES[e.date.getMonth()]} ${e.date.getFullYear()}`,entries:[]}; map[k].entries.push(e); });
+    return Object.keys(map).sort().map(k=>map[k]);
   }
-  return entries.map(e=>({key:fmtDateShort(e.date),entries:[e]}));
+  // week: group by sheetName (each sheet = one pay week)
+  const map={};
+  entries.forEach(e=>{ if(!map[e.sheetName])map[e.sheetName]={key:sheetToLabel(e.sheetName),entries:[]}; map[e.sheetName].entries.push(e); });
+  // preserve sheet order
+  return globalSheetNames.filter(n=>map[n]).map(n=>map[n]);
 }
 
-function sumEntriesForCat(entries, catKey){
-  return entries.reduce((s,e)=>s+getDayVal(e,catKey,globalRawRows[e.sheetName]),0);
+// ── SINGLE CUSTOM REPORT ──────────────────────────────────────────────────────
+function setCRMode(mode,btn){
+  crMode=mode;
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cr-single-inputs').style.display = mode==='single'?'flex':'none';
+  document.getElementById('cr-compare-inputs').style.display = mode==='compare'?'block':'none';
+  document.getElementById('cr-single-out').style.display='none';
+  document.getElementById('cr-compare-out').style.display='none';
+  // grouping toggle only meaningful for single
+  document.getElementById('cr-group-field').style.opacity = mode==='single'?'1':'0.4';
+}
+function setCRGroup(g,btn){ crGroup=g; btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+
+function metricsForGroup(g){
+  const m={ total:0 };
+  CAT_KEYS.forEach(k=>m[k]=sumCat(g.entries,k));
+  m.total=CAT_KEYS.reduce((s,k)=>s+m[k],0);
+  m.attendance=sumCat(g.entries,'attendance');
+  m.perGuest=m.attendance>0?m.total/m.attendance:0;
+  return m;
 }
 
-function buildStats(datasets, labels, metric){
-  const yFmt=fmtY(metric);
-  const allVals=datasets.flatMap(d=>d.data.filter(v=>v!=null&&!isNaN(v)&&v>0));
-  if(!allVals.length)return'';
-  const sum=allVals.reduce((a,b)=>a+b,0),avg=sum/labels.length,max=Math.max(...allVals),min=Math.min(...allVals);
-  return`<div class="custom-stat"><div class="cs-label">Total</div><div class="cs-value">${yFmt(sum)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Average</div><div class="cs-value">${yFmt(avg)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Peak</div><div class="cs-value">${yFmt(max)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Low</div><div class="cs-value">${yFmt(min)}</div></div>
-    <div class="custom-stat"><div class="cs-label">Days</div><div class="cs-value">${labels.length}</div></div>`;
-}
-
-function makeFlexChart(canvasId, chartType, labels, datasets, metric){
-  const yFmt=fmtY(metric);
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-  const isStacked=chartType==='bar-stacked';
-  if(charts[canvasId])charts[canvasId].destroy();
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:isLine?'line':'bar',
-    data:{labels,datasets},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{
-        label:ctx=>`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`,
-        footer:isStacked?items=>{const t=items.reduce((s,i)=>s+i.parsed.y,0);return`Total: ${yFmt(t)}`;}:undefined
-      }}},
-      scales:{
-        x:{stacked:isStacked,ticks:{font:{size:11},autoSkip:labels.length>20,maxRotation:45},grid:{display:false}},
-        y:{stacked:isStacked,ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
-      }
-    }
-  });
-}
-
-function buildDatasetsFromGroups(groups, cats, metric, chartType){
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-  if(metric==='attendance'){
-    return [{label:'Attendance',data:groups.map(g=>sumEntriesForCat(g.entries,'attendance')),
-      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
-  }
-  if(metric==='percap'){
-    // Total per cap = total revenue / attendance per group
-    return [{label:'Revenue per Guest',data:groups.map(g=>{
-      const rev=sumEntriesForCat(g.entries,'total');
-      const att=sumEntriesForCat(g.entries,'attendance');
-      return att>0?rev/att:0;
-    }),borderColor:'#D4537E',backgroundColor:isFilled?'rgba(212,83,126,0.12)':'#D4537E',
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#D4537E',borderRadius:6}];
-  }
-  // revenue or percap_breakdown — use category keys directly
-  return cats.map(cat=>{
-    const color=CAT_COLORS[cat];
-    return{label:CAT_LABELS[cat],data:groups.map(g=>sumEntriesForCat(g.entries,cat)),
-      borderColor:color,backgroundColor:isFilled?color+'22':color,
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-      pointRadius:isLine?3:0,pointBackgroundColor:color,borderRadius:6,
-      stack:chartType==='bar-stacked'?'s':undefined};
-  });
-}
-
-function showOutput(panelId,titleId,subId,legendId,statsId,exportId,title,sub,datasets,labels,metric){
-  document.getElementById(titleId).textContent=title;
-  document.getElementById(subId).textContent=sub;
-  document.getElementById(legendId).innerHTML=datasets.map(d=>`<span><span class="swatch" style="background:${d.borderColor||d.backgroundColor};"></span>${d.label}</span>`).join('');
-  document.getElementById(statsId).innerHTML=buildStats(datasets,labels,metric);
-  document.getElementById(panelId).style.display='block';
-  document.getElementById(exportId).style.display='inline-block';
-  document.getElementById(panelId).scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-// Show/hide correct category checkboxes based on metric selection
-document.getElementById('cr-metric').addEventListener('change', function(){
-  const isPercap = this.value === 'percap_breakdown';
-  document.getElementById('cr-categories').style.display = isPercap ? 'none' : 'flex';
-  document.getElementById('cr-percap-categories').style.display = isPercap ? 'flex' : 'none';
-});
-document.getElementById('comp-metric').addEventListener('change', function(){
-  const isPercap = this.value === 'percap_breakdown';
-  document.getElementById('comp-categories').style.display = isPercap ? 'none' : 'flex';
-  document.getElementById('comp-percap-categories').style.display = isPercap ? 'flex' : 'none';
-});
-// ── Single Report ─────────────────────────────────────────────────────────────
 function generateSingle(){
   if(!globalData)return;
-  const startDate=inputToDate(document.getElementById('cr-start').value);
-  const endDate=inputToDate(document.getElementById('cr-end').value);
-  const metric=document.getElementById('cr-metric').value;
-  const chartType=document.getElementById('cr-chart-type').value;
-  const groupBy=document.getElementById('cr-group').value;
-  const title=document.getElementById('cr-title').value;
-  const catsSelector = metric==='percap_breakdown' ? '#cr-percap-categories input:checked' : '#cr-categories input:checked';
-  const cats=[...document.querySelectorAll(catsSelector)].map(c=>c.value);
-  if(!startDate||!endDate){alert('Please select a start and end date.');return;}
-  if(startDate>endDate){alert('Start date must be before end date.');return;}
-  if((metric==='revenue'||metric==='percap_breakdown')&&!cats.length){alert('Select at least one category.');return;}
+  const start=inputToDate(document.getElementById('cr-start').value);
+  const end=inputToDate(document.getElementById('cr-end').value);
+  if(!start||!end||start>end){ alert('Please choose a valid start/end date.'); return; }
+  const entries=entriesInRange(start,end);
+  if(!entries.length){ alert('No data in that range.'); return; }
 
-  const entries=getDailyEntriesInRange(startDate,endDate);
-  if(!entries.length){alert('No data found for that date range.');return;}
-  const groups=groupEntries(entries,groupBy);
+  const groups=groupEntries(entries,crGroup);
+  const gm=groups.map(metricsForGroup);
   const labels=groups.map(g=>g.key);
-  const datasets=buildDatasetsFromGroups(groups,cats,metric,chartType);
 
-  makeFlexChart('singleChart',chartType,labels,datasets,metric);
-  showOutput('single-out','single-title','single-sub','single-legend','single-stats','single-export',
-    title||'Custom Report',
-    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':metric==='percap_breakdown'?'Per Cap by Category':'Per Guest'}`,
-    datasets,labels,metric);
+  // totals across range
+  const totalRev=gm.reduce((s,x)=>s+x.total,0);
+  const totalAtt=gm.reduce((s,x)=>s+x.attendance,0);
+  const perGuest=totalAtt>0?totalRev/totalAtt:0;
+  const peak=Math.max(...gm.map(x=>x.total));
+  const peakIdx=gm.findIndex(x=>x.total===peak);
+  const gLabel=crGroup.charAt(0).toUpperCase()+crGroup.slice(1);
+
+  document.getElementById('cr-single-title').textContent=`${fmtDateShort(start)} – ${fmtDateShort(end)}`;
+  document.getElementById('cr-single-sub').textContent=`${entries.length} days · grouped by ${crGroup} · ${groups.length} ${crGroup}${groups.length!==1?'s':''}`;
+  document.getElementById('cr-rev-sub').textContent=`By ${crGroup}`;
+  document.getElementById('cr-export-name').value=`report_${dateToKey(start)}_${dateToKey(end)}`;
+
+  document.getElementById('cr-single-cards').innerHTML=`
+    <div class="card highlight"><div class="label">Total Revenue</div><div class="value">${fmt(totalRev)}</div></div>
+    <div class="card"><div class="label">Avg / ${gLabel}</div><div class="value">${fmt(totalRev/groups.length)}</div></div>
+    <div class="card"><div class="label">Peak ${gLabel}</div><div class="value">${fmt(peak)}</div><div class="sub">${labels[peakIdx]||''}</div></div>
+    <div class="card"><div class="label">Total Attendance</div><div class="value">${num(totalAtt)}</div></div>
+    <div class="card"><div class="label">Avg Per Guest</div><div class="value">${fmt2(perGuest)}</div></div>
+  `;
+
+  // Revenue by category (stacked)
+  drawChart('crRevChart','bar',labels,CAT_KEYS.map(k=>({
+    label:CAT_LABEL[k],data:gm.map(x=>x[k]),backgroundColor:CAT_COLOR[k],borderWidth:0,stack:'r',type:'bar'
+  })), v=>'$'+(v/1000).toFixed(0)+'k',{stacked:true});
+
+  // Attendance + per guest
+  drawChart('crAttChart','bar',labels,[{label:'Attendance',data:gm.map(x=>x.attendance),backgroundColor:'#378ADD',borderWidth:0,borderRadius:5}], v=>num(v),{simpleTipNum:true});
+  drawChart('crPcChart','line',labels,[{label:'Per Guest',data:gm.map(x=>x.perGuest),borderColor:'#D4537E',backgroundColor:'rgba(212,83,126,0.08)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#D4537E',fill:true,tension:0.3}], v=>fmt2(v));
+
+  // Top items
+  const items=getItemData(start,end).sort((a,b)=>b.total-a.total).slice(0,10);
+  const catTotals={}; getItemData(start,end).forEach(i=>catTotals[i.category]=(catTotals[i.category]||0)+i.total);
+  const maxRev=items[0]?.total||1;
+  document.getElementById('cr-items-body').innerHTML = items.length?items.map((it,idx)=>`
+    <tr>
+      <td class="lb-rank ${idx===0?'g1':idx===1?'g2':idx===2?'g3':''}">${idx+1}</td>
+      <td style="font-weight:500;">${it.name}</td>
+      <td><span class="lb-cat" style="background:${IP_CAT_COLORS[it.category]||'#888'};">${it.category}</span></td>
+      <td style="font-weight:600;">${fmt(it.total)}<div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round(it.total/maxRev*100)}%;background:${IP_CAT_COLORS[it.category]||'#378ADD'};"></div></div></td>
+      <td>${catTotals[it.category]>0?(it.total/catTotals[it.category]*100).toFixed(1):'0.0'}%</td>
+    </tr>`).join(''):'<tr><td colspan="5" class="muted">No item data in this range</td></tr>';
+
+  document.getElementById('cr-single-out').style.display='block';
+  document.getElementById('cr-single-out').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── Comparative Report ────────────────────────────────────────────────────────
-function initCompRanges(){
-  compRangeCount=0;
-  document.getElementById('comp-ranges').innerHTML='';
-  addCompRange();addCompRange();
-}
-
-function addCompRange(){
+// ── COMPARATIVE ───────────────────────────────────────────────────────────────
+function initRanges(){ compRangeCount=0; document.getElementById('cr-ranges').innerHTML=''; addRange(); addRange(); }
+function addRange(){
   compRangeCount++;
   const color=RANGE_COLORS[(compRangeCount-1)%RANGE_COLORS.length];
   const sorted=[...globalDailyIndex].sort((a,b)=>a.date-b.date);
   const minD=sorted.length?dateToKey(sorted[0].date):'';
-  const maxD=sorted.length?dateToKey(sorted[sorted.length-1].date):'';
+  const maxD=sorted.length?dateToKey(sorted.at(-1).date):'';
   const div=document.createElement('div');
-  div.className='range-card';div.id='comp-range-'+compRangeCount;
-  div.style.setProperty('--rc',color);
+  div.className='range-card'; div.id='range-'+compRangeCount; div.style.setProperty('--rc',color);
   div.innerHTML=`
     <span class="range-badge">Range ${compRangeCount}</span>
-    <div class="range-dates">
-      <label>From</label>
-      <input type="date" id="cr-s-${compRangeCount}" min="${minD}" max="${maxD}" value="${minD}" />
-      <label>To</label>
-      <input type="date" id="cr-e-${compRangeCount}" min="${minD}" max="${maxD}" value="${maxD}" />
-    </div>
-    ${compRangeCount>2?`<button class="remove-btn" onclick="removeCompRange(${compRangeCount})">✕</button>`:''}
+    <span class="rc-lbl">From</span><input type="date" id="rg-s-${compRangeCount}" min="${minD}" max="${maxD}" value="${minD}"/>
+    <span class="rc-lbl">To</span><input type="date" id="rg-e-${compRangeCount}" min="${minD}" max="${maxD}" value="${maxD}"/>
+    ${compRangeCount>2?`<button class="rc-remove" onclick="document.getElementById('range-${compRangeCount}').remove()">✕ Remove</button>`:''}
   `;
-  document.getElementById('comp-ranges').appendChild(div);
+  document.getElementById('cr-ranges').appendChild(div);
 }
-
-function removeCompRange(id){const el=document.getElementById('comp-range-'+id);if(el)el.remove();}
-
-function generateComp(){
+function generateCompare(){
   if(!globalData)return;
-  const chartType=document.getElementById('comp-chart-type').value;
-  const metric=document.getElementById('comp-metric').value;
-  const groupBy=document.getElementById('comp-group').value;
-  const title=document.getElementById('comp-title').value;
-  const catsSelector = metric==='percap_breakdown' ? '#comp-percap-categories input:checked' : '#comp-categories input:checked';
-  const cats=[...document.querySelectorAll(catsSelector)].map(c=>c.value);
-  if((metric==='revenue'||metric==='percap_breakdown')&&!cats.length){alert('Select at least one category.');return;}
-
   const ranges=[];
-  document.querySelectorAll('.range-card').forEach(card=>{
-    const id=card.id.split('-').pop();
-    const sEl=document.getElementById('cr-s-'+id),eEl=document.getElementById('cr-e-'+id);
-    if(!sEl||!eEl)return;
-    const s=inputToDate(sEl.value),e=inputToDate(eEl.value);
-    if(!s||!e){alert('Please fill in all date range fields.');return;}
-    if(s>e){alert('Start must be before end in each range.');return;}
-    const color=RANGE_COLORS[(ranges.length)%RANGE_COLORS.length];
-    ranges.push({start:s,end:e,color,name:`${fmtDateShort(s)}–${fmtDateShort(e)}`});
+  document.querySelectorAll('#cr-ranges .range-card').forEach(card=>{
+    const id=card.id.split('-')[1];
+    const s=inputToDate(document.getElementById('rg-s-'+id).value);
+    const e=inputToDate(document.getElementById('rg-e-'+id).value);
+    if(!s||!e||s>e){ return; }
+    const color=RANGE_COLORS[ranges.length%RANGE_COLORS.length];
+    ranges.push({ start:s, end:e, color, name:`${fmtDateShort(s)}–${fmtDateShort(e)}` });
   });
-  if(ranges.length<2){alert('Please add at least 2 ranges.');return;}
+  if(ranges.length<2){ alert('Please set at least 2 valid ranges.'); return; }
 
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-
-  // Each range becomes one or more datasets
-  // X-axis: position index (Day 1, Day 2... or Week 1...) to normalize lengths
-  const processedRanges=ranges.map(r=>{
-    const entries=getDailyEntriesInRange(r.start,r.end);
-    const groups=groupEntries(entries,groupBy);
-    let values;
-    if(metric==='attendance') values=groups.map(g=>sumEntriesForCat(g.entries,'attendance'));
-    else if(metric==='percap'){
-      values=groups.map(g=>{
-        const rev=sumEntriesForCat(g.entries,'total');
-        const att=sumEntriesForCat(g.entries,'attendance');
-        return att>0?rev/att:0;
-      });
-    } else if(metric==='percap_breakdown'){
-      // Sum all selected per cap cats averaged across entries
-      values=groups.map(g=>cats.length===1
-        ? sumEntriesForCat(g.entries,cats[0])
-        : cats.reduce((s,cat)=>s+sumEntriesForCat(g.entries,cat),0)/cats.length);
-    } else {
-      if(cats.length===1) values=groups.map(g=>sumEntriesForCat(g.entries,cats[0]));
-      else values=groups.map(g=>cats.reduce((s,cat)=>s+sumEntriesForCat(g.entries,cat),0));
-    }
-    return{...r,values,innerLabels:groups.map(g=>g.key)};
+  // Metrics per range
+  const rm=ranges.map(r=>{
+    const entries=entriesInRange(r.start,r.end);
+    const m={ trampoline:sumCat(entries,'trampoline'), concessions:sumCat(entries,'concessions'),
+              merchandise:sumCat(entries,'merchandise'), events:sumCat(entries,'events'),
+              attendance:sumCat(entries,'attendance'), days:entries.length };
+    m.total=CAT_KEYS.reduce((s,k)=>s+m[k],0);
+    m.perGuest=m.attendance>0?m.total/m.attendance:0;
+    const items=getItemData(r.start,r.end).sort((a,b)=>b.total-a.total);
+    m.topItem=items[0]?`${items[0].name} (${fmt(items[0].total)})`:'—';
+    return m;
   });
 
-  const maxLen=Math.max(...processedRanges.map(r=>r.values.length));
-  const xLabels=Array.from({length:maxLen},(_,i)=>`${groupBy==='month'?'Month':groupBy==='week'?'Week':'Day'} ${i+1}`);
-  const yFmt=fmtY(metric);
+  document.getElementById('cr-cmp-title').textContent=`Comparing ${ranges.length} Ranges`;
+  document.getElementById('cr-cmp-sub').textContent=ranges.map(r=>r.name).join('  vs  ');
+  document.getElementById('cr-cmp-export-name').value='comparison_'+ranges.map(r=>dateToKey(r.start)).join('_');
 
-  const datasets=processedRanges.map(r=>({
-    label:r.name,data:r.values,
-    borderColor:r.color,backgroundColor:isFilled?r.color+'22':r.color,
-    borderWidth:isLine?2.5:0,fill:isFilled,tension:0.3,
-    pointRadius:isLine?4:0,pointBackgroundColor:r.color,borderRadius:6
-  }));
+  // Metrics table
+  const rowsDef=[
+    ['Total Revenue', m=>fmt(m.total)],
+    ['Trampoline Park', m=>fmt(m.trampoline)],
+    ['Concessions', m=>fmt(m.concessions)],
+    ['Merchandise', m=>fmt(m.merchandise)],
+    ['Events', m=>fmt(m.events)],
+    ['Attendance', m=>num(m.attendance)],
+    ['Revenue Per Guest', m=>fmt2(m.perGuest)],
+    ['Days in Range', m=>m.days],
+    ['Top Item', m=>m.topItem],
+  ];
+  let html='<thead><tr><th>Metric</th>'+ranges.map(r=>`<th><span class="cmp-chip" style="background:${r.color};"></span>${r.name}</th>`).join('')+'</tr></thead><tbody>';
+  rowsDef.forEach(([label,fn])=>{ html+=`<tr><td class="cmp-metric">${label}</td>`+rm.map(m=>`<td>${fn(m)}</td>`).join('')+'</tr>'; });
+  html+='</tbody>';
+  document.getElementById('cmp-table').innerHTML=html;
 
-  if(charts['compChart'])charts['compChart'].destroy();
-  charts['compChart']=new Chart(document.getElementById('compChart'),{
-    type:isLine?'line':'bar',data:{labels:xLabels,datasets},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{
-        title:items=>{const idx=items[0].dataIndex;return processedRanges.map(r=>r.innerLabels[idx]||'').filter(Boolean).join(' / ');},
-        label:ctx=>`${ctx.dataset.label}: ${yFmt(ctx.parsed.y)}`
-      }}},
-      scales:{
-        x:{ticks:{font:{size:11}},grid:{display:false}},
-        y:{ticks:{callback:yFmt,font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
-      }
-    }
-  });
+  // Revenue by category: one stacked bar per range
+  drawChart('cmpRevChart','bar',ranges.map(r=>r.name),CAT_KEYS.map(k=>({
+    label:CAT_LABEL[k],data:rm.map(m=>m[k]),backgroundColor:CAT_COLOR[k],borderWidth:0,stack:'r',type:'bar'
+  })), v=>'$'+(v/1000).toFixed(0)+'k',{stacked:true});
 
-  showOutput('comp-out','comp-title-out','comp-sub','comp-legend','comp-stats','comp-export',
-    title||'Comparative Report',
-    `${ranges.length} ranges · ${groupBy.charAt(0).toUpperCase()+groupBy.slice(1)} · ${metric==='revenue'?'Revenue':metric==='attendance'?'Attendance':'Per Guest'}`,
-    datasets,xLabels,metric);
+  // Attendance + per guest bars
+  drawChart('cmpAttChart','bar',ranges.map(r=>r.name),[{label:'Attendance',data:rm.map(m=>m.attendance),backgroundColor:ranges.map(r=>r.color),borderWidth:0,borderRadius:6}], v=>num(v),{simpleTipNum:true});
+  drawChart('cmpPcChart','bar',ranges.map(r=>r.name),[{label:'Per Guest',data:rm.map(m=>m.perGuest),backgroundColor:ranges.map(r=>r.color),borderWidth:0,borderRadius:6}], v=>fmt2(v),{simpleTipMoney2:true});
+
+  document.getElementById('cr-compare-out').style.display='block';
+  document.getElementById('cr-compare-out').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── Daily: Single Week ────────────────────────────────────────────────────────
-function generateDSW(){
-  const sheetName=document.getElementById('dsw-week').value;
-  const metric=document.getElementById('dsw-metric').value;
-  const chartType=document.getElementById('dsw-chart-type').value;
-  const title=document.getElementById('dsw-title').value;
-  const cats=[...document.querySelectorAll('#dsw-cats input:checked')].map(c=>c.value);
-  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
-
-  const weekIdx=globalSheetNames.indexOf(sheetName);
-  const weekLabel=weekIdx>=0?globalLabels[weekIdx]:sheetToLabel(sheetName);
-  const rows=globalRawRows[sheetName];
-  if(!rows){alert('Sheet data not loaded yet.');return;}
-
-  // Get all day entries for this sheet
-  const entries=globalDailyIndex.filter(e=>e.sheetName===sheetName).sort((a,b)=>a.date-b.date);
-  const labels=entries.map(e=>e.dayName.slice(0,3)+' '+fmtDateShort(e.date));
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-
-  let datasets;
-  if(metric==='attendance'){
-    datasets=[{label:'Attendance',data:entries.map(e=>getDayVal(e,'attendance',rows)),
-      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
-  } else {
-    datasets=cats.map(cat=>{
-      const color=CAT_COLORS[cat];
-      return{label:CAT_LABELS[cat],data:entries.map(e=>getDayVal(e,cat,rows)),
-        borderColor:color,backgroundColor:isFilled?color+'22':color,
-        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-        pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:6};
-    });
-  }
-
-  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
-  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','dsw-export',
-    title||`Week of ${weekLabel} — Daily Breakdown`,
-    `${weekLabel} · By Day · ${metric==='revenue'?'Revenue':'Attendance'}`,
-    datasets,labels,metric);
-}
-
-// ── Daily: Same Day Across Weeks ──────────────────────────────────────────────
-function generateDSD(){
-  const dayIdx=parseInt(document.getElementById('dsd-day').value);
-  const dayName=DAY_NAMES[dayIdx];
-  const startDate=inputToDate(document.getElementById('dsd-start').value);
-  const endDate=inputToDate(document.getElementById('dsd-end').value);
-  const metric=document.getElementById('dsd-metric').value;
-  const chartType=document.getElementById('dsd-chart-type').value;
-  const title=document.getElementById('dsd-title').value;
-  const cats=[...document.querySelectorAll('#dsd-cats input:checked')].map(c=>c.value);
-  if(!startDate||!endDate){alert('Please select a date range.');return;}
-  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
-
-  // Get all entries for the specific day within range
-  const entries=getDailyEntriesInRange(startDate,endDate).filter(e=>DAY_NAMES.indexOf(e.dayName)===dayIdx);
-  if(!entries.length){alert(`No ${dayName} data found in that range.`);return;}
-
-  const labels=entries.map(e=>fmtDateShort(e.date));
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-
-  let datasets;
-  if(metric==='attendance'){
-    datasets=[{label:`${dayName} Attendance`,data:entries.map(e=>getDayVal(e,'attendance',globalRawRows[e.sheetName])),
-      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?4:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
-  } else {
-    datasets=cats.map(cat=>{
-      const color=CAT_COLORS[cat];
-      return{label:`${dayName} — ${CAT_LABELS[cat]}`,data:entries.map(e=>getDayVal(e,cat,globalRawRows[e.sheetName])),
-        borderColor:color,backgroundColor:isFilled?color+'22':color,
-        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-        pointRadius:isLine?4:0,pointBackgroundColor:color,borderRadius:6};
-    });
-  }
-
-  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
-  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','dsd-export',
-    title||`Every ${dayName} — ${metric==='revenue'?'Revenue':'Attendance'} Trend`,
-    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · ${dayName}s only`,
-    datasets,labels,metric);
-}
-
-// ── Daily: Custom Date Range by Day ──────────────────────────────────────────
-function generateDDR(){
-  const startDate=inputToDate(document.getElementById('ddr-start').value);
-  const endDate=inputToDate(document.getElementById('ddr-end').value);
-  const metric=document.getElementById('ddr-metric').value;
-  const chartType=document.getElementById('ddr-chart-type').value;
-  const title=document.getElementById('ddr-title').value;
-  const cats=[...document.querySelectorAll('#ddr-cats input:checked')].map(c=>c.value);
-  if(!startDate||!endDate){alert('Please select a date range.');return;}
-  if(startDate>endDate){alert('Start must be before end.');return;}
-  if(!cats.length&&metric==='revenue'){alert('Select at least one category.');return;}
-
-  const entries=getDailyEntriesInRange(startDate,endDate);
-  if(!entries.length){alert('No data found for that date range.');return;}
-
-  const labels=entries.map(e=>e.dayName.slice(0,3)+' '+fmtDateShort(e.date));
-  const isLine=chartType==='line'||chartType==='line-area';
-  const isFilled=chartType==='line-area';
-
-  let datasets;
-  if(metric==='attendance'){
-    datasets=[{label:'Attendance',data:entries.map(e=>getDayVal(e,'attendance',globalRawRows[e.sheetName])),
-      borderColor:'#378ADD',backgroundColor:isFilled?'rgba(55,138,221,0.12)':'#378ADD',
-      borderWidth:isLine?2:0,fill:isFilled,tension:0.3,pointRadius:isLine?3:0,pointBackgroundColor:'#378ADD',borderRadius:6}];
-  } else {
-    datasets=cats.map(cat=>{
-      const color=CAT_COLORS[cat];
-      return{label:CAT_LABELS[cat],data:entries.map(e=>getDayVal(e,cat,globalRawRows[e.sheetName])),
-        borderColor:color,backgroundColor:isFilled?color+'22':color,
-        borderWidth:isLine?2:0,fill:isFilled,tension:0.3,
-        pointRadius:isLine?3:0,pointBackgroundColor:color,borderRadius:6};
-    });
-  }
-
-  makeFlexChart('dailyChart',chartType,labels,datasets,metric);
-  showOutput('daily-out','daily-title','daily-sub','daily-legend','daily-stats','ddr-export',
-    title||`${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} — Daily Breakdown`,
-    `${fmtDateShort(startDate)} – ${fmtDateShort(endDate)} · Every day · ${metric==='revenue'?'Revenue':'Attendance'}`,
-    datasets,labels,metric);
-}
-
-// ── Item Performance ──────────────────────────────────────────────────────────
-
-// Map of category name -> color
-const IP_CAT_COLORS = {
-  'Merchandise':    '#EF9F27',
-  'Concessions':    '#1D9E75',
-  'Events':         '#D4537E',
-  'Trampoline Park':'#378ADD'
-};
-
-// Known sub-item rows and which category they belong to
-// Parsed dynamically from sheet but we need the category section headers
-const IP_CAT_HEADERS = ['Merchandise','Concessions','Events','Trampoline Park'];
-
-let ipCurrentCat = 'all';
-let ipCurrentSort = 'revenue';
-
+// ── ITEM PERFORMANCE ──────────────────────────────────────────────────────────
 function onIPPeriodChange(){
-  const val = document.getElementById('ip-period').value;
-  const isCustom = val === 'custom';
-  document.getElementById('ip-start-wrap').style.display = isCustom ? 'block' : 'none';
-  document.getElementById('ip-end-wrap').style.display   = isCustom ? 'block' : 'none';
-}
-
-function setIPCat(btn){
-  document.querySelectorAll('.ip-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  ipCurrentCat = btn.dataset.cat;
+  const custom=document.getElementById('ip-period').value==='custom';
+  document.getElementById('ip-start-wrap').style.display=custom?'flex':'none';
+  document.getElementById('ip-end-wrap').style.display=custom?'flex':'none';
   renderItemTab();
 }
+function setIPCat(btn){ document.querySelectorAll('.ip-pill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); ipCurrentCat=btn.dataset.cat; renderItemTab(); }
 
-function setIPSort(col){
-  document.getElementById('ip-sort').value = col==='revenue'?'revenue':col==='wow'?'wow':col==='name'?'name':col==='pct'?'pct':'revenue';
-  renderItemTab();
-}
-
-// Parse sub-items from a sheet's raw rows
-// Returns array of {name, category, weeklyTotal, dailyVals[7]}
 function parseItemsFromRows(rows){
-  const items = [];
-  let currentCat = null;
-  // Find the "Category" header row first (row 23 area)
-  let inItemSection = false;
-  for(let r=0; r<rows.length; r++){
-    const row = rows[r];
-    const cellA = row[0] ? row[0].toString().trim() : '';
-    const cellI = row[COL_IDX] ? row[COL_IDX].toString().replace(/[$,"\s]/g,'') : '';
-
-    // Detect "Category" header row
-    if(cellA.toLowerCase()==='category'){ inItemSection=true; continue; }
-    if(!inItemSection) continue;
-
-    // Detect category section headers
-    if(IP_CAT_HEADERS.includes(cellA)){
-      currentCat = cellA;
-      continue;
-    }
-
-    // Skip blank rows, % rows, per cap rows, # rows, known non-item rows
-    if(!cellA) continue;
-    if(cellA.startsWith('%')) continue;
-    if(cellA.toLowerCase().includes('per cap')) continue;
-    if(cellA.startsWith('#')) continue;
-    if(!currentCat) continue;
-
-    // Skip known summary/expense rows that are not items
-    const excludedRows = [
-      'total sales','total hours','total labor ($)','total labor',
-      'total estimated labor tax (12%)','total estimated labor tax',
-      'estimated fixed daily expenses','estimated expenses',
-      'revenue - total expenses','revenue- total expenses',
-      'labor : sales','expense : sales'
-    ];
-    if(excludedRows.includes(cellA.toLowerCase())) continue;
-
-    // Parse total from col I
-    const total = cellI && !isNaN(parseFloat(cellI)) ? parseFloat(cellI) : 0;
-
-    // Parse daily values cols B-H (indices 1-7)
-    const dailyVals = [1,2,3,4,5,6,7].map(ci=>{
-      const v = row[ci] ? row[ci].toString().replace(/[$,"\s]/g,'') : '';
-      return v && !isNaN(parseFloat(v)) ? parseFloat(v) : 0;
-    });
-
-    items.push({ name: cellA, category: currentCat, weeklyTotal: total, dailyVals });
+  const items=[]; let currentCat=null, inSection=false;
+  const excluded=['total sales','total hours','total labor ($)','total labor','total estimated labor tax (12%)','total estimated labor tax','estimated fixed daily expenses','estimated expenses','revenue - total expenses','revenue- total expenses','labor : sales','expense : sales'];
+  for(const row of rows){
+    const a=row[0]?row[0].toString().trim():'';
+    if(a.toLowerCase()==='category'){ inSection=true; continue; }
+    if(!inSection) continue;
+    if(IP_CAT_HEADERS.includes(a)){ currentCat=a; continue; }
+    if(!a||a.startsWith('%')||a.toLowerCase().includes('per cap')||a.startsWith('#')||!currentCat) continue;
+    if(excluded.includes(a.toLowerCase())) continue;
+    // daily values cols B–H (indices 1–7)
+    const dailyVals=[1,2,3,4,5,6,7].map(ci=>cellNum(row[ci]));
+    items.push({ name:a, category:currentCat, dailyVals });
   }
   return items;
 }
-
-// Get date range for selected period
 function getIPDateRange(){
-  const period = document.getElementById('ip-period').value;
-  const sorted = [...globalDailyIndex].sort((a,b)=>a.date-b.date);
-  if(!sorted.length) return {start:null,end:null};
-
-  const now = sorted[sorted.length-1].date;
-  const currentMonth = now.getMonth();
-  const currentYear  = now.getFullYear();
-
-  if(period==='current-month'){
-    return {
-      start: new Date(currentYear, currentMonth, 1),
-      end:   new Date(currentYear, currentMonth+1, 0)
-    };
-  }
-  if(period==='last-month'){
-    return {
-      start: new Date(currentYear, currentMonth-1, 1),
-      end:   new Date(currentYear, currentMonth, 0)
-    };
-  }
-  if(period==='all-time'){
-    return { start: sorted[0].date, end: now };
-  }
-  if(period==='custom'){
-    return {
-      start: inputToDate(document.getElementById('ip-start').value),
-      end:   inputToDate(document.getElementById('ip-end').value)
-    };
-  }
-  return {start:null,end:null};
+  const period=document.getElementById('ip-period').value;
+  const sorted=[...globalDailyIndex].sort((a,b)=>a.date-b.date);
+  if(!sorted.length)return{start:null,end:null};
+  const now=sorted.at(-1).date, y=now.getFullYear(), mo=now.getMonth();
+  if(period==='current-month') return {start:new Date(y,mo,1),end:new Date(y,mo+1,0)};
+  if(period==='last-month')    return {start:new Date(y,mo-1,1),end:new Date(y,mo,0)};
+  if(period==='all-time')      return {start:sorted[0].date,end:now};
+  return {start:inputToDate(document.getElementById('ip-start').value),end:inputToDate(document.getElementById('ip-end').value)};
 }
-
-// Aggregate item data across all sheets in date range
-function getItemData(startDate, endDate){
-  if(!startDate||!endDate) return [];
-
-  // Get all sheets that overlap with date range
-  const relevantSheets = globalSheetNames.filter(name=>{
-    const entries = globalDailyIndex.filter(e=>e.sheetName===name);
-    if(!entries.length) return false;
-    const sheetDates = entries.map(e=>e.date);
-    const sheetStart = new Date(Math.min(...sheetDates));
-    const sheetEnd   = new Date(Math.max(...sheetDates));
-    return sheetEnd >= startDate && sheetStart <= endDate;
-  });
-
-  if(!relevantSheets.length) return [];
-
-  // For each sheet, parse items and sum up only days in range
-  const itemMap = {}; // name -> {category, total, weeklyTotals:[]}
-
-  relevantSheets.forEach(sheetName=>{
-    const rows = globalRawRows[sheetName];
-    if(!rows) return;
-    const items = parseItemsFromRows(rows);
-
-    // Get day entries for this sheet within range
-    const sheetEntries = globalDailyIndex
-      .filter(e=>e.sheetName===sheetName && e.date>=startDate && e.date<=endDate)
-      .sort((a,b)=>a.date-b.date);
-
-    // Map colIdx to day index offset (col 1=Mon, 2=Tue... but depends on sheet)
-    // Daily vals in parseItemsFromRows use cols B-H (indices 1-7 = Mon-Sun based on screenshot)
-    // We need to map those cols to the actual dates
-    const sheetAllEntries = globalDailyIndex.filter(e=>e.sheetName===sheetName).sort((a,b)=>a.date-b.date);
-
-    items.forEach(item=>{
-      if(!itemMap[item.name]){
-        itemMap[item.name] = { name:item.name, category:item.category, total:0, weeklyTotals:{} };
-      }
-      // Sum daily values for days within range
-      let itemTotal = 0;
-      sheetAllEntries.forEach((entry, di)=>{
-        if(entry.date >= startDate && entry.date <= endDate){
-          // colIdx 2=Sun,3=Mon,4=Tue,5=Wed,6=Thu,7=Fri,8=Sat
-          // dailyVals uses indices 1-7 = cols B-H
-          // entry.colIdx is 2-8 (Sun=2, Mon=3... Sat=8)
-          // dailyVals index = entry.colIdx - 1 (so Sun=1, Mon=2... Sat=7)
-          const dv = item.dailyVals[entry.colIdx - 1] || 0;
-          itemTotal += dv;
-        }
-      });
-      itemMap[item.name].total += itemTotal;
-      // Store weekly total for trend
-      itemMap[item.name].weeklyTotals[sheetName] = (itemMap[item.name].weeklyTotals[sheetName]||0) + itemTotal;
+// Aggregate items over a date range (day-accurate via daily index)
+function getItemData(start,end){
+  if(!start||!end)return[];
+  const map={}; // name -> {name,category,total,weeklyTotals}
+  globalSheetNames.forEach(sheetName=>{
+    const rows=globalRawRows[sheetName]; if(!rows)return;
+    const sheetEntries=globalDailyIndex.filter(e=>e.sheetName===sheetName && e.date>=start && e.date<=end);
+    if(!sheetEntries.length)return;
+    const items=parseItemsFromRows(rows);
+    items.forEach(it=>{
+      if(!map[it.name])map[it.name]={name:it.name,category:it.category,total:0,weeklyTotals:{}};
+      let sub=0;
+      sheetEntries.forEach(e=>{ sub += it.dailyVals[e.colIdx-1]||0; }); // colIdx 1–7 → dailyVals 0–6
+      map[it.name].total+=sub;
+      map[it.name].weeklyTotals[sheetName]=(map[it.name].weeklyTotals[sheetName]||0)+sub;
     });
   });
-
-  return Object.values(itemMap).filter(i=>i.total>0||Object.values(i.weeklyTotals).some(v=>v>0));
+  return Object.values(map).filter(i=>i.total>0);
 }
-
-// Get WoW change for an item
-function getItemWoW(item){
-  const weeks = globalSheetNames.filter(n=>n in item.weeklyTotals);
-  if(weeks.length < 2) return null;
-  const last  = item.weeklyTotals[weeks[weeks.length-1]] || 0;
-  const prior = item.weeklyTotals[weeks[weeks.length-2]] || 0;
-  if(prior===0) return null;
+function getItemWoW(it){
+  const weeks=globalSheetNames.filter(n=>n in it.weeklyTotals);
+  if(weeks.length<2)return null;
+  const last=it.weeklyTotals[weeks.at(-1)]||0, prior=it.weeklyTotals[weeks.at(-2)]||0;
+  if(prior===0)return null;
   return ((last-prior)/prior)*100;
 }
-
 function renderItemTab(){
-  if(!globalData){ return; }
-  const {start, end} = getIPDateRange();
-  if(!start||!end){ alert('Please select a date range.'); return; }
+  if(!globalData)return;
+  const {start,end}=getIPDateRange();
+  if(!start||!end){ return; }
+  const sortVal=document.getElementById('ip-sort').value;
+  const showVal=document.getElementById('ip-show').value;
 
-  const sortVal = document.getElementById('ip-sort').value;
-  const showVal = document.getElementById('ip-show').value;
+  let items=getItemData(start,end);
+  const periodLabel=getPeriodLabel(start,end);
+  document.getElementById('ip-export-name').value='items_'+dateToKey(start)+'_'+dateToKey(end);
 
-  let items = getItemData(start, end);
-  if(!items.length){ document.getElementById('ip-table-body').innerHTML='<tr><td colspan="8" style="text-align:center;color:#aaa;padding:24px;">No item data found for this period.</td></tr>'; return; }
+  if(!items.length){
+    document.getElementById('ip-cards').innerHTML='';
+    document.getElementById('ip-table-body').innerHTML='<tr><td colspan="7" class="muted">No item data for this period.</td></tr>';
+    ['ipBarChart','ipDonutChart','ipTrendChart'].forEach(id=>{ if(charts[id])charts[id].destroy(); });
+    return;
+  }
 
-  // Filter by category
-  if(ipCurrentCat !== 'all') items = items.filter(i=>i.category===ipCurrentCat);
-
-  // Calculate category totals for % calc
-  const catTotals = {};
-  items.forEach(i=>{ catTotals[i.category]=(catTotals[i.category]||0)+i.total; });
-
-  // Attach computed fields
-  items = items.map(i=>({
-    ...i,
-    wow: getItemWoW(i),
-    pct: catTotals[i.category]>0 ? (i.total/catTotals[i.category])*100 : 0,
-    weeklyAvg: i.total / Math.max(1, Object.keys(i.weeklyTotals).length)
-  }));
-
-  // Sort
+  if(ipCurrentCat!=='all') items=items.filter(i=>i.category===ipCurrentCat);
+  const catTotals={}; items.forEach(i=>catTotals[i.category]=(catTotals[i.category]||0)+i.total);
+  items=items.map(i=>({...i, wow:getItemWoW(i), pct:catTotals[i.category]>0?i.total/catTotals[i.category]*100:0, weeklyAvg:i.total/Math.max(1,Object.keys(i.weeklyTotals).length)}));
   items.sort((a,b)=>{
-    if(sortVal==='revenue') return b.total-a.total;
-    if(sortVal==='revenue-asc') return a.total-b.total;
-    if(sortVal==='wow') return (b.wow??-999)-(a.wow??-999);
-    if(sortVal==='name') return a.name.localeCompare(b.name);
-    if(sortVal==='pct') return b.pct-a.pct;
+    if(sortVal==='revenue')return b.total-a.total;
+    if(sortVal==='revenue-asc')return a.total-b.total;
+    if(sortVal==='wow')return (b.wow??-1e9)-(a.wow??-1e9);
+    if(sortVal==='pct')return b.pct-a.pct;
+    if(sortVal==='name')return a.name.localeCompare(b.name);
     return b.total-a.total;
   });
+  const show=showVal==='all'?items:items.slice(0,parseInt(showVal));
+  const maxRev=show[0]?.total||1;
+  const totalRev=items.reduce((s,i)=>s+i.total,0);
+  const topItem=items[0], topCat=Object.entries(catTotals).sort((a,b)=>b[1]-a[1])[0];
 
-  // Limit
-  const displayItems = showVal==='all' ? items : items.slice(0, parseInt(showVal));
-  const maxRevenue = displayItems[0]?.total || 1;
+  document.getElementById('ip-chart-title').textContent=`Top Items by Revenue — ${periodLabel}`;
+  document.getElementById('ip-chart-sub').textContent=ipCurrentCat==='all'?'All categories':ipCurrentCat;
+  document.getElementById('ip-table-title').textContent=`Item Leaderboard — ${periodLabel}`;
 
-  const periodLabel = getPeriodLabel(start, end);
-  const totalRevenue = items.reduce((s,i)=>s+i.total, 0);
-  const topItem = items[0];
-  const topCat = Object.entries(catTotals).sort((a,b)=>b[1]-a[1])[0];
-
-  // Update summary cards
-  document.getElementById('ip-cards').innerHTML = `
+  document.getElementById('ip-cards').innerHTML=`
     <div class="card highlight"><div class="label">Items Tracked</div><div class="value">${items.length}</div><div class="sub">${periodLabel}</div></div>
-    <div class="card"><div class="label">Top Item</div><div class="value" style="font-size:16px;">${topItem?.name||'—'}</div><div class="sub">${topItem?fmt(topItem.total):''}</div></div>
-    <div class="card"><div class="label">Top Category</div><div class="value" style="font-size:16px;">${topCat?topCat[0]:'—'}</div><div class="sub">${topCat?fmt(topCat[1]):''}</div></div>
-    <div class="card"><div class="label">Total Item Revenue</div><div class="value">${fmt(totalRevenue)}</div><div class="sub">${periodLabel}</div></div>
+    <div class="card"><div class="label">Top Item</div><div class="value" style="font-size:15px;">${topItem?.name||'—'}</div><div class="sub">${topItem?fmt(topItem.total):''}</div></div>
+    <div class="card"><div class="label">Top Category</div><div class="value" style="font-size:15px;">${topCat?topCat[0]:'—'}</div><div class="sub">${topCat?fmt(topCat[1]):''}</div></div>
+    <div class="card"><div class="label">Total Item Revenue</div><div class="value">${fmt(totalRev)}</div><div class="sub">${periodLabel}</div></div>
   `;
 
-  document.getElementById('ip-chart-title').textContent = `Top Items by Revenue — ${periodLabel}`;
-  document.getElementById('ip-chart-sub').textContent = ipCurrentCat==='all'?'All categories':ipCurrentCat;
-  document.getElementById('ip-table-title').textContent = `Item Leaderboard — ${periodLabel}`;
-
-  // Bar chart
-  const barColors = displayItems.map(i=>IP_CAT_COLORS[i.category]||'#378ADD');
-  if(charts['ipBarChart']) charts['ipBarChart'].destroy();
-  charts['ipBarChart'] = new Chart(document.getElementById('ipBarChart'),{
+  // Bar chart (horizontal)
+  if(charts['ipBarChart'])charts['ipBarChart'].destroy();
+  charts['ipBarChart']=new Chart(document.getElementById('ipBarChart'),{
     type:'bar',
-    data:{
-      labels: displayItems.map(i=>i.name),
-      datasets:[{label:'Revenue',data:displayItems.map(i=>i.total),backgroundColor:barColors,borderWidth:0,borderRadius:6}]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${fmt(ctx.parsed.x)} (${displayItems[ctx.dataIndex].pct.toFixed(1)}% of ${displayItems[ctx.dataIndex].category})`}}},
-      scales:{
-        x:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}},
-        y:{ticks:{font:{size:11}},grid:{display:false}}
-      }
-    }
+    data:{labels:show.map(i=>i.name),datasets:[{data:show.map(i=>i.total),backgroundColor:show.map(i=>IP_CAT_COLORS[i.category]||'#378ADD'),borderWidth:0,borderRadius:6}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${fmt(ctx.parsed.x)} (${show[ctx.dataIndex].pct.toFixed(1)}% of ${show[ctx.dataIndex].category})`}}},
+      scales:{x:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}},y:{ticks:{font:{size:11}},grid:{display:false}}}}
   });
 
-  // Leaderboard table
-  const tbody = document.getElementById('ip-table-body');
-  tbody.innerHTML = displayItems.map((item, idx)=>{
-    const rankClass = idx===0?'gold':idx===1?'silver':idx===2?'bronze':'';
-    const catColor = IP_CAT_COLORS[item.category]||'#aaa';
-    const barPct = Math.round((item.total/maxRevenue)*100);
-    const wow = item.wow;
-    const wowHTML = wow===null
-      ? '<span class="lb-wow na">N/A</span>'
-      : `<span class="lb-wow ${wow>0?'up':wow<0?'down':'flat'}">${wow>=0?'+':''}${wow.toFixed(1)}%</span>`;
-
-    // Mini sparkline data
-    const sparkVals = globalSheetNames.map(n=>item.weeklyTotals[n]||0);
-    const sparkMax = Math.max(...sparkVals, 1);
-    const sparkPoints = sparkVals.map((v,i)=>`${Math.round((i/(sparkVals.length-1||1))*70)},${Math.round((1-(v/sparkMax))*24)+3}`).join(' ');
-
+  // Table
+  document.getElementById('ip-table-body').innerHTML=show.map((it,idx)=>{
+    const wow=it.wow;
+    const wowHTML=wow===null?'<span class="wow flat">N/A</span>':`<span class="wow ${wow>0?'up':wow<0?'down':'flat'}">${wow>=0?'+':''}${wow.toFixed(1)}%</span>`;
+    const cc=IP_CAT_COLORS[it.category]||'#888';
     return `<tr>
-      <td class="lb-rank ${rankClass}">${idx+1}</td>
-      <td class="lb-name">${item.name}</td>
-      <td><span class="lb-category" style="background:${catColor};">${item.category}</span></td>
-      <td>
-        <div style="font-weight:600;">${fmt(item.total)}</div>
-        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${barPct}%;background:${catColor};"></div></div>
-      </td>
-      <td>${item.pct.toFixed(1)}%</td>
-      <td>${fmt(item.weeklyAvg)}/wk</td>
+      <td class="lb-rank ${idx===0?'g1':idx===1?'g2':idx===2?'g3':''}">${idx+1}</td>
+      <td style="font-weight:500;">${it.name}</td>
+      <td><span class="lb-cat" style="background:${cc};">${it.category}</span></td>
+      <td style="font-weight:600;">${fmt(it.total)}<div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round(it.total/maxRev*100)}%;background:${cc};"></div></div></td>
+      <td>${it.pct.toFixed(1)}%</td>
+      <td>${fmt(it.weeklyAvg)}/wk</td>
       <td>${wowHTML}</td>
-      <td>
-        <svg class="sparkline-wrap" viewBox="0 0 70 30" xmlns="http://www.w3.org/2000/svg">
-          <polyline points="${sparkPoints}" fill="none" stroke="${catColor}" stroke-width="1.5"/>
-        </svg>
-      </td>
     </tr>`;
   }).join('');
 
-  // Donut chart — top 8 items + "Other"
-  const top8 = items.slice(0,8);
-  const otherTotal = items.slice(8).reduce((s,i)=>s+i.total,0);
-  const donutLabels = [...top8.map(i=>i.name), ...(otherTotal>0?['Other']:[])];
-  const donutData   = [...top8.map(i=>i.total), ...(otherTotal>0?[otherTotal]:[])];
-  const donutColors = [...top8.map(i=>IP_CAT_COLORS[i.category]||'#aaa'), '#ccc'];
-
-  if(charts['ipDonutChart']) charts['ipDonutChart'].destroy();
-  charts['ipDonutChart'] = new Chart(document.getElementById('ipDonutChart'),{
-    type:'doughnut',
-    data:{labels:donutLabels,datasets:[{data:donutData,backgroundColor:donutColors,borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.parsed)} (${((ctx.parsed/totalRevenue)*100).toFixed(1)}%)`}}}}
+  // Donut (top 8 + Other)
+  const top8=items.slice(0,8), otherTotal=items.slice(8).reduce((s,i)=>s+i.total,0);
+  const dL=[...top8.map(i=>i.name),...(otherTotal>0?['Other']:[])];
+  const dV=[...top8.map(i=>i.total),...(otherTotal>0?[otherTotal]:[])];
+  const dC=[...top8.map(i=>IP_CAT_COLORS[i.category]||'#aaa'),'#ccc'];
+  if(charts['ipDonutChart'])charts['ipDonutChart'].destroy();
+  charts['ipDonutChart']=new Chart(document.getElementById('ipDonutChart'),{
+    type:'doughnut',data:{labels:dL,datasets:[{data:dV,backgroundColor:dC,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.parsed)} (${(ctx.parsed/totalRev*100).toFixed(1)}%)`}}}}
   });
 
-  // Trend chart — top 5 items across weeks
-  const top5 = items.slice(0,5);
-  const trendLabels = globalSheetNames.map(n=>sheetToLabel(n));
-  const trendDatasets = top5.map(item=>({
-    label: item.name,
-    data: globalSheetNames.map(n=>item.weeklyTotals[n]||0),
-    borderColor: IP_CAT_COLORS[item.category]||'#378ADD',
-    backgroundColor:'transparent',
-    borderWidth:2, pointRadius:3,
-    pointBackgroundColor: IP_CAT_COLORS[item.category]||'#378ADD',
-    tension:0.3
-  }));
-
-  if(charts['ipTrendChart']) charts['ipTrendChart'].destroy();
-  charts['ipTrendChart'] = new Chart(document.getElementById('ipTrendChart'),{
-    type:'line',
-    data:{labels:trendLabels,datasets:trendDatasets},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}},
-      scales:{
-        x:{ticks:{font:{size:10},autoSkip:true,maxRotation:40},grid:{display:false}},
-        y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}
-      }
-    }
+  // Trend top 5
+  const top5=items.slice(0,5);
+  const tL=globalSheetNames.map(sheetToLabel);
+  const tD=top5.map(it=>({label:it.name,data:globalSheetNames.map(n=>it.weeklyTotals[n]||0),borderColor:IP_CAT_COLORS[it.category]||'#378ADD',backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:IP_CAT_COLORS[it.category]||'#378ADD',tension:0.3}));
+  if(charts['ipTrendChart'])charts['ipTrendChart'].destroy();
+  charts['ipTrendChart']=new Chart(document.getElementById('ipTrendChart'),{
+    type:'line',data:{labels:tL,datasets:tD},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}},scales:{x:{ticks:{font:{size:10},autoSkip:true,maxRotation:40},grid:{display:false}},y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',font:{size:11}},grid:{color:'rgba(128,128,128,0.12)'}}}}
   });
 }
-
-function getPeriodLabel(start, end){
-  const period = document.getElementById('ip-period').value;
-  if(period==='current-month'||period==='last-month'){
-    const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    return months[start.getMonth()]+' '+start.getFullYear();
-  }
-  if(period==='all-time') return 'All Time';
+function getPeriodLabel(start,end){
+  const p=document.getElementById('ip-period').value;
+  if(p==='current-month'||p==='last-month') return `${MONTH_NAMES[start.getMonth()]} ${start.getFullYear()}`;
+  if(p==='all-time') return 'All Time';
   return `${fmtDateShort(start)} – ${fmtDateShort(end)}`;
 }
 </script>
