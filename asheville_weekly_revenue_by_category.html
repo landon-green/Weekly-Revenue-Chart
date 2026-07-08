@@ -117,6 +117,50 @@
     .ring-info .ring-label{ font-size:11.5px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; margin-top:2px; }
     .ring-info .ring-detail{ font-size:11.5px; color:var(--text-faint); margin-top:3px; }
 
+    /* ── Bento grid dashboard ── */
+    .bento-grid{ display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:76px; gap:12px; margin-bottom:24px; }
+    .bento-card{ background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow-sm); overflow:hidden; position:relative; display:flex; flex-direction:column; transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s; }
+    .bento-card.chart-card, .bento-card.ring-mini-card{ cursor:pointer; }
+    .bento-card.chart-card:hover, .bento-card.ring-mini-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow); }
+    .bento-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-shrink:0; }
+    .bento-card-title{ font-family:var(--font-display); font-size:12.5px; font-weight:700; color:var(--text); }
+    .expand-hint{ font-size:13px; color:var(--text-faint); opacity:0; transition:opacity .15s; }
+    .bento-card.chart-card:hover .expand-hint, .bento-card.ring-mini-card:hover .expand-hint{ opacity:1; color:var(--accent); }
+    .chart-card .chart-wrap{ flex:1; min-height:0; }
+
+    .kpi-card{ justify-content:center; }
+    .kpi-card .value{ font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--text); letter-spacing:-0.3px; line-height:1.1; }
+    .kpi-card .label{ font-size:10.5px; color:var(--text-dim); margin-top:7px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+    .kpi-card .sub{ font-size:10.5px; color:var(--text-faint); margin-top:3px; }
+    .kpi-card.accent-primary{ box-shadow:var(--shadow-sm), inset 3px 0 0 var(--accent); }
+    .kpi-card.accent-success{ box-shadow:var(--shadow-sm), inset 3px 0 0 var(--success); }
+
+    .mini-stat-row{ display:flex; align-items:center; justify-content:center; gap:14px; height:100%; }
+    .mini-stat{ text-align:center; flex:1; }
+    .mini-stat-label{ font-size:10px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px; }
+    .mini-stat-value{ font-family:var(--font-display); font-size:17px; font-weight:700; }
+    .mini-stat-value.up{ color:var(--success); }
+    .mini-stat-value.down{ color:var(--danger); }
+    .mini-stat-sub{ font-size:10px; color:var(--text-faint); margin-top:3px; }
+    .mini-stat-divider{ width:1px; align-self:stretch; background:var(--border-soft); }
+
+    .ring-mini-card{ align-items:center; }
+    .ring-mini-host{ flex:1; display:flex; align-items:center; justify-content:center; }
+    .ring-mini-host .ring-mini-inner{ display:flex; align-items:center; gap:10px; }
+    .ring-mini-pct{ font-family:var(--font-display); font-size:18px; font-weight:700; }
+
+    @media (max-width:980px){
+      .bento-grid{ grid-template-columns:repeat(6,1fr); grid-auto-rows:70px; }
+      .bento-grid > div{ grid-column:span 6 !important; grid-row:span 2 !important; }
+    }
+
+    /* Detail modal */
+    .detail-overlay{ display:none; position:fixed; inset:0; background:rgba(10,10,10,0.55); z-index:500; align-items:center; justify-content:center; padding:24px; }
+    .detail-overlay.show{ display:flex; }
+    .detail-box{ background:var(--surface); border-radius:var(--radius); padding:28px 30px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow); position:relative; }
+    .detail-close{ position:absolute; top:18px; right:18px; width:30px; height:30px; border-radius:50%; border:none; background:var(--surface2); color:var(--text-dim); cursor:pointer; font-size:13px; transition:all .15s; }
+    .detail-close:hover{ color:var(--danger); transform:rotate(90deg); }
+
     .control-bar { background:var(--surface); border-radius:var(--radius); padding:20px 22px; margin-bottom:20px; box-shadow:var(--shadow-sm); }
     .control-row { display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; }
     .field { display:flex; flex-direction:column; gap:7px; }
@@ -213,47 +257,94 @@
 </div>
 
 <div id="tab-dashboard" class="tab-content active">
-  <div class="cards">
-    <div class="card highlight"><div class="value" id="c-total">—</div><div class="label">Total Revenue (all weeks)</div></div>
-    <div class="card current-month"><div class="value" id="c-month">—</div><div class="label" id="c-month-lbl">Current Month Revenue</div><div class="sub" id="c-month-weeks"></div></div>
-    <div class="card"><div class="value" id="c-avg">—</div><div class="label">Weekly Average</div></div>
-    <div class="card"><div class="value" id="c-best">—</div><div class="label">Best Week</div><div class="sub" id="c-best-lbl"></div></div>
-    <div class="card"><div class="value" id="c-worst">—</div><div class="label">Worst Week</div><div class="sub" id="c-worst-lbl"></div></div>
-    <div class="card"><div class="value" id="c-wow">—</div><div class="label">Latest Week vs Prior</div><div class="sub" id="c-wow-lbl"></div></div>
-  </div>
+  <div class="bento-grid">
 
-  <div class="panel">
-    <div class="panel-header">
-      <div><div class="panel-title">Performance vs 4-Week Baseline</div><div class="panel-sub">Where the latest week stands against the recent trend, so you know what to aim for</div></div>
+    <!-- Left stacked KPIs -->
+    <div class="bento-card kpi-card" style="grid-column:span 3; grid-row:span 2;">
+      <div class="value" id="c-total">—</div><div class="label">Total Revenue</div><div class="sub">all weeks</div>
     </div>
-    <div class="rings-panel" id="rings-panel"></div>
-  </div>
+    <div class="bento-card kpi-card accent-success" style="grid-column:span 3; grid-row:span 2;">
+      <div class="value" id="c-avg">—</div><div class="label">Weekly Average</div>
+    </div>
 
-  <div class="panel">
-    <div class="panel-header">
-      <div><div class="panel-title">Weekly Revenue by Category</div><div class="panel-sub">Stacked bars with 4-week rolling average · hover for % breakdown</div></div>
-      <div class="legend">
-        <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline Park</span>
-        <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
-        <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
-        <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>
-        <span><span class="swatch" style="background:#9C8CFF;border-radius:50%;"></span>4-wk Avg</span>
+    <!-- Center hero chart -->
+    <div class="bento-card chart-card" style="grid-column:span 6; grid-row:span 4;" onclick="openDetail('revenue')">
+      <div class="bento-card-head">
+        <span class="bento-card-title">Weekly Revenue by Category</span>
+        <span class="expand-hint">⤢</span>
+      </div>
+      <div class="chart-wrap" style="height:100%;"><canvas id="revenueChart"></canvas></div>
+    </div>
+
+    <!-- Right stacked KPIs -->
+    <div class="bento-card kpi-card accent-primary" style="grid-column:span 3; grid-row:span 2;">
+      <div class="value" id="c-month">—</div><div class="label" id="c-month-lbl">Current Month</div><div class="sub" id="c-month-weeks"></div>
+    </div>
+    <div class="bento-card kpi-card" style="grid-column:span 3; grid-row:span 2;">
+      <div class="value" id="c-wow">—</div><div class="label">Latest Week vs Prior</div><div class="sub" id="c-wow-lbl"></div>
+    </div>
+
+    <!-- Best / Worst combined -->
+    <div class="bento-card" style="grid-column:span 3; grid-row:span 2;">
+      <div class="mini-stat-row">
+        <div class="mini-stat"><div class="mini-stat-label">Best Week</div><div class="mini-stat-value up" id="c-best">—</div><div class="mini-stat-sub" id="c-best-lbl"></div></div>
+        <div class="mini-stat-divider"></div>
+        <div class="mini-stat"><div class="mini-stat-label">Worst Week</div><div class="mini-stat-value down" id="c-worst">—</div><div class="mini-stat-sub" id="c-worst-lbl"></div></div>
       </div>
     </div>
-    <div id="wow-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:22px;"></div>
-    <div class="chart-wrap" style="height:380px;"><canvas id="revenueChart"></canvas></div>
+
+    <!-- Rings, three compact -->
+    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('rings')">
+      <div class="bento-card-head"><span class="bento-card-title">Revenue</span><span class="expand-hint">⤢</span></div>
+      <div id="ring-mini-revenue" class="ring-mini-host"></div>
+    </div>
+    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('rings')">
+      <div class="bento-card-head"><span class="bento-card-title">Attendance</span><span class="expand-hint">⤢</span></div>
+      <div id="ring-mini-attendance" class="ring-mini-host"></div>
+    </div>
+    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('rings')">
+      <div class="bento-card-head"><span class="bento-card-title">Rev / Guest</span><span class="expand-hint">⤢</span></div>
+      <div id="ring-mini-perguest" class="ring-mini-host"></div>
+    </div>
+
+    <!-- Bottom charts -->
+    <div class="bento-card chart-card" style="grid-column:span 6; grid-row:span 3;" onclick="openDetail('monthly')">
+      <div class="bento-card-head">
+        <span class="bento-card-title">Monthly Revenue</span>
+        <span class="expand-hint">⤢</span>
+      </div>
+      <div class="chart-wrap" style="height:100%;"><canvas id="monthlyChart"></canvas></div>
+    </div>
+    <div class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('attendance')">
+      <div class="bento-card-head">
+        <span class="bento-card-title">Attendance</span>
+        <span class="expand-hint">⤢</span>
+      </div>
+      <div class="chart-wrap" style="height:100%;"><canvas id="attendanceChart"></canvas></div>
+    </div>
+    <div class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('percap')">
+      <div class="bento-card-head">
+        <span class="bento-card-title">Rev / Guest</span>
+        <span class="expand-hint">⤢</span>
+      </div>
+      <div class="chart-wrap" style="height:100%;"><canvas id="percapChart"></canvas></div>
+    </div>
+
   </div>
-  <div class="panel">
-    <div class="panel-header"><div><div class="panel-title">Monthly Revenue</div><div class="panel-sub">Each day counted in its true calendar month (boundary weeks split correctly)</div></div></div>
-    <div class="chart-wrap" style="height:260px;"><canvas id="monthlyChart"></canvas></div>
-  </div>
-  <div class="panel">
-    <div class="panel-header"><div><div class="panel-title">Weekly Attendance</div><div class="panel-sub">Big Air total attendance per week</div></div></div>
-    <div class="chart-wrap" style="height:220px;"><canvas id="attendanceChart"></canvas></div>
-  </div>
-  <div class="panel">
-    <div class="panel-header"><div><div class="panel-title">Revenue Per Guest</div><div class="panel-sub">Total revenue divided by attendance each week</div></div></div>
-    <div class="chart-wrap" style="height:220px;"><canvas id="percapChart"></canvas></div>
+</div>
+
+<!-- Detail Modal -->
+<div class="detail-overlay" id="detail-modal" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-box">
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <div class="panel-header" style="margin-bottom:14px;">
+      <div><div class="panel-title" id="detail-title" style="font-size:18px;">—</div><div class="panel-sub" id="detail-sub"></div></div>
+      <div class="legend" id="detail-legend"></div>
+    </div>
+    <div id="detail-wow" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;min-height:0;"></div>
+    <div class="chart-wrap" id="detail-chart-wrap" style="height:420px;"><canvas id="detailChart"></canvas></div>
+    <div class="rings-panel" id="detail-rings-panel" style="display:none; margin-top:4px;"></div>
+    <div class="cards" id="detail-extra" style="margin-top:18px; margin-bottom:0;"></div>
   </div>
 </div>
 
@@ -449,6 +540,7 @@ let crMode = 'single';
 let crGroup = 'week';
 let compRangeCount = 0;
 let ipCurrentCat = 'all';
+let chartConfigs = {};
 
 (function initTheme(){
   const saved = localStorage.getItem('bigair_theme') || 'dark';
@@ -618,28 +710,36 @@ function ringSVG(pct, color, size=84, stroke=9){
       transform="rotate(-90 ${c} ${c})"/>
   </svg>`;
 }
-function renderRings(){
+function computeRingsData(){
   const totals=globalData.totals, att=globalData.attendance;
   const perGuestArr = totals.map((t,i)=>att[i]>0?t/att[i]:0);
-
   const curRev=totals.at(-1), baseRev=baselineAvg(totals);
   const curAtt=att.at(-1), baseAtt=baselineAvg(att);
   const curPG=perGuestArr.at(-1), basePG=baselineAvg(perGuestArr);
-
   const revPct = baseRev>0 ? (curRev/baseRev*100) : 100;
   const attPct = baseAtt>0 ? (curAtt/baseAtt*100) : 100;
   const pgPct  = basePG>0  ? (curPG/basePG*100)  : 100;
-
-  const rings=[
-    { label:'Revenue', pct:revPct, detail:`${fmt(curRev)} vs avg ${fmt(baseRev)}` },
-    { label:'Attendance', pct:attPct, detail:`${num(curAtt)} vs avg ${num(Math.round(baseAtt))}` },
-    { label:'Revenue / Guest', pct:pgPct, detail:`${fmt2(curPG)} vs avg ${fmt2(basePG)}` },
+  return [
+    { key:'revenue',   label:'Revenue',          pct:revPct, detail:`${fmt(curRev)} vs avg ${fmt(baseRev)}` },
+    { key:'attendance',label:'Attendance',       pct:attPct, detail:`${num(curAtt)} vs avg ${num(Math.round(baseAtt))}` },
+    { key:'perguest',  label:'Revenue / Guest',  pct:pgPct,  detail:`${fmt2(curPG)} vs avg ${fmt2(basePG)}` },
   ];
-
-  document.getElementById('rings-panel').innerHTML = rings.map(r=>{
+}
+function renderRings(){
+  const rings=computeRingsData();
+  const hostMap={ revenue:'ring-mini-revenue', attendance:'ring-mini-attendance', perguest:'ring-mini-perguest' };
+  rings.forEach(r=>{
+    const color=ringColor(r.pct);
+    const host=document.getElementById(hostMap[r.key]);
+    if(host) host.innerHTML=`<div class="ring-mini-inner">${ringSVG(r.pct,color,54,7)}<div class="ring-mini-pct" style="color:${color};">${Math.round(r.pct)}%</div></div>`;
+  });
+}
+function renderBigRings(){
+  const rings=computeRingsData();
+  document.getElementById('detail-rings-panel').innerHTML=rings.map(r=>{
     const color=ringColor(r.pct);
     return `<div class="ring-card">
-      ${ringSVG(r.pct, color)}
+      ${ringSVG(r.pct,color,84,9)}
       <div class="ring-info">
         <div class="ring-pct" style="color:${color};">${Math.round(r.pct)}%</div>
         <div class="ring-label">${r.label}</div>
@@ -696,21 +796,133 @@ function renderDashboard(){
   renderRings();
 
   const avg4=rollingAvg(totals,4);
-  drawChart('revenueChart','bar',labels,[
+  const revenueDatasets=[
     {label:'Trampoline Park',data:globalData.trampoline,backgroundColor:CAT_COLOR.trampoline,borderWidth:0,stack:'r',type:'bar'},
     {label:'Concessions',data:globalData.concessions,backgroundColor:CAT_COLOR.concessions,borderWidth:0,stack:'r',type:'bar'},
     {label:'Merchandise',data:globalData.merchandise,backgroundColor:CAT_COLOR.merchandise,borderWidth:0,stack:'r',type:'bar'},
     {label:'Events',data:globalData.events,backgroundColor:CAT_COLOR.events,borderWidth:0,stack:'r',type:'bar'},
     {label:'4-wk Avg',data:avg4,type:'line',borderColor:CAT_COLOR.total,backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:3,pointBackgroundColor:CAT_COLOR.total,tension:0.3,spanGaps:false,order:0}
-  ], v=>'$'+(v/1000).toFixed(0)+'k', {stacked:true});
+  ];
+  const revenueYFmt=v=>'$'+(v/1000).toFixed(0)+'k';
+  drawChart('revenueChart','bar',labels,revenueDatasets,revenueYFmt,{stacked:true});
+  chartConfigs.revenue={type:'bar',labels,datasets:revenueDatasets,yFmt:revenueYFmt,opts:{stacked:true},
+    title:'Weekly Revenue by Category', sub:'Stacked bars with 4-week rolling average · hover for % breakdown',
+    hasLegend:true, hasWow:true};
 
   const mLabels=monthKeys.map(k=>monthMap[k].label), mVals=monthKeys.map(k=>monthMap[k].total);
-  drawChart('monthlyChart','bar',mLabels,[{label:'Monthly Revenue',data:mVals,backgroundColor:mLabels.map((_,i)=>RANGE_COLORS[i%RANGE_COLORS.length]),borderWidth:0,borderRadius:6}], v=>'$'+(v/1000).toFixed(0)+'k',{simpleTip:'Revenue'});
+  const monthlyDatasets=[{label:'Monthly Revenue',data:mVals,backgroundColor:mLabels.map((_,i)=>RANGE_COLORS[i%RANGE_COLORS.length]),borderWidth:0,borderRadius:6}];
+  drawChart('monthlyChart','bar',mLabels,monthlyDatasets,revenueYFmt,{simpleTip:'Revenue'});
+  chartConfigs.monthly={type:'bar',labels:mLabels,datasets:monthlyDatasets,yFmt:revenueYFmt,opts:{simpleTip:'Revenue'},
+    title:'Monthly Revenue', sub:'Each day counted in its true calendar month (boundary weeks split correctly)'};
 
-  drawChart('attendanceChart','line',labels,[{label:'Attendance',data:globalData.attendance,borderColor:CAT_COLOR.trampoline,backgroundColor:currentTheme()==='dark'?'rgba(76,141,255,0.14)':'rgba(76,141,255,0.10)',borderWidth:2,pointRadius:4,pointBackgroundColor:CAT_COLOR.trampoline,fill:true,tension:0.3}], v=>num(v));
+  const attColor=currentTheme()==='dark'?'rgba(76,141,255,0.14)':'rgba(76,141,255,0.10)';
+  const attendanceDatasets=[{label:'Attendance',data:globalData.attendance,borderColor:CAT_COLOR.trampoline,backgroundColor:attColor,borderWidth:2,pointRadius:4,pointBackgroundColor:CAT_COLOR.trampoline,fill:true,tension:0.3}];
+  drawChart('attendanceChart','line',labels,attendanceDatasets,num,{});
+  chartConfigs.attendance={type:'line',labels,datasets:attendanceDatasets,yFmt:num,opts:{},
+    title:'Weekly Attendance', sub:'Big Air total attendance per week'};
+
   const pc=totals.map((t,i)=>globalData.attendance[i]>0?t/globalData.attendance[i]:0);
-  drawChart('percapChart','line',labels,[{label:'Revenue per Guest',data:pc,borderColor:CAT_COLOR.events,backgroundColor:currentTheme()==='dark'?'rgba(255,92,147,0.14)':'rgba(255,92,147,0.10)',borderWidth:2,pointRadius:4,pointBackgroundColor:CAT_COLOR.events,fill:true,tension:0.3}], v=>fmt2(v));
+  const pcColor=currentTheme()==='dark'?'rgba(255,92,147,0.14)':'rgba(255,92,147,0.10)';
+  const percapDatasets=[{label:'Revenue per Guest',data:pc,borderColor:CAT_COLOR.events,backgroundColor:pcColor,borderWidth:2,pointRadius:4,pointBackgroundColor:CAT_COLOR.events,fill:true,tension:0.3}];
+  drawChart('percapChart','line',labels,percapDatasets,fmt2,{});
+  chartConfigs.percap={type:'line',labels,datasets:percapDatasets,yFmt:fmt2,opts:{},
+    title:'Revenue Per Guest', sub:'Total revenue divided by attendance each week'};
 }
+
+// ── Detail modal (click-to-expand) ───────────────────────────────────────────
+function openDetail(kind){
+  const modal=document.getElementById('detail-modal');
+  const legendEl=document.getElementById('detail-legend');
+  const wowEl=document.getElementById('detail-wow');
+  const extraEl=document.getElementById('detail-extra');
+  const ringsEl=document.getElementById('detail-rings-panel');
+  const chartWrap=document.getElementById('detail-chart-wrap');
+  legendEl.innerHTML=''; wowEl.innerHTML=''; extraEl.innerHTML='';
+  ringsEl.style.display='none'; chartWrap.style.display='block';
+
+  if(kind==='rings'){
+    chartWrap.style.display='none';
+    document.getElementById('detail-title').textContent='Performance vs 4-Week Baseline';
+    document.getElementById('detail-sub').textContent='Where the latest week stands against the recent trend, so you know what to aim for';
+    ringsEl.style.display='grid';
+    renderBigRings();
+    modal.classList.add('show');
+    return;
+  }
+
+  const cfg=chartConfigs[kind];
+  if(!cfg) return;
+  document.getElementById('detail-title').textContent=cfg.title;
+  document.getElementById('detail-sub').textContent=cfg.sub;
+
+  if(cfg.hasLegend){
+    legendEl.innerHTML=`
+      <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline Park</span>
+      <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
+      <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
+      <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>
+      <span><span class="swatch" style="background:#9C8CFF;border-radius:50%;"></span>4-wk Avg</span>`;
+  }
+  if(cfg.hasWow){
+    const totals=globalData.totals, labels=globalLabels;
+    for(let i=1;i<totals.length;i++){
+      const pct=((totals[i]-totals[i-1])/totals[i-1])*100;
+      const b=document.createElement('span');
+      b.className='wow '+(pct>0?'up':pct<0?'down':'flat');
+      b.title=labels[i]; b.textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%'; wowEl.appendChild(b);
+    }
+  }
+
+  drawChart('detailChart',cfg.type,cfg.labels,cfg.datasets,cfg.yFmt,cfg.opts);
+
+  // Extra detail stat cards per kind
+  if(kind==='revenue'){
+    const totals=globalData.totals;
+    const total=totals.reduce((a,b)=>a+b,0), avg=total/totals.length;
+    const bi=totals.indexOf(Math.max(...totals)), wi=totals.indexOf(Math.min(...totals));
+    extraEl.innerHTML=`
+      <div class="card"><div class="value">${fmt(total)}</div><div class="label">Total Revenue</div></div>
+      <div class="card"><div class="value">${fmt(avg)}</div><div class="label">Weekly Average</div></div>
+      <div class="card"><div class="value">${fmt(totals[bi])}</div><div class="label">Best Week</div><div class="sub">${globalLabels[bi]}</div></div>
+      <div class="card"><div class="value">${fmt(totals[wi])}</div><div class="label">Worst Week</div><div class="sub">${globalLabels[wi]}</div></div>
+    `;
+  } else if(kind==='monthly'){
+    const vals=cfg.datasets[0].data;
+    const total=vals.reduce((a,b)=>a+b,0), avg=total/vals.length;
+    const bi=vals.indexOf(Math.max(...vals));
+    extraEl.innerHTML=`
+      <div class="card"><div class="value">${fmt(total)}</div><div class="label">All-Time Total</div></div>
+      <div class="card"><div class="value">${fmt(avg)}</div><div class="label">Monthly Average</div></div>
+      <div class="card"><div class="value">${fmt(vals[bi])}</div><div class="label">Best Month</div><div class="sub">${cfg.labels[bi]}</div></div>
+      <div class="card"><div class="value">${cfg.labels.length}</div><div class="label">Months Tracked</div></div>
+    `;
+  } else if(kind==='attendance'){
+    const vals=globalData.attendance;
+    const total=vals.reduce((a,b)=>a+b,0), avg=total/vals.length;
+    const bi=vals.indexOf(Math.max(...vals));
+    extraEl.innerHTML=`
+      <div class="card"><div class="value">${num(total)}</div><div class="label">Total Attendance</div></div>
+      <div class="card"><div class="value">${num(Math.round(avg))}</div><div class="label">Weekly Average</div></div>
+      <div class="card"><div class="value">${num(vals[bi])}</div><div class="label">Best Week</div><div class="sub">${globalLabels[bi]}</div></div>
+    `;
+  } else if(kind==='percap'){
+    const vals=cfg.datasets[0].data;
+    const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+    const bi=vals.indexOf(Math.max(...vals));
+    extraEl.innerHTML=`
+      <div class="card"><div class="value">${fmt2(avg)}</div><div class="label">Average Per Guest</div></div>
+      <div class="card"><div class="value">${fmt2(vals[bi])}</div><div class="label">Best Week</div><div class="sub">${globalLabels[bi]}</div></div>
+      <div class="card"><div class="value">${fmt2(vals.at(-1))}</div><div class="label">Latest Week</div><div class="sub">${globalLabels.at(-1)}</div></div>
+    `;
+  }
+
+  modal.classList.add('show');
+}
+function closeDetail(){
+  document.getElementById('detail-modal').classList.remove('show');
+  if(charts['detailChart']){ charts['detailChart'].destroy(); delete charts['detailChart']; }
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
 
 function drawChart(id,type,labels,datasets,yFmt,opts={}){
   if(charts[id])charts[id].destroy();
