@@ -40,16 +40,21 @@
       font-family: var(--font-body); background: var(--bg); color: var(--text);
       padding: 0 0 32px; transition: background 0.25s ease, color 0.25s ease;
       font-variant-numeric: tabular-nums;
+      background-image: radial-gradient(1100px circle at 50% -8%, var(--accent-soft), transparent 60%);
+      background-repeat: no-repeat;
+      min-height: 100vh;
     }
     ::selection { background: var(--accent-soft); color: var(--accent); }
     button, select, input { font-family: var(--font-body); }
 
     body::before{
       content:''; display:block; height:3px; width:100%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
-      background-size:200% 100%;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent), var(--accent-2));
+      background-size:300% 100%;
+      animation: shimmerBar 8s ease-in-out infinite;
     }
-    .page-wrap{ padding: 26px 32px 0; max-width:1320px; margin:0 auto; }
+    @keyframes shimmerBar{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+    .page-wrap{ padding: 30px 44px 0; max-width:1680px; margin:0 auto; }
 
     /* Password */
     #password-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
@@ -118,46 +123,70 @@
     .ring-info .ring-detail{ font-size:11.5px; color:var(--text-faint); margin-top:3px; }
 
     /* ── Bento grid dashboard ── */
-    .bento-grid{ display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:76px; gap:12px; margin-bottom:24px; }
-    .bento-card{ background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow-sm); overflow:hidden; position:relative; display:flex; flex-direction:column; transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s; }
+    .bento-grid{ display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:92px; gap:16px; margin-bottom:26px; }
+    .bento-card{
+      background:var(--surface); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm);
+      overflow:hidden; position:relative; display:flex; flex-direction:column;
+      transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s;
+      opacity:0; animation: cardIn .55s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes cardIn{ from{ opacity:0; transform:translateY(14px) scale(.985); } to{ opacity:1; transform:translateY(0) scale(1); } }
+    .bento-grid > *:nth-child(1){ animation-delay:.00s; } .bento-grid > *:nth-child(2){ animation-delay:.04s; }
+    .bento-grid > *:nth-child(3){ animation-delay:.08s; } .bento-grid > *:nth-child(4){ animation-delay:.06s; }
+    .bento-grid > *:nth-child(5){ animation-delay:.10s; } .bento-grid > *:nth-child(6){ animation-delay:.12s; }
+    .bento-grid > *:nth-child(7){ animation-delay:.16s; } .bento-grid > *:nth-child(8){ animation-delay:.19s; }
+    .bento-grid > *:nth-child(9){ animation-delay:.22s; } .bento-grid > *:nth-child(10){ animation-delay:.24s; }
+    .bento-grid > *:nth-child(11){ animation-delay:.27s; } .bento-grid > *:nth-child(12){ animation-delay:.30s; }
     .bento-card.chart-card, .bento-card.ring-mini-card{ cursor:pointer; }
     .bento-card.chart-card:hover, .bento-card.ring-mini-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow); }
-    .bento-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-shrink:0; }
-    .bento-card-title{ font-family:var(--font-display); font-size:12.5px; font-weight:700; color:var(--text); }
-    .expand-hint{ font-size:13px; color:var(--text-faint); opacity:0; transition:opacity .15s; }
-    .bento-card.chart-card:hover .expand-hint, .bento-card.ring-mini-card:hover .expand-hint{ opacity:1; color:var(--accent); }
+    .bento-card.chart-card:active, .bento-card.ring-mini-card:active{ transform:translateY(-1px) scale(.985); }
+    .bento-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-shrink:0; }
+    .bento-card-title{ font-family:var(--font-display); font-size:13.5px; font-weight:700; color:var(--text); }
+    .expand-hint{ font-size:14px; color:var(--text-faint); opacity:0; transition:all .18s; transform:scale(.8); }
+    .bento-card.chart-card:hover .expand-hint, .bento-card.ring-mini-card:hover .expand-hint{ opacity:1; color:var(--accent); transform:scale(1); }
     .chart-card .chart-wrap{ flex:1; min-height:0; }
 
     .kpi-card{ justify-content:center; }
-    .kpi-card .value{ font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--text); letter-spacing:-0.3px; line-height:1.1; }
-    .kpi-card .label{ font-size:10.5px; color:var(--text-dim); margin-top:7px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
-    .kpi-card .sub{ font-size:10.5px; color:var(--text-faint); margin-top:3px; }
+    .kpi-card .value{ font-family:var(--font-display); font-size:27px; font-weight:700; color:var(--text); letter-spacing:-0.3px; line-height:1.1; }
+    .kpi-card .label{ font-size:11px; color:var(--text-dim); margin-top:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+    .kpi-card .sub{ font-size:11px; color:var(--text-faint); margin-top:3px; }
     .kpi-card.accent-primary{ box-shadow:var(--shadow-sm), inset 3px 0 0 var(--accent); }
     .kpi-card.accent-success{ box-shadow:var(--shadow-sm), inset 3px 0 0 var(--success); }
+    .kpi-card.ring-mini-card:active{ transform:scale(.98); }
 
-    .mini-stat-row{ display:flex; align-items:center; justify-content:center; gap:14px; height:100%; }
+    .mini-stat-row{ display:flex; align-items:center; justify-content:center; gap:16px; height:100%; }
     .mini-stat{ text-align:center; flex:1; }
-    .mini-stat-label{ font-size:10px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px; }
-    .mini-stat-value{ font-family:var(--font-display); font-size:17px; font-weight:700; }
+    .mini-stat-label{ font-size:10.5px; color:var(--text-dim); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
+    .mini-stat-value{ font-family:var(--font-display); font-size:19px; font-weight:700; }
     .mini-stat-value.up{ color:var(--success); }
     .mini-stat-value.down{ color:var(--danger); }
-    .mini-stat-sub{ font-size:10px; color:var(--text-faint); margin-top:3px; }
+    .mini-stat-sub{ font-size:10.5px; color:var(--text-faint); margin-top:3px; }
     .mini-stat-divider{ width:1px; align-self:stretch; background:var(--border-soft); }
 
     .ring-mini-card{ align-items:center; }
     .ring-mini-host{ flex:1; display:flex; align-items:center; justify-content:center; }
-    .ring-mini-host .ring-mini-inner{ display:flex; align-items:center; gap:10px; }
-    .ring-mini-pct{ font-family:var(--font-display); font-size:18px; font-weight:700; }
+    .ring-mini-host .ring-mini-inner{ display:flex; align-items:center; gap:12px; }
+    .ring-mini-pct{ font-family:var(--font-display); font-size:20px; font-weight:700; }
+    .ring-svg circle:last-of-type{ transition: stroke-dasharray .9s cubic-bezier(.16,1,.3,1); }
 
     @media (max-width:980px){
-      .bento-grid{ grid-template-columns:repeat(6,1fr); grid-auto-rows:70px; }
+      .bento-grid{ grid-template-columns:repeat(6,1fr); grid-auto-rows:78px; }
       .bento-grid > div{ grid-column:span 6 !important; grid-row:span 2 !important; }
     }
 
     /* Detail modal */
-    .detail-overlay{ display:none; position:fixed; inset:0; background:rgba(10,10,10,0.6); z-index:500; align-items:center; justify-content:center; padding:20px; }
-    .detail-overlay.show{ display:flex; }
-    .detail-box{ background:var(--surface); border-radius:var(--radius); padding:30px 34px; width:95vw; max-width:1180px; max-height:92vh; overflow-y:auto; box-shadow:var(--shadow); position:relative; }
+    .detail-overlay{
+      position:fixed; inset:0; background:rgba(10,10,10,0.6); z-index:500;
+      display:flex; align-items:center; justify-content:center; padding:20px;
+      opacity:0; visibility:hidden; transition: opacity .25s ease, visibility 0s linear .25s;
+    }
+    .detail-overlay.show{ opacity:1; visibility:visible; transition: opacity .25s ease; }
+    .detail-box{
+      background:var(--surface); border-radius:var(--radius); padding:30px 34px; width:95vw; max-width:1180px;
+      max-height:92vh; overflow-y:auto; box-shadow:var(--shadow); position:relative;
+      transform:scale(.94) translateY(10px); transition: transform .3s cubic-bezier(.16,1,.3,1);
+    }
+    .detail-overlay.show .detail-box{ transform:scale(1) translateY(0); }
     .detail-close{ position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:50%; border:none; background:var(--surface2); color:var(--text-dim); cursor:pointer; font-size:14px; transition:all .15s; }
     .detail-close:hover{ color:var(--danger); transform:rotate(90deg); }
     .detail-single-ring{ display:flex; align-items:center; gap:18px; background:var(--surface2); border-radius:var(--radius-sm); padding:18px 22px; margin-bottom:18px; }
@@ -700,17 +729,41 @@ function ringColor(pct){
   if(pct>=90)  return cs.getPropertyValue('--warn').trim();
   return cs.getPropertyValue('--danger').trim();
 }
+// Animate a text value counting up from 0 to endVal using an eased tween
+function countUp(el, endVal, formatFn, duration=700){
+  if(!el) return;
+  const start=performance.now();
+  function tick(now){
+    const p=Math.min((now-start)/duration,1);
+    const eased=1-Math.pow(1-p,3);
+    el.textContent=formatFn(endVal*eased);
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+// Ring markup starts at 0 fill; call triggerRingFill() after insertion to animate to target
 function ringSVG(pct, color, size=84, stroke=9){
   const r=(size-stroke)/2, c=size/2, circ=2*Math.PI*r;
   const frac=Math.max(0,Math.min(pct/100,1));
   const dash=circ*frac;
   const trackColor = getComputedStyle(document.documentElement).getPropertyValue('--surface3').trim();
-  return `<svg class="ring-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  return `<svg class="ring-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" data-target-dash="${dash}" data-circ="${circ}">
     <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${trackColor}" stroke-width="${stroke}"/>
     <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
-      stroke-linecap="round" stroke-dasharray="${dash} ${circ-dash}"
+      stroke-linecap="round" stroke-dasharray="0 ${circ}"
       transform="rotate(-90 ${c} ${c})"/>
   </svg>`;
+}
+function triggerRingFill(containerEl){
+  if(!containerEl) return;
+  const svg=containerEl.querySelector('svg.ring-svg');
+  if(!svg) return;
+  const dash=parseFloat(svg.getAttribute('data-target-dash'));
+  const circ=parseFloat(svg.getAttribute('data-circ'));
+  const circle=svg.querySelector('circle:last-of-type');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    circle.setAttribute('stroke-dasharray', `${dash} ${circ-dash}`);
+  }));
 }
 function computeRingsData(){
   const totals=globalData.totals, att=globalData.attendance;
@@ -733,22 +786,32 @@ function renderRings(){
   rings.forEach(r=>{
     const color=ringColor(r.pct);
     const host=document.getElementById(hostMap[r.key]);
-    if(host) host.innerHTML=`<div class="ring-mini-inner">${ringSVG(r.pct,color,54,7)}<div class="ring-mini-pct" style="color:${color};">${Math.round(r.pct)}%</div></div>`;
+    if(host){
+      host.innerHTML=`<div class="ring-mini-inner">${ringSVG(r.pct,color,54,7)}<div class="ring-mini-pct" style="color:${color};">0%</div></div>`;
+      triggerRingFill(host);
+      countUp(host.querySelector('.ring-mini-pct'), r.pct, v=>Math.round(v)+'%', 800);
+    }
   });
 }
 function renderBigRings(){
   const rings=computeRingsData();
-  document.getElementById('detail-rings-panel').innerHTML=rings.map(r=>{
+  const panel=document.getElementById('detail-rings-panel');
+  panel.innerHTML=rings.map(r=>{
     const color=ringColor(r.pct);
     return `<div class="ring-card">
       ${ringSVG(r.pct,color,84,9)}
       <div class="ring-info">
-        <div class="ring-pct" style="color:${color};">${Math.round(r.pct)}%</div>
+        <div class="ring-pct rp-target" style="color:${color};" data-pct="${r.pct}">0%</div>
         <div class="ring-label">${r.label}</div>
         <div class="ring-detail">${r.detail}</div>
       </div>
     </div>`;
   }).join('');
+  panel.querySelectorAll('.ring-card').forEach(card=>{
+    triggerRingFill(card);
+    const pctEl=card.querySelector('.rp-target');
+    countUp(pctEl, parseFloat(pctEl.dataset.pct), v=>Math.round(v)+'%', 800);
+  });
 }
 
 function buildMonthlyTotals(){
@@ -773,14 +836,15 @@ function renderDashboard(){
   const curKey=`${latest.date.getFullYear()}-${String(latest.date.getMonth()+1).padStart(2,'0')}`;
   const cur=monthMap[curKey];
 
-  document.getElementById('c-total').textContent=fmt(total);
-  document.getElementById('c-avg').textContent=fmt(avg);
-  document.getElementById('c-best').textContent=fmt(totals[bi]);
+  countUp(document.getElementById('c-total'), total, fmt, 900);
+  countUp(document.getElementById('c-avg'), avg, fmt, 900);
+  countUp(document.getElementById('c-best'), totals[bi], fmt, 900);
   document.getElementById('c-best-lbl').textContent=labels[bi];
-  document.getElementById('c-worst').textContent=fmt(totals[wi]);
+  countUp(document.getElementById('c-worst'), totals[wi], fmt, 900);
   document.getElementById('c-worst-lbl').textContent=labels[wi];
   document.getElementById('c-month-lbl').textContent=(cur?cur.label:'Current Month')+' Revenue';
-  document.getElementById('c-month').textContent=cur?fmt(cur.total):'—';
+  if(cur) countUp(document.getElementById('c-month'), cur.total, fmt, 900);
+  else document.getElementById('c-month').textContent='—';
   document.getElementById('c-month-weeks').textContent=cur?`${cur.sheets.size} week${cur.sheets.size!==1?'s':''} · calendar-accurate`:'';
   const we=document.getElementById('c-wow');
   const dark=currentTheme()==='dark';
@@ -844,10 +908,12 @@ function renderSingleRing(key){
   host.innerHTML=`
     ${ringSVG(r.pct,color,72,8)}
     <div class="ring-info">
-      <div class="ring-pct" style="color:${color};font-size:26px;">${Math.round(r.pct)}%</div>
+      <div class="ring-pct" style="color:${color};font-size:26px;">0%</div>
       <div class="ring-label">${r.label} vs 4-Week Baseline</div>
       <div class="ring-detail">${r.detail}</div>
     </div>`;
+  triggerRingFill(host);
+  countUp(host.querySelector('.ring-pct'), r.pct, v=>Math.round(v)+'%', 800);
 }
 
 function openDetail(kind){
