@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Big Air Asheville — Weekly Performance</title>
+  <title>Weekly Performance Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     :root{
@@ -22,6 +21,7 @@
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.35);
       --radius: 16px; --radius-sm: 10px;
       --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+      --cat-trampoline:#4C8DFF; --cat-concessions:#2FD9A5; --cat-merchandise:#FFB648; --cat-events:#FF5C93; --cat-total:#9C8CFF;
     }
     html[data-theme="light"]{
       /* Light = cream / coffee */
@@ -68,6 +68,70 @@
     #password-box button.pw-btn:active { transform: scale(0.97); }
     #password-error { font-size: 12px; color: var(--danger); margin-top: 10px; min-height: 16px; }
     #main-content { display: none; }
+    #password-box .auth-note{ font-size:12.5px; line-height:1.45; color:var(--text-dim); background:var(--accent-soft); border-radius:var(--radius-sm); padding:10px 12px; margin:-10px 0 16px; text-align:left; }
+    #password-box button.pw-btn:disabled{ opacity:.6; cursor:wait; }
+
+    /* User menu */
+    .user-chip{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-dim); background:var(--surface2); padding:6px 12px; border-radius:20px; }
+    .user-chip .role{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--accent); }
+    button.boh-btn{ color:var(--accent); background:var(--accent-soft); font-weight:600; }
+    .tile-hidden{ display:none !important; }
+    header{ flex-wrap:wrap; gap:14px; }
+    #status{ flex-wrap:wrap; justify-content:flex-end; gap:8px 10px; }
+    @media (max-width:820px){
+      header{ align-items:flex-start; }
+      header h1{ font-size:20px; }
+      #status{ justify-content:flex-start; width:100%; }
+      .admin-head, .admin-tabs, .admin-body, .admin-foot{ padding-left:18px; padding-right:18px; }
+      .admin-overlay{ padding:10px; }
+      .admin-input{ min-width:0; width:100%; }
+      .form-row > .field{ flex:1 1 100%; }
+    }
+
+    /* Back of House */
+    .admin-overlay{ position:fixed; inset:0; background:rgba(10,10,10,.6); z-index:600; display:flex; align-items:center; justify-content:center; padding:20px;
+      opacity:0; visibility:hidden; transition:opacity .22s ease, visibility 0s linear .22s; }
+    .admin-overlay.show{ opacity:1; visibility:visible; transition:opacity .22s ease; }
+    .admin-box{ background:var(--surface); border-radius:var(--radius); width:95vw; max-width:980px; max-height:92vh; display:flex; flex-direction:column;
+      box-shadow:var(--shadow); transform:scale(.96) translateY(8px); transition:transform .3s cubic-bezier(.16,1,.3,1); }
+    .admin-overlay.show .admin-box{ transform:none; }
+    .admin-head{ display:flex; justify-content:space-between; align-items:flex-start; padding:26px 30px 0; position:relative; }
+    .admin-head .detail-close{ position:static; }
+    .admin-tabs{ display:flex; gap:2px; padding:16px 30px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; }
+    .admin-tab{ padding:10px 16px; font-size:13px; font-weight:600; border:none; background:transparent; color:var(--text-dim); cursor:pointer; border-radius:var(--radius-sm) var(--radius-sm) 0 0; position:relative; }
+    .admin-tab:hover{ color:var(--text); background:var(--surface2); }
+    .admin-tab.active{ color:var(--accent); background:var(--accent-soft); }
+    .admin-tab.active::after{ content:''; position:absolute; left:12px; right:12px; bottom:-1px; height:2px; border-radius:2px; background:var(--accent); }
+    .admin-body{ padding:22px 30px; overflow-y:auto; flex:1; }
+    .admin-sec{ display:none; } .admin-sec.active{ display:block; animation:fadeIn .2s ease; }
+    .admin-foot{ display:flex; align-items:center; gap:10px; padding:16px 30px; border-top:1px solid var(--border-soft); }
+    #admin-msg{ font-size:12.5px; color:var(--text-dim); margin-right:auto; }
+    #admin-msg.err{ color:var(--danger); } #admin-msg.ok{ color:var(--success); }
+    .sec-title{ font-family:var(--font-display); font-size:14.5px; font-weight:700; margin:0 0 4px; }
+    .sec-help{ font-size:12.5px; color:var(--text-dim); margin:0 0 14px; line-height:1.45; }
+    .sec-block{ margin-bottom:26px; }
+    .form-row{ display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end; }
+    .admin-input{ padding:9px 12px; font-size:13px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface2); color:var(--text); outline:none; min-width:150px; }
+    .admin-input:focus{ border-color:var(--accent); }
+    .mini-btn{ font-size:12px; padding:5px 10px; border-radius:7px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); cursor:pointer; white-space:nowrap; }
+    .mini-btn:hover{ color:var(--accent); border-color:var(--accent); }
+    .mini-btn.danger:hover{ color:var(--danger); border-color:var(--danger); }
+    .you-tag{ font-size:10.5px; color:var(--accent); font-weight:700; margin-left:6px; }
+    .toggle-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; }
+    .toggle-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface2); border-radius:var(--radius-sm); padding:11px 14px; font-size:13px; cursor:pointer; }
+    .switch{ position:relative; display:inline-block; vertical-align:middle; width:38px; height:22px; flex-shrink:0; cursor:pointer; }
+    .switch input{ opacity:0; width:0; height:0; position:absolute; }
+    .switch .knob{ position:absolute; inset:0; background:var(--surface3); border-radius:22px; transition:background .2s; }
+    .switch .knob::before{ content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform .22s cubic-bezier(.34,1.56,.64,1); box-shadow:0 1px 2px rgba(0,0,0,.3); }
+    .switch input:checked + .knob{ background:var(--accent); }
+    .switch input:checked + .knob::before{ transform:translateX(16px); }
+    .presets{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .preset{ width:30px; height:30px; border-radius:50%; border:3px solid var(--surface); box-shadow:0 0 0 1px var(--border); cursor:pointer; transition:transform .15s; }
+    .preset:hover{ transform:scale(1.1); }
+    .preset.sel{ box-shadow:0 0 0 2px var(--text); }
+    .color-in{ width:46px; height:34px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); padding:2px; cursor:pointer; }
+    .color-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; }
+    .color-row{ display:flex; align-items:center; justify-content:space-between; background:var(--surface2); border-radius:var(--radius-sm); padding:8px 8px 8px 14px; font-size:13px; }
 
     header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border-soft); }
     header h1 { font-family:var(--font-display); font-size: 24px; font-weight: 700; letter-spacing:-0.3px; }
@@ -123,7 +187,7 @@
     .ring-info .ring-detail{ font-size:11.5px; color:var(--text-faint); margin-top:3px; }
 
     /* ── Bento grid dashboard ── */
-    .bento-grid{ display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:92px; gap:16px; margin-bottom:26px; }
+    .bento-grid{ display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:92px; gap:16px; margin-bottom:26px; grid-auto-flow:row dense; }
     .bento-card{
       background:var(--surface); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm);
       overflow:hidden; position:relative; display:flex; flex-direction:column;
@@ -273,10 +337,16 @@
 
 <div id="password-screen">
   <div id="password-box">
-    <h2>Big Air Asheville</h2>
-    <p>Enter the password to view the dashboard</p>
-    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()" />
-    <button class="pw-btn" onclick="checkPassword()">View Dashboard</button>
+    <h2 class="park-name">Weekly Performance</h2>
+    <p id="auth-sub">Connecting…</p>
+    <div id="auth-setup-note" class="auth-note" style="display:none;">First time here: create the admin account. You'll use it to sign in and to open Back of House, where you add other users.</div>
+    <div id="auth-fields" style="display:none;">
+      <input type="text" id="auth-name" placeholder="Your full name" autocomplete="name" style="display:none;" />
+      <input type="text" id="auth-user" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('password-input').focus()" />
+      <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()" />
+      <input type="password" id="auth-pass2" placeholder="Confirm password" autocomplete="new-password" style="display:none;" onkeydown="if(event.key==='Enter')submitAuth()" />
+      <button class="pw-btn" id="auth-btn" onclick="submitAuth()">Sign In</button>
+    </div>
     <div id="password-error"></div>
   </div>
 </div>
@@ -285,7 +355,7 @@
 <div class="page-wrap">
 <header>
   <div>
-    <h1>Big Air Asheville — Weekly Performance</h1>
+    <h1><span class="park-name"></span> — Weekly Performance</h1>
     <p>Revenue, attendance &amp; per-cap trends · Auto-updating from Google Sheets</p>
   </div>
   <div id="status">
@@ -294,14 +364,17 @@
       <span id="status-text">Loading...</span>
     </div>
     <button class="refresh" onclick="loadData()">↻ Refresh</button>
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">☀️</span></button>
+    <span class="user-chip"><span id="user-name">—</span><span class="role" id="user-role"></span></span>
+    <button class="refresh boh-btn" id="boh-btn" style="display:none;" onclick="openAdmin()">⚙ Back of House</button>
+    <button class="refresh" onclick="signOut()">Sign out</button>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Switch light / dark"><span id="theme-icon">☀️</span></button>
   </div>
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
-  <button class="tab-btn" onclick="switchTab('items',this)">🏆 Item Performance</button>
-  <button class="tab-btn" onclick="switchTab('custom',this)">🛠 Custom Report</button>
+  <button class="tab-btn active" id="tabbtn-dashboard" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button class="tab-btn" id="tabbtn-items" onclick="switchTab('items',this)">🏆 Item Performance</button>
+  <button class="tab-btn" id="tabbtn-custom" onclick="switchTab('custom',this)">🛠 Custom Report</button>
 </div>
 
 <div id="tab-dashboard" class="tab-content active">
@@ -314,15 +387,15 @@
   <div class="bento-grid">
 
     <!-- Left stacked KPIs -->
-    <div class="bento-card kpi-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-revenue')">
+    <div data-tile="kpi-total" class="bento-card kpi-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-revenue')">
       <div class="value" id="c-total">—</div><div class="label">Total Revenue</div><div class="sub">all weeks · click for breakdown</div>
     </div>
-    <div class="bento-card kpi-card accent-success" style="grid-column:span 3; grid-row:span 2;">
+    <div data-tile="kpi-average" class="bento-card kpi-card accent-success" style="grid-column:span 3; grid-row:span 2;">
       <div class="value" id="c-avg">—</div><div class="label">Weekly Average</div>
     </div>
 
     <!-- Center hero chart -->
-    <div class="bento-card chart-card" style="grid-column:span 6; grid-row:span 4;" onclick="openDetail('revenue')">
+    <div data-tile="chart-weekly" class="bento-card chart-card" style="grid-column:span 6; grid-row:span 4;" onclick="openDetail('revenue')">
       <div class="bento-card-head">
         <span class="bento-card-title">Weekly Revenue by Category</span>
         <span class="expand-hint">⤢</span>
@@ -331,15 +404,15 @@
     </div>
 
     <!-- Right stacked KPIs -->
-    <div class="bento-card kpi-card accent-primary" style="grid-column:span 3; grid-row:span 2;">
+    <div data-tile="kpi-month" class="bento-card kpi-card accent-primary" style="grid-column:span 3; grid-row:span 2;">
       <div class="value" id="c-month">—</div><div class="label" id="c-month-lbl">Current Month</div><div class="sub" id="c-month-weeks"></div>
     </div>
-    <div class="bento-card kpi-card" style="grid-column:span 3; grid-row:span 2;">
+    <div data-tile="kpi-wow" class="bento-card kpi-card" style="grid-column:span 3; grid-row:span 2;">
       <div class="value" id="c-wow">—</div><div class="label">Latest Week vs Prior</div><div class="sub" id="c-wow-lbl"></div>
     </div>
 
     <!-- Best / Worst combined -->
-    <div class="bento-card" style="grid-column:span 3; grid-row:span 2;">
+    <div data-tile="best-worst" class="bento-card" style="grid-column:span 3; grid-row:span 2;">
       <div class="mini-stat-row">
         <div class="mini-stat"><div class="mini-stat-label">Best Week</div><div class="mini-stat-value up" id="c-best">—</div><div class="mini-stat-sub" id="c-best-lbl"></div></div>
         <div class="mini-stat-divider"></div>
@@ -348,35 +421,35 @@
     </div>
 
     <!-- Rings, three compact -->
-    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-revenue')">
+    <div data-tile="ring-revenue" class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-revenue')">
       <div class="bento-card-head"><span class="bento-card-title">Revenue</span><span class="expand-hint">⤢</span></div>
       <div id="ring-mini-revenue" class="ring-mini-host"></div>
     </div>
-    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-attendance')">
+    <div data-tile="ring-attendance" class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-attendance')">
       <div class="bento-card-head"><span class="bento-card-title">Attendance</span><span class="expand-hint">⤢</span></div>
       <div id="ring-mini-attendance" class="ring-mini-host"></div>
     </div>
-    <div class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-perguest')">
+    <div data-tile="ring-perguest" class="bento-card ring-mini-card" style="grid-column:span 3; grid-row:span 2;" onclick="openDetail('ring-perguest')">
       <div class="bento-card-head"><span class="bento-card-title">Rev / Guest</span><span class="expand-hint">⤢</span></div>
       <div id="ring-mini-perguest" class="ring-mini-host"></div>
     </div>
 
     <!-- Bottom charts -->
-    <div class="bento-card chart-card" style="grid-column:span 6; grid-row:span 3;" onclick="openDetail('monthly')">
+    <div data-tile="chart-monthly" class="bento-card chart-card" style="grid-column:span 6; grid-row:span 3;" onclick="openDetail('monthly')">
       <div class="bento-card-head">
         <span class="bento-card-title">Monthly Revenue</span>
         <span class="expand-hint">⤢</span>
       </div>
       <div class="chart-wrap" style="height:100%;"><canvas id="monthlyChart"></canvas></div>
     </div>
-    <div class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('attendance')">
+    <div data-tile="chart-attendance" class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('attendance')">
       <div class="bento-card-head">
         <span class="bento-card-title">Attendance</span>
         <span class="expand-hint">⤢</span>
       </div>
       <div class="chart-wrap" style="height:100%;"><canvas id="attendanceChart"></canvas></div>
     </div>
-    <div class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('percap')">
+    <div data-tile="chart-perguest" class="bento-card chart-card" style="grid-column:span 3; grid-row:span 3;" onclick="openDetail('percap')">
       <div class="bento-card-head">
         <span class="bento-card-title">Rev / Guest</span>
         <span class="expand-hint">⤢</span>
@@ -515,10 +588,10 @@
       <div class="panel-header">
         <div><div class="panel-title">Revenue by Category</div><div class="panel-sub" id="cr-rev-sub"></div></div>
         <div class="legend">
-          <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline</span>
-          <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
-          <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
-          <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>
+          <span><span class="swatch" style="background:var(--cat-trampoline);"></span>Trampoline</span>
+          <span><span class="swatch" style="background:var(--cat-concessions);"></span>Concessions</span>
+          <span><span class="swatch" style="background:var(--cat-merchandise);"></span>Merchandise</span>
+          <span><span class="swatch" style="background:var(--cat-events);"></span>Events</span>
         </div>
       </div>
       <div class="chart-wrap" style="height:340px;"><canvas id="crRevChart"></canvas></div>
@@ -548,10 +621,10 @@
       <div class="panel-header">
         <div><div class="panel-title">Revenue by Category</div><div class="panel-sub">One stacked bar per range</div></div>
         <div class="legend">
-          <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline</span>
-          <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
-          <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
-          <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>
+          <span><span class="swatch" style="background:var(--cat-trampoline);"></span>Trampoline</span>
+          <span><span class="swatch" style="background:var(--cat-concessions);"></span>Concessions</span>
+          <span><span class="swatch" style="background:var(--cat-merchandise);"></span>Merchandise</span>
+          <span><span class="swatch" style="background:var(--cat-events);"></span>Events</span>
         </div>
       </div>
       <div class="chart-wrap" style="height:340px;"><canvas id="cmpRevChart"></canvas></div>
@@ -563,8 +636,92 @@
   </div>
 </div>
 
-<div class="footer">Big Air Asheville · Data pulled live from Google Sheets</div>
+<div class="footer"><span class="park-name"></span> · Data pulled live from Google Sheets</div>
 </div>
+</div>
+
+<div class="admin-overlay" id="admin-panel" onclick="if(event.target===this)closeAdmin()">
+  <div class="admin-box">
+    <div class="admin-head">
+      <div><div class="panel-title" style="font-size:20px;">⚙ Back of House</div>
+      <div class="panel-sub">Only admins see this. Changes here apply to everyone who uses the dashboard.</div></div>
+      <button class="detail-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-sec="users" onclick="adminSection('users')">Users &amp; Access</button>
+      <button class="admin-tab" data-sec="tiles" onclick="adminSection('tiles')">Dashboard Tiles</button>
+      <button class="admin-tab" data-sec="look" onclick="adminSection('look')">Look &amp; Colors</button>
+      <button class="admin-tab" data-sec="account" onclick="adminSection('account')">My Password</button>
+    </div>
+    <div class="admin-body">
+      <div class="admin-sec active" id="admin-sec-users">
+        <div class="sec-block">
+          <div class="sec-title">Who can sign in</div>
+          <div class="sec-help"><b>Viewers</b> can see the dashboard. <b>Admins</b> can also open Back of House. Turning an account off signs that person out right away.</div>
+          <div style="overflow-x:auto;"><table class="lb-table" id="users-table"></table></div>
+        </div>
+        <div class="sec-block">
+          <div class="sec-title">Add a person</div>
+          <div class="sec-help">Give them their username and password yourself. They can change their password after signing in.</div>
+          <div class="form-row">
+            <div class="field"><label>Full name</label><input class="admin-input" id="nu-name" placeholder="Jordan Smith"/></div>
+            <div class="field"><label>Username</label><input class="admin-input" id="nu-user" placeholder="jordan" autocapitalize="none" spellcheck="false"/></div>
+            <div class="field"><label>Password</label><input class="admin-input" id="nu-pass" placeholder="6+ characters"/></div>
+            <div class="field"><label>Access</label><select class="admin-input" id="nu-role"><option value="viewer">Viewer</option><option value="admin">Admin</option></select></div>
+            <button class="btn-primary" onclick="addUser()">Add person</button>
+          </div>
+        </div>
+      </div>
+      <div class="admin-sec" id="admin-sec-tiles">
+        <div class="sec-block">
+          <div class="sec-title">Dashboard tiles</div>
+          <div class="sec-help">Turn off anything you don't want on the main Dashboard. The remaining tiles close up the gaps.</div>
+          <div class="toggle-grid" id="tile-toggles"></div>
+        </div>
+        <div class="sec-block">
+          <div class="sec-title">Tabs</div>
+          <div class="toggle-grid" id="tab-toggles"></div>
+        </div>
+      </div>
+      <div class="admin-sec" id="admin-sec-look">
+        <div class="sec-block">
+          <div class="sec-title">Park name</div>
+          <div class="form-row"><input class="admin-input" id="look-name" style="min-width:280px;" oninput="DRAFT.parkName=this.value; previewDraft(false)"/></div>
+        </div>
+        <div class="sec-block">
+          <div class="sec-title">Accent color</div>
+          <div class="sec-help">Used for buttons, the active tab and highlights.</div>
+          <div class="presets" id="accent-presets"></div>
+        </div>
+        <div class="sec-block">
+          <div class="sec-title">Chart colors</div>
+          <div class="color-grid" id="cat-colors"></div>
+        </div>
+        <div class="sec-block">
+          <div class="sec-title">Starting theme</div>
+          <div class="sec-help">What people see the first time. Each person can still switch with the ☀️ / 🌙 button.</div>
+          <div class="form-row"><select class="admin-input" id="look-theme" onchange="DRAFT.defaultTheme=this.value"><option value="dark">Dark</option><option value="light">Light</option></select>
+          <button class="mini-btn" onclick="resetLook()">Reset colors to default</button></div>
+        </div>
+      </div>
+      <div class="admin-sec" id="admin-sec-account">
+        <div class="sec-block">
+          <div class="sec-title">Change your password</div>
+          <div class="form-row">
+            <div class="field"><label>Current password</label><input type="password" class="admin-input" id="pw-cur" autocomplete="current-password"/></div>
+            <div class="field"><label>New password</label><input type="password" class="admin-input" id="pw-new" autocomplete="new-password"/></div>
+            <div class="field"><label>Confirm new</label><input type="password" class="admin-input" id="pw-new2" autocomplete="new-password"/></div>
+            <button class="btn-primary" onclick="changeMyPassword()">Update password</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-foot">
+      <span id="admin-msg"></span>
+      <button class="btn-outline" id="admin-cancel" onclick="closeAdmin()">Close</button>
+      <button class="btn-primary" id="admin-save" style="display:none;" onclick="saveSettings()">Save changes</button>
+    </div>
+  </div>
 </div>
 
 <input type="hidden" id="cr-export-name" value="custom_report"/>
@@ -572,13 +729,54 @@
 <input type="hidden" id="ip-export-name" value="item_performance"/>
 
 <script>
-const SHEET_ID    = '1IJzH3bbhaVnAuZa4LnZfxry1LG7NzJLB_bXI0mMhvxk';
+/* ════════════════════════════════════════════════════════════════════
+   ⚙  SETUP — the Web App URL for the revenue sheet's Apps Script.
+   Already filled in. Only change it if you make a brand-new deployment.
+   Everything else (park name, users, passwords, colors, tiles) is set
+   inside the dashboard under ⚙ Back of House.
+   ════════════════════════════════════════════════════════════════════ */
 const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz3P-guZK4MPPYZkVhmm9kdYXpTWn_cGg7KfKjsanasbUYm4pHn8PQCTu8Y-rBz_pOU1g/exec';
+/* ════════════════════════ END OF SETUP ════════════════════════════ */
+
+const SETUP_DONE = /^https:\/\/script\.google\.com\/.+\/exec/.test(APPS_SCRIPT.trim());
+const DEFAULT_SETTINGS = {
+  parkName: 'Big Air Asheville',
+  defaultTheme: 'dark',
+  accent: '#FF7A33',
+  colors: { trampoline:'#4C8DFF', concessions:'#2FD9A5', merchandise:'#FFB648', events:'#FF5C93', total:'#9C8CFF' },
+  tiles: {},                       // tile key → false when hidden
+  tabs: { items:true, custom:true }
+};
+const TILE_LIST = [
+  ['kpi-total','Total Revenue'], ['kpi-average','Weekly Average'], ['kpi-month','Current Month Revenue'], ['kpi-wow','Latest Week vs Prior'],
+  ['best-worst','Best / Worst Week'], ['chart-weekly','Weekly Revenue chart'], ['ring-revenue','Revenue vs 4-week ring'],
+  ['ring-attendance','Attendance vs 4-week ring'], ['ring-perguest','Rev / Guest vs 4-week ring'], ['chart-monthly','Monthly Revenue chart'],
+  ['chart-attendance','Attendance chart'], ['chart-perguest','Rev / Guest chart']
+];
+const ACCENT_PRESETS = ['#FF7A33','#E8473C','#E91E8C','#8E5CF7','#2F80ED','#0EA5B7','#12A67F','#F2B705'];
+function mergeSettings(s){
+  s = s || {};
+  return {
+    parkName: (s.parkName || DEFAULT_SETTINGS.parkName).toString(),
+    defaultTheme: s.defaultTheme === 'light' ? 'light' : 'dark',
+    accent: /^#[0-9a-f]{6}$/i.test(s.accent||'') ? s.accent : DEFAULT_SETTINGS.accent,
+    colors: Object.assign({}, DEFAULT_SETTINGS.colors, s.colors || {}),
+    tiles: Object.assign({}, s.tiles || {}),
+    tabs: Object.assign({}, DEFAULT_SETTINGS.tabs, s.tabs || {})
+  };
+}
+let SETTINGS = mergeSettings((()=>{ try{ return JSON.parse(localStorage.getItem('bigair_rev_settings')); }catch(e){ return null; } })());
+let SESSION = (()=>{ try{ return JSON.parse(localStorage.getItem('bigair_rev_session')); }catch(e){ return null; } })();
+function saveSession(s){ SESSION=s; try{ localStorage.setItem('bigair_rev_session', JSON.stringify(s)); }catch(e){} }
+function clearSession(){ SESSION=null; try{ localStorage.removeItem('bigair_rev_session'); }catch(e){} }
+function cacheSettings(){ try{ localStorage.setItem('bigair_rev_settings', JSON.stringify(SETTINGS)); }catch(e){} }
+function isAdmin(){ return !!(SESSION && SESSION.user && SESSION.user.role==='admin'); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 const COL_IDX = 8;
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const CAT_KEYS = ['trampoline','concessions','merchandise','events'];
-const CAT_COLOR = { trampoline:'#4C8DFF', concessions:'#2FD9A5', merchandise:'#FFB648', events:'#FF5C93', total:'#9C8CFF' };
+const CAT_COLOR = Object.assign({}, DEFAULT_SETTINGS.colors);
 const CAT_LABEL = { trampoline:'Trampoline Park', concessions:'Concessions', merchandise:'Merchandise', events:'Events', total:'Total Revenue' };
 const CAT_SHEET_ROW = { trampoline:'Trampoline Park', merchandise:'Merchandise', concessions:'Concessions', events:'Events' };
 const RANGE_COLORS = ['#4C8DFF','#FF5C93','#2FD9A5','#FFB648','#9C8CFF','#FF7A33','#3FCFE0','#E0965B'];
@@ -599,8 +797,8 @@ let chartConfigs = {};
 let loadDiagnostics = [];
 
 (function initTheme(){
-  const saved = localStorage.getItem('bigair_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
+  let saved=null; try{ saved=localStorage.getItem('bigair_theme'); }catch(e){}
+  document.documentElement.setAttribute('data-theme', saved || SETTINGS.defaultTheme);
 })();
 function currentTheme(){ return document.documentElement.getAttribute('data-theme')||'dark'; }
 function themeColors(){
@@ -610,7 +808,8 @@ function themeColors(){
 function toggleTheme(){
   const next = currentTheme()==='dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('bigair_theme', next);
+  try{ localStorage.setItem('bigair_theme', next); }catch(e){}
+  applyAccent();
   document.getElementById('theme-icon').textContent = next==='dark' ? '☀️' : '🌙';
   if(globalData){
     renderDashboard();
@@ -621,25 +820,118 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('theme-icon').textContent = currentTheme()==='dark' ? '☀️' : '🌙';
 });
 
-const PW = 'Asheville2026!';
-function checkPassword(){
-  if(document.getElementById('password-input').value === PW){
-    sessionStorage.setItem('auth','true');
-    document.getElementById('password-screen').style.display='none';
-    document.getElementById('main-content').style.display='block';
-    loadData();
-  } else {
-    document.getElementById('password-error').textContent='Incorrect password.';
-    document.getElementById('password-input').value='';
-    document.getElementById('password-input').focus();
+// ── Talking to the sheet's Apps Script ───────────────────────────────────────
+async function api(action, body){
+  const payload = Object.assign({ action, token: SESSION ? SESSION.token : null }, body || {});
+  const res = await fetch(APPS_SCRIPT.trim(), { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const j = await res.json();
+  if(j && j.ok===false && j.error==='auth'){
+    clearSession(); closeAdmin(false);
+    showAuth('login','Your sign-in expired. Please sign in again.');
+    throw new Error('auth');
+  }
+  return j;
+}
+
+// ── Look & feel from Back of House settings ──────────────────────────────────
+function hexToRgb(hex){ const n=parseInt(hex.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+function shade(hex, amt){ const [r,g,b]=hexToRgb(hex); const t=amt<0?0:255, p=Math.abs(amt);
+  const c=v=>Math.round((t-v)*p+v).toString(16).padStart(2,'0'); return '#'+c(r)+c(g)+c(b); }
+function rgba(hex,a){ const [r,g,b]=hexToRgb(hex); return `rgba(${r},${g},${b},${a})`; }
+function applyAccent(){
+  const root=document.documentElement, dark=currentTheme()==='dark';
+  const base = dark ? SETTINGS.accent : shade(SETTINGS.accent,-0.12);
+  root.style.setProperty('--accent', base);
+  root.style.setProperty('--accent-2', shade(base,0.28));
+  root.style.setProperty('--accent-soft', rgba(base, dark?0.16:0.12));
+}
+function updateThemeIcon(){ document.getElementById('theme-icon').textContent = currentTheme()==='dark' ? '☀️' : '🌙'; }
+function applySettings(rerender){
+  const s=SETTINGS, root=document.documentElement;
+  document.querySelectorAll('.park-name').forEach(el=>el.textContent=s.parkName);
+  document.title = s.parkName + ' — Weekly Performance';
+  Object.keys(CAT_COLOR).forEach(k=>{ CAT_COLOR[k]=s.colors[k]||DEFAULT_SETTINGS.colors[k]; root.style.setProperty('--cat-'+k, CAT_COLOR[k]); });
+  IP_CAT_COLORS['Trampoline Park']=CAT_COLOR.trampoline; IP_CAT_COLORS['Concessions']=CAT_COLOR.concessions;
+  IP_CAT_COLORS['Merchandise']=CAT_COLOR.merchandise; IP_CAT_COLORS['Events']=CAT_COLOR.events;
+  let personal=null; try{ personal=localStorage.getItem('bigair_theme'); }catch(e){}
+  if(!personal) root.setAttribute('data-theme', s.defaultTheme);
+  applyAccent(); updateThemeIcon();
+  document.querySelectorAll('[data-tile]').forEach(el=>el.classList.toggle('tile-hidden', s.tiles[el.dataset.tile]===false));
+  ['items','custom'].forEach(t=>{
+    const on = s.tabs[t]!==false, btn=document.getElementById('tabbtn-'+t);
+    btn.style.display = on ? '' : 'none';
+    if(!on && document.getElementById('tab-'+t).classList.contains('active')) switchTab('dashboard', document.getElementById('tabbtn-dashboard'));
+  });
+  if(rerender!==false && globalData){
+    renderDashboard();
+    if(document.getElementById('tab-items').classList.contains('active')) renderItemTab();
   }
 }
-if(sessionStorage.getItem('auth')==='true'){
+
+// ── Sign-in screen ───────────────────────────────────────────────────────────
+let AUTH_MODE='login';
+function showAuth(mode, msg){
+  AUTH_MODE=mode;
+  document.getElementById('main-content').style.display='none';
+  document.getElementById('password-screen').style.display='flex';
+  const setup = mode==='setup', blocked = mode==='blocked';
+  document.getElementById('auth-sub').textContent = blocked ? 'Not connected yet' : setup ? 'Create your admin account' : 'Sign in to view the dashboard';
+  document.getElementById('auth-setup-note').style.display = setup ? 'block' : 'none';
+  document.getElementById('auth-fields').style.display = blocked ? 'none' : 'block';
+  document.getElementById('auth-name').style.display = setup ? 'block' : 'none';
+  document.getElementById('auth-pass2').style.display = setup ? 'block' : 'none';
+  document.getElementById('password-input').setAttribute('autocomplete', setup ? 'new-password' : 'current-password');
+  document.getElementById('auth-btn').textContent = setup ? 'Create Admin Account' : 'Sign In';
+  document.getElementById('password-error').textContent = msg || '';
+  if(!blocked) setTimeout(()=>document.getElementById(setup?'auth-name':'auth-user').focus(), 50);
+}
+async function submitAuth(){
+  const err=document.getElementById('password-error'), btn=document.getElementById('auth-btn');
+  const name=document.getElementById('auth-name').value.trim();
+  const username=document.getElementById('auth-user').value.trim().toLowerCase();
+  const password=document.getElementById('password-input').value;
+  const setup = AUTH_MODE==='setup';
+  if(setup && !name){ err.textContent='Enter your name.'; return; }
+  if(!username || !password){ err.textContent='Enter your username and password.'; return; }
+  if(setup && password.length<6){ err.textContent='Use at least 6 characters for the password.'; return; }
+  if(setup && password!==document.getElementById('auth-pass2').value){ err.textContent="The two passwords don't match."; return; }
+  err.textContent=''; btn.disabled=true; const label=btn.textContent; btn.textContent='One moment…';
+  try{
+    const j = await api(setup?'setup':'login', { name, username, password });
+    if(!j.ok){ err.textContent=j.error||'Something went wrong.'; return; }
+    saveSession({ token:j.token, user:j.user });
+    document.getElementById('password-input').value=''; document.getElementById('auth-pass2').value='';
+    enterDashboard();
+  }catch(e){ if(e.message!=='auth') err.textContent="Couldn't reach the dashboard connection. Check your internet and try again."; }
+  finally{ btn.disabled=false; btn.textContent=label; }
+}
+function updateUserUI(){
+  if(!SESSION || !SESSION.user) return;
+  document.getElementById('user-name').textContent = SESSION.user.name || SESSION.user.username;
+  document.getElementById('user-role').textContent = SESSION.user.role==='admin' ? 'Admin' : '';
+  document.getElementById('boh-btn').style.display = isAdmin() ? '' : 'none';
+}
+function enterDashboard(){
   document.getElementById('password-screen').style.display='none';
   document.getElementById('main-content').style.display='block';
+  updateUserUI();
   loadData();
 }
-document.getElementById('theme-icon').textContent = currentTheme()==='dark' ? '☀️' : '🌙';
+async function signOut(){
+  try{ await api('logout'); }catch(e){}
+  clearSession(); location.reload();
+}
+async function boot(){
+  applySettings(false);
+  if(!SETUP_DONE){ showAuth('blocked','This dashboard isn\'t connected to its spreadsheet yet. Paste the Web App URL into the setup line at the top of index.html.'); return; }
+  let b;
+  try{ b = await api('bootstrap'); }
+  catch(e){ showAuth('blocked',"Couldn't reach the spreadsheet connection. Check the Web App URL in index.html and that the Apps Script is deployed with access set to Anyone."); return; }
+  if(b.settings){ SETTINGS=mergeSettings(b.settings); cacheSettings(); applySettings(false); }
+  if(b.needsSetup){ clearSession(); showAuth('setup'); return; }
+  if(SESSION && SESSION.token) enterDashboard(); else showAuth('login');
+}
 
 function switchTab(name,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -670,12 +962,6 @@ function inputToDate(s){ if(!s)return null; const[y,m,d]=s.split('-'); return ne
 function fmtDateShort(d){ return d?`${MONTH_NAMES[d.getMonth()].slice(0,3)} ${d.getDate()}`:''; }
 function sheetToLabel(name){ return name.replace(/\s*\d{4}/,'').replace(/-/g,'–').trim(); }
 
-async function fetchSheetNames(){ const r=await fetch(APPS_SCRIPT); if(!r.ok)throw new Error(); return (await r.json()).sheets; }
-async function fetchSheet(name){
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
-  const r=await fetch(url); if(!r.ok)throw new Error('Failed:'+name);
-  return Papa.parse(await r.text(),{skipEmptyLines:false}).data;
-}
 function findRowByLabel(rows,label){
   for(const row of rows) if(row[0]&&row[0].toString().trim().toLowerCase()===label.toLowerCase()) return row;
   return null;
@@ -693,20 +979,22 @@ function detectNameIssues(name){
   return issues;
 }
 const DIAG_CHECKS=[['Trampoline Park','trampoline'],['Merchandise','merchandise'],['Concessions','concessions'],['Events','events'],['Big Air Total Attendance','attendance']];
-async function diagnoseSheet(name){
-  const entry={ name, nameIssues:detectNameIssues(name), status:'ok', missingRows:[], values:{}, error:null, total:0 };
-  let rows;
-  try{ rows=await fetchSheet(name); }
-  catch(e){ entry.status='fetch_failed'; entry.error=(e&&e.message)||String(e); return {entry, rows:null}; }
+function diagnoseSheet(name, rows){
+  const entry={ name, nameIssues:detectNameIssues(name), status:'ok', missingRows:[], values:{}, error:null, total:0, formulaErrors:[] };
   DIAG_CHECKS.forEach(([label,key])=>{
     const row=findRowByLabel(rows,label);
     entry.values[key]= row ? cellNum(row[COL_IDX]) : null;
     if(!row) entry.missingRows.push(label);
+    else {
+      const bad=[1,2,3,4,5,6,7,COL_IDX].filter(ci=>row[ci] && /^#/.test(row[ci].toString().trim()));
+      if(bad.length) entry.formulaErrors.push(`${label} (${row[bad[0]].toString().trim()} in column ${'ABCDEFGHI'[bad[0]]}${bad.length>1?' + '+(bad.length-1)+' more':''})`);
+    }
   });
   const total=(entry.values.trampoline||0)+(entry.values.merchandise||0)+(entry.values.concessions||0)+(entry.values.events||0);
   entry.total=total;
   if(entry.missingRows.length>0) entry.status='missing_rows';
-  else if(total<=0) entry.status='zero_total';
+  else if(total<=0) entry.status='zero_total';   // week not filled in yet — skipped quietly
+  else if(entry.formulaErrors.length) entry.status='ok_with_errors';
   return {entry, rows};
 }
 function toggleDiagnostics(){
@@ -716,10 +1004,10 @@ function toggleDiagnostics(){
 function renderDiagnosticsBanner(){
   const banner=document.getElementById('diagnostics-banner');
   const panel=document.getElementById('diagnostics-panel');
-  if(!loadDiagnostics.length){ banner.style.display='none'; panel.style.display='none'; panel.innerHTML=''; return; }
+  if(!loadDiagnostics.length || !isAdmin()){ banner.style.display='none'; panel.style.display='none'; panel.innerHTML=''; return; }
   banner.style.display='flex';
   document.getElementById('diag-summary').textContent=
-    `${loadDiagnostics.length} week${loadDiagnostics.length!==1?'s':''} excluded from totals — data issue detected`;
+    `${loadDiagnostics.length} week${loadDiagnostics.length!==1?'s':''} with a spreadsheet problem — numbers may be off. Click for details`;
   panel.innerHTML = loadDiagnostics.map(d=>{
     let reason='', detail='';
     if(d.status==='fetch_failed'){
@@ -729,6 +1017,9 @@ function renderDiagnosticsBanner(){
       reason=`Missing expected row(s) in column A: ${d.missingRows.join(', ')}`;
       const found=Object.entries(d.values).filter(([k,v])=>v!==null).map(([k,v])=>`${k}: ${fmt(v)}`).join(' · ');
       detail = found ? `Rows that WERE found — ${found}` : 'None of the expected category rows were found on this tab at all.';
+    } else if(d.status==='ok_with_errors'){
+      reason='This week is included, but the sheet shows a formula error, so that category is being counted as $0.';
+      detail=`Fix in the spreadsheet: ${d.formulaErrors.join(' · ')}`;
     } else if(d.status==='zero_total'){
       reason='Every category value summed to $0, so this week was excluded from totals.';
       detail = Object.entries(d.values).map(([k,v])=>`${k}: ${v===null?'not found':fmt(v)}`).join(' · ');
@@ -737,7 +1028,7 @@ function renderDiagnosticsBanner(){
       ? `<div style="color:var(--danger);margin-top:4px;">⚠ Tab name issue: ${d.nameIssues.join(', ')}</div>`
       : '';
     return `<div class="diag-entry">
-      <div class="diag-entry-name">${d.name}</div>
+      <div class="diag-entry-name">${esc(d.name)}</div>
       <div class="diag-entry-reason">${reason}</div>
       <div class="diag-entry-detail">${detail}</div>
       ${nameFlag}
@@ -762,30 +1053,35 @@ function sumCat(entries, catKey){ return entries.reduce((s,e)=>s+dayCatVal(e,cat
 
 async function loadData(){
   setStatus('Loading...','loading');
-  let sheetNames;
-  try{ sheetNames=await fetchSheetNames(); }catch(e){ setStatus('Could not load sheet list.','error'); return; }
+  let res;
+  try{ res = await api('data'); }
+  catch(e){ if(e.message!=='auth') setStatus("Couldn't load data. Check your connection and click Refresh.",'error'); return; }
+  if(!res.ok){ setStatus(res.error||"Couldn't load data.",'error'); return; }
+  if(res.user){ SESSION.user=res.user; saveSession(SESSION); updateUserUI(); }
+  if(res.settings){ SETTINGS=mergeSettings(res.settings); cacheSettings(); applySettings(false); }
 
   const data={trampoline:[],merchandise:[],concessions:[],events:[],attendance:[],totals:[]};
   const labels=[], rawNames=[];
   globalDailyIndex=[]; globalRawRows={};
   loadDiagnostics=[];
 
-  for(const name of sheetNames){
-    const {entry, rows} = await diagnoseSheet(name);
-    if(entry.status!=='ok') loadDiagnostics.push(entry);
+  for(const wk of (res.weeks||[])){
+    const name=wk.name, rows=wk.rows;
+    const {entry} = diagnoseSheet(name, rows);
+    if(entry.status!=='ok' && entry.status!=='zero_total') loadDiagnostics.push(entry);
     if(!rows) continue; // fetch failed entirely — nothing more to do for this tab
 
     globalRawRows[name]=rows;
     buildDailyIndex(name,rows);
 
-    if(entry.status==='ok'){
+    if(entry.status==='ok' || entry.status==='ok_with_errors'){
       data.trampoline.push(entry.values.trampoline); data.merchandise.push(entry.values.merchandise);
       data.concessions.push(entry.values.concessions); data.events.push(entry.values.events);
       data.attendance.push(entry.values.attendance); data.totals.push(entry.total);
       labels.push(sheetToLabel(name)); rawNames.push(name);
     }
   }
-  if(!labels.length){ setStatus('No data found.','error'); return; }
+  if(!labels.length){ setStatus('No weeks with sales yet. Add your first week in the spreadsheet, then click Refresh.','error'); return; }
 
   globalData=data; globalLabels=labels; globalSheetNames=rawNames;
 
@@ -1024,10 +1320,10 @@ function openDetail(kind){
     wowEl.innerHTML=wowBadgeHTML(weeklyPctChange(totals));
     drawChart('detailChart',chartConfigs.revenue.type,chartConfigs.revenue.labels,chartConfigs.revenue.datasets,chartConfigs.revenue.yFmt,chartConfigs.revenue.opts);
     legendEl.innerHTML=`
-      <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline Park</span>
-      <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
-      <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
-      <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>`;
+      <span><span class="swatch" style="background:var(--cat-trampoline);"></span>Trampoline Park</span>
+      <span><span class="swatch" style="background:var(--cat-concessions);"></span>Concessions</span>
+      <span><span class="swatch" style="background:var(--cat-merchandise);"></span>Merchandise</span>
+      <span><span class="swatch" style="background:var(--cat-events);"></span>Events</span>`;
 
     const total=totals.reduce((a,b)=>a+b,0);
     const catTotals={ trampoline:globalData.trampoline.reduce((a,b)=>a+b,0), concessions:globalData.concessions.reduce((a,b)=>a+b,0),
@@ -1094,11 +1390,11 @@ function openDetail(kind){
 
   if(cfg.hasLegend){
     legendEl.innerHTML=`
-      <span><span class="swatch" style="background:#4C8DFF;"></span>Trampoline Park</span>
-      <span><span class="swatch" style="background:#2FD9A5;"></span>Concessions</span>
-      <span><span class="swatch" style="background:#FFB648;"></span>Merchandise</span>
-      <span><span class="swatch" style="background:#FF5C93;"></span>Events</span>
-      <span><span class="swatch" style="background:#9C8CFF;border-radius:50%;"></span>4-wk Avg</span>`;
+      <span><span class="swatch" style="background:var(--cat-trampoline);"></span>Trampoline Park</span>
+      <span><span class="swatch" style="background:var(--cat-concessions);"></span>Concessions</span>
+      <span><span class="swatch" style="background:var(--cat-merchandise);"></span>Merchandise</span>
+      <span><span class="swatch" style="background:var(--cat-events);"></span>Events</span>
+      <span><span class="swatch" style="background:var(--cat-total);border-radius:50%;"></span>4-wk Avg</span>`;
   }
   if(cfg.hasWow){
     const totals=globalData.totals, labels=globalLabels;
@@ -1158,7 +1454,7 @@ function closeDetail(){
   document.getElementById('detail-modal').classList.remove('show');
   if(charts['detailChart']){ charts['detailChart'].destroy(); delete charts['detailChart']; }
 }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeDetail(); closeAdmin(); } });
 
 function drawChart(id,type,labels,datasets,yFmt,opts={}){
   if(charts[id])charts[id].destroy();
@@ -1400,11 +1696,12 @@ function getItemData(start,end){
     if(!sheetEntries.length)return;
     const items=parseItemsFromRows(rows);
     items.forEach(it=>{
-      if(!map[it.name])map[it.name]={name:it.name,category:it.category,total:0,weeklyTotals:{}};
+      const key=it.category+'|'+it.name;
+      if(!map[key])map[key]={name:it.name,category:it.category,total:0,weeklyTotals:{}};
       let sub=0;
       sheetEntries.forEach(e=>{ sub += it.dailyVals[e.colIdx-1]||0; });
-      map[it.name].total+=sub;
-      map[it.name].weeklyTotals[sheetName]=(map[it.name].weeklyTotals[sheetName]||0)+sub;
+      map[key].total+=sub;
+      map[key].weeklyTotals[sheetName]=(map[key].weeklyTotals[sheetName]||0)+sub;
     });
   });
   return Object.values(map).filter(i=>i.total>0);
@@ -1519,6 +1816,152 @@ function getPeriodLabel(start,end){
   if(p==='all-time') return 'All Time';
   return `${fmtDateShort(start)} – ${fmtDateShort(end)}`;
 }
+
+// ── Back of House ────────────────────────────────────────────────────────────
+let ADMIN_USERS=[], DRAFT=null;
+function setAdminMsg(text, kind){ const m=document.getElementById('admin-msg'); m.textContent=text||''; m.className=kind||''; }
+function adminSection(sec){
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active', b.dataset.sec===sec));
+  document.querySelectorAll('.admin-sec').forEach(s=>s.classList.toggle('active', s.id==='admin-sec-'+sec));
+  const settingsSec = sec==='tiles' || sec==='look';
+  document.getElementById('admin-save').style.display = settingsSec ? '' : 'none';
+  document.getElementById('admin-cancel').textContent = settingsSec ? 'Cancel' : 'Close';
+  setAdminMsg('');
+}
+async function openAdmin(){
+  if(!isAdmin()) return;
+  DRAFT = JSON.parse(JSON.stringify(SETTINGS));
+  renderTileToggles(); renderLookForm();
+  adminSection('users');
+  document.getElementById('admin-panel').classList.add('show');
+  await refreshUsers();
+}
+function closeAdmin(revert){
+  const p=document.getElementById('admin-panel');
+  if(!p || !p.classList.contains('show')) return;
+  p.classList.remove('show');
+  if(revert!==false) applySettings();     // undo any unsaved preview
+  DRAFT=null;
+}
+async function refreshUsers(){
+  setAdminMsg('Loading people…');
+  try{
+    const j=await api('admin');
+    if(!j.ok){ setAdminMsg(j.error,'err'); return; }
+    ADMIN_USERS=j.users; renderUsers(); setAdminMsg('');
+  }catch(e){ if(e.message!=='auth') setAdminMsg("Couldn't load people. Try again.",'err'); }
+}
+function renderUsers(){
+  const me = SESSION && SESSION.user ? SESSION.user.username : '';
+  const rows = ADMIN_USERS.map(u=>{
+    const self = u.username===me, uq = esc(u.username).replace(/&#39;/g,"\\'");
+    return `<tr>
+      <td style="font-weight:600;">${esc(u.name)}${self?'<span class="you-tag">YOU</span>':''}</td>
+      <td style="font-family:var(--font-mono);">${esc(u.username)}</td>
+      <td><select class="admin-input" style="min-width:110px;padding:6px 10px;" onchange="updateUser('${uq}',{role:this.value})">
+        <option value="viewer"${u.role==='viewer'?' selected':''}>Viewer</option><option value="admin"${u.role==='admin'?' selected':''}>Admin</option></select></td>
+      <td><label class="switch" title="${u.active?'Account on':'Account off'}"><input type="checkbox"${u.active?' checked':''}${self?' disabled':''} onchange="updateUser('${uq}',{active:this.checked})"><span class="knob"></span></label></td>
+      <td style="white-space:nowrap;"><button class="mini-btn" onclick="resetUserPassword('${uq}')">Reset password</button>
+        ${self?'':`<button class="mini-btn danger" onclick="removeUser('${uq}')">Remove</button>`}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('users-table').innerHTML =
+    `<thead><tr><th>Name</th><th>Username</th><th>Access</th><th>On</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="muted">No people yet</td></tr>'}</tbody>`;
+}
+async function userCall(action, body, okText){
+  setAdminMsg('Saving…');
+  try{
+    const j=await api(action, body);
+    if(!j.ok){ setAdminMsg(j.error,'err'); renderUsers(); return false; }
+    if(j.users){ ADMIN_USERS=j.users; renderUsers(); }
+    setAdminMsg(okText,'ok'); return true;
+  }catch(e){ if(e.message!=='auth') setAdminMsg("Couldn't save. Try again.",'err'); return false; }
+}
+async function addUser(){
+  const name=document.getElementById('nu-name').value.trim();
+  const username=document.getElementById('nu-user').value.trim().toLowerCase();
+  const password=document.getElementById('nu-pass').value;
+  const role=document.getElementById('nu-role').value;
+  if(!name||!username||!password){ setAdminMsg('Fill in name, username and password.','err'); return; }
+  if(await userCall('saveUser',{user:{isNew:true,name,username,password,role}}, `Added ${name}. Send them their username and password.`)){
+    ['nu-name','nu-user','nu-pass'].forEach(id=>document.getElementById(id).value='');
+  }
+}
+function updateUser(username, changes){
+  const u=ADMIN_USERS.find(x=>x.username===username); if(!u) return;
+  userCall('saveUser',{user:Object.assign({username, name:u.name, role:u.role, active:u.active}, changes)}, 'Saved.');
+}
+function resetUserPassword(username){
+  const u=ADMIN_USERS.find(x=>x.username===username); if(!u) return;
+  const p=prompt(`New password for ${u.name} (at least 6 characters):`);
+  if(p===null) return;
+  if(p.length<6){ setAdminMsg('Passwords need at least 6 characters.','err'); return; }
+  userCall('saveUser',{user:{username, name:u.name, role:u.role, active:u.active, password:p}}, `Password changed for ${u.name}. Let them know the new one.`);
+}
+function removeUser(username){
+  const u=ADMIN_USERS.find(x=>x.username===username); if(!u) return;
+  if(!confirm(`Remove ${u.name}? They won't be able to sign in.`)) return;
+  userCall('deleteUser',{username}, `Removed ${u.name}.`);
+}
+async function changeMyPassword(){
+  const cur=document.getElementById('pw-cur').value, n1=document.getElementById('pw-new').value, n2=document.getElementById('pw-new2').value;
+  if(!cur||!n1){ setAdminMsg('Fill in your current and new password.','err'); return; }
+  if(n1.length<6){ setAdminMsg('Use at least 6 characters.','err'); return; }
+  if(n1!==n2){ setAdminMsg("The new passwords don't match.",'err'); return; }
+  setAdminMsg('Saving…');
+  try{
+    const j=await api('changePassword',{current:cur,newPassword:n1});
+    if(!j.ok){ setAdminMsg(j.error,'err'); return; }
+    ['pw-cur','pw-new','pw-new2'].forEach(id=>document.getElementById(id).value='');
+    setAdminMsg('Your password is updated.','ok');
+  }catch(e){ if(e.message!=='auth') setAdminMsg("Couldn't save. Try again.",'err'); }
+}
+function toggleRow(label, checked, onchange){
+  return `<label class="toggle-row"><span>${esc(label)}</span><span class="switch"><input type="checkbox"${checked?' checked':''} onchange="${onchange}"><span class="knob"></span></span></label>`;
+}
+function renderTileToggles(){
+  document.getElementById('tile-toggles').innerHTML = TILE_LIST.map(([k,label])=>
+    toggleRow(label, DRAFT.tiles[k]!==false, `DRAFT.tiles['${k}']=this.checked; previewDraft()`)).join('');
+  document.getElementById('tab-toggles').innerHTML =
+    toggleRow('Item Performance tab', DRAFT.tabs.items!==false, `DRAFT.tabs.items=this.checked; previewDraft()`) +
+    toggleRow('Custom Report tab', DRAFT.tabs.custom!==false, `DRAFT.tabs.custom=this.checked; previewDraft()`);
+}
+function renderLookForm(){
+  document.getElementById('look-name').value = DRAFT.parkName;
+  document.getElementById('look-theme').value = DRAFT.defaultTheme;
+  const presets = ACCENT_PRESETS.map(c=>`<span class="preset${c.toLowerCase()===DRAFT.accent.toLowerCase()?' sel':''}" style="background:${c}" title="${c}" onclick="setAccent('${c}')"></span>`).join('');
+  document.getElementById('accent-presets').innerHTML = presets +
+    `<input type="color" class="color-in" value="${DRAFT.accent}" title="Pick any color" onchange="setAccent(this.value)">`;
+  const names = { trampoline:'Trampoline Park', concessions:'Concessions', merchandise:'Merchandise', events:'Events', total:'4-week average line' };
+  document.getElementById('cat-colors').innerHTML = Object.keys(names).map(k=>
+    `<label class="color-row"><span>${names[k]}</span><input type="color" class="color-in" value="${DRAFT.colors[k]}" onchange="DRAFT.colors['${k}']=this.value; previewDraft()"></label>`).join('');
+}
+function setAccent(c){ DRAFT.accent=c; renderLookForm(); previewDraft(); }
+function resetLook(){
+  DRAFT.accent=DEFAULT_SETTINGS.accent; DRAFT.colors=Object.assign({},DEFAULT_SETTINGS.colors);
+  renderLookForm(); previewDraft(); setAdminMsg('Colors reset. Click Save changes to keep them.');
+}
+function previewDraft(rerender){
+  const saved=SETTINGS; SETTINGS=mergeSettings(DRAFT);
+  applySettings(rerender);
+  SETTINGS=saved;
+  setAdminMsg('Previewing. Click Save changes to keep it for everyone.');
+}
+async function saveSettings(){
+  if(!DRAFT) return;
+  DRAFT.parkName = (DRAFT.parkName||'').trim() || DEFAULT_SETTINGS.parkName;
+  setAdminMsg('Saving…');
+  try{
+    const clean=mergeSettings(DRAFT);
+    const j=await api('saveSettings',{settings:clean});
+    if(!j.ok){ setAdminMsg(j.error,'err'); return; }
+    SETTINGS=clean; cacheSettings(); applySettings();
+    DRAFT=JSON.parse(JSON.stringify(SETTINGS));
+    setAdminMsg('Saved. Everyone sees this the next time they load the dashboard.','ok');
+  }catch(e){ if(e.message!=='auth') setAdminMsg("Couldn't save. Try again.",'err'); }
+}
+
+boot();
 </script>
 </body>
 </html>
